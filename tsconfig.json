@@ -1,0 +1,30 @@
+{
+    "compilerOptions":  {
+                            "target":  "ES2022",
+                            "module":  "NodeNext",
+                            "moduleResolution":  "NodeNext",
+                            "strict":  true,
+                            "resolveJsonModule":  true,
+                            "noEmitOnError":  true,
+                            "noImplicitAny":  false,
+                            "noImplicitThis":  true,
+                            "allowUnreachableCode":  false,
+                            "sourceMap":  true,
+                            "strictPropertyInitialization":  false,
+                            "outDir":  "./gen/srv/srv",
+                            "allowSyntheticDefaultImports":  true,
+                            "esModuleInterop":  true,
+                            "skipLibCheck":  true,
+                            "forceConsistentCasingInFileNames":  true,
+                            "types":  [
+                                          "node"
+                                      ]
+                        },
+    "include":  [
+                    "srv"
+                ],
+    "exclude":  [
+                    "node_modules",
+                    "gen"
+                ]
+}

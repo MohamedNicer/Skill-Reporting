@@ -1,0 +1,16 @@
+{
+  "requires": {
+    "[development]": {
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "employee": { "password": "employee", "roles": ["Employee"] },
+          "manager": { "password": "manager", "roles": ["Manager"] },
+          "admin": { "password": "admin", "roles": ["HRAdmin", "SkillsAdmin", "Admin"] }
+        }
+      }
+    },
+    "[hybrid]": { "auth": "xsuaa" },
+    "[production]": { "auth": "xsuaa" }
+  }
+}
