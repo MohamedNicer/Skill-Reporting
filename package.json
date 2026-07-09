@@ -1,77 +1,82 @@
 {
-    "name":  "employee-skills-cv-app",
-    "version":  "0.1.0",
-    "private":  true,
-    "description":  "SAP CAP app for managing employee skills, CV documents, extraction results, and generated CVs.",
-    "scripts":  {
-                    "start":  "cds-serve",
-                    "watch":  "cds watch",
-                    "build-ts":  "tsc",
-                    "deploy-hana":  "cds deploy --to hana --vcap-file cds-deploy-hana.json",
-                    "start-hybrid":  "cds watch --profile hybrid"
-                },
-    "dependencies":  {
-                         "@cap-js/sqlite":  "^1",
-                         "@sap/cds":  "^8",
-                         "@cap-js/hana":  "^1",
-                         "@sap/xssec":  "^4",
-                         "hdb":  "^0.19.0"
-                     },
-    "devDependencies":  {
-                            "@sap/cds-dk":  "^8",
-                            "@types/node":  "^20",
-                            "tsx":  "^4",
-                            "typescript":  "^5"
+    "name": "employee-skills-cv-app",
+    "version": "0.1.0",
+    "private": true,
+    "description": "SAP CAP app for managing employee skills, CV documents, extraction results, and generated CVs.",
+    "scripts": {
+        "start": "cds-serve",
+        "watch": "cds watch",
+        "watch-ui": "cd app/skill-reporting-ui && npx ui5 serve --port 8080",
+        "build-ts": "tsc",
+        "deploy-hana": "cds deploy --to hana --vcap-file cds-deploy-hana.json",
+        "start-hybrid": "cds watch --profile hybrid"
+    },
+    "dependencies": {
+        "@cap-js-community/odata-v2-adapter": "^1.16.0",
+        "@cap-js/hana": "^1",
+        "@cap-js/sqlite": "^1",
+        "@sap/cds": "^8",
+        "@sap/xssec": "^4",
+        "hdb": "^0.19.0"
+    },
+    "devDependencies": {
+        "@sap/cds-dk": "^8",
+        "@types/node": "^20",
+        "tsx": "^4",
+        "typescript": "^5"
+    },
+    "cds": {
+        "requires": {
+            "auth": {
+                "[development]": {
+                    "kind": "mocked",
+                    "users": {
+                        "employee": {
+                            "password": "employee",
+                            "roles": [
+                                "Employee"
+                            ]
                         },
-    "cds":  {
-                "requires":  {
-                                 "auth":  {
-                                              "[development]":  {
-                                                                    "kind":  "mocked",
-                                                                    "users":  {
-                                                                                  "employee":  {
-                                                                                                   "password":  "employee",
-                                                                                                   "roles":  [
-                                                                                                                 "Employee"
-                                                                                                             ]
-                                                                                               },
-                                                                                  "manager":  {
-                                                                                                  "password":  "manager",
-                                                                                                  "roles":  [
-                                                                                                                "Manager"
-                                                                                                            ]
-                                                                                              },
-                                                                                  "admin":  {
-                                                                                                "password":  "admin",
-                                                                                                "roles":  [
-                                                                                                              "HRAdmin",
-                                                                                                              "SkillsAdmin"
-                                                                                                          ]
-                                                                                            }
-                                                                              }
-                                                                },
-                                              "[production]":  {
-                                                                   "kind":  "xsuaa"
-                                                               }
-                                          },
-                                 "db":  {
-                                            "kind":  "hana",
-                                            "[development]":  {
-                                                                  "kind":  "sqlite"
-                                                              },
-                                            "[hybrid]":  {
-                                                             "kind":  "hana"
-                                                         },
-                                            "[production]":  {
-                                                                 "kind":  "hana"
-                                                             }
-                                        }
-                             },
-                "query":  {
-                              "limit":  {
-                                            "default":  10000,
-                                            "max":  99999
-                                        }
-                          }
+                        "manager": {
+                            "password": "manager",
+                            "roles": [
+                                "Manager"
+                            ]
+                        },
+                        "admin": {
+                            "password": "admin",
+                            "roles": [
+                                "HRAdmin",
+                                "SkillsAdmin"
+                            ]
+                        }
+                    }
+                },
+                "[production]": {
+                    "kind": "xsuaa"
+                }
+            },
+            "db": {
+                "kind": "hana",
+                "[development]": {
+                    "kind": "sqlite"
+                },
+                "[hybrid]": {
+                    "kind": "hana"
+                },
+                "[production]": {
+                    "kind": "hana"
+                }
             }
+        },
+        "query": {
+            "limit": {
+                "default": 10000,
+                "max": 99999
+            }
+        },
+        "cov2ap": {
+            "plugin": true
+        }
+    }
 }

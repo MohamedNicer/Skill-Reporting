@@ -1,0 +1,5 @@
+ID;employeeNumber;firstName;lastName;email;departmentID;managerID;jobTitle;jobFamily;location;isActive
+EMP1;E001;Alice;Smith;alice@example.com;DEPT1;;Engineering Manager;Engineering;New York;true
+EMP2;E002;Bob;Johnson;bob@example.com;DEPT1;EMP1;Software Engineer;Engineering;New York;true
+EMP3;E003;Charlie;Brown;charlie@example.com;DEPT2;;HR Director;HR;London;true
+EMP4;E004;Diana;Prince;diana@example.com;DEPT3;;Sales Lead;Sales;San Francisco;true

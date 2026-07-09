@@ -1,0 +1,10 @@
+ID;categoryID;code;label;scaleType;rank;isActive
+PL1;CAT1;BEG;Beginner;1to3;1;true
+PL2;CAT1;INT;Intermediate;1to3;2;true
+PL3;CAT1;ADV;Advanced;1to3;3;true
+PL4;CAT2;BEG;Beginner;1to3;1;true
+PL5;CAT2;INT;Intermediate;1to3;2;true
+PL6;CAT2;ADV;Advanced;1to3;3;true
+PL7;CAT3;BEG;Beginner;1to3;1;true
+PL8;CAT3;INT;Intermediate;1to3;2;true
+PL9;CAT3;ADV;Advanced;1to3;3;true

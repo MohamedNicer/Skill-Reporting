@@ -1,4 +1,7 @@
-using EmployeeSkillsCV from '../data-provider';
+using {
+    AdminService,
+    CVService
+} from '../data-provider';
 
 using {
     DocumentAssets           as DBDocumentAssets,
@@ -10,11 +13,10 @@ using {
     GeneratedCVs             as DBGeneratedCVs
 } from '../../db/cds-models/documents';
 
-extend service EmployeeSkillsCV with {
-    /********************************************************************************************************/
-    /* Action - Function Imports                                                                            */
-    /********************************************************************************************************/
-
+// -------------------------------------------------------------------------
+// CV Service
+// -------------------------------------------------------------------------
+extend service CVService with {
     action uploadCV(
         employeeID : String(255),
         fileName : String(255),
@@ -22,16 +24,9 @@ extend service EmployeeSkillsCV with {
     ) returns UploadedCVs;
 
     action startExtraction(uploadedCVID : UUID) returns CVExtractionRuns;
-
     action confirmExtractedSkills(extractionRunID : UUID) returns Boolean;
-
     action generateCV(employeeID : String(255), templateVersionID : UUID) returns GeneratedCVs;
-
     function downloadDocument(documentAssetID : UUID) returns String(1000);
-
-    /********************************************************************************************************/
-    /* Main Entities                                                                                        */
-    /********************************************************************************************************/
 
     entity DocumentAssets           as projection on DBDocumentAssets;
     @cds.redirection.target: true
@@ -42,10 +37,6 @@ extend service EmployeeSkillsCV with {
     entity CVTemplateVersions       as projection on DBCVTemplateVersions;
     @cds.redirection.target: true
     entity GeneratedCVs             as projection on DBGeneratedCVs;
-
-    /********************************************************************************************************/
-    /* Composite or Table Views                                                                             */
-    /********************************************************************************************************/
 
     @readonly
     entity VUploadedCVs             as
@@ -75,5 +66,12 @@ extend service EmployeeSkillsCV with {
                 toGenerationStatus.text as generationStatusText : String(80),
                 generatedAt
         };
-};
+}
 
+// -------------------------------------------------------------------------
+// Admin Service
+// -------------------------------------------------------------------------
+extend service AdminService with {
+    entity CVTemplates              as projection on DBCVTemplates;
+    entity CVTemplateVersions       as projection on DBCVTemplateVersions;
+}

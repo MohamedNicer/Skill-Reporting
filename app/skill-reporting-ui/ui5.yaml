@@ -1,0 +1,23 @@
+specVersion: "2.5"
+metadata:
+  name: com.ndbs.skillreportingui
+type: application
+server:
+  customMiddleware:
+  - name: ui5-tooling-transpile-middleware
+    afterMiddleware: compression
+    configuration:
+      debug: true
+      transpileAsync: true
+      transpileTypeScript: true
+  - name: fiori-tools-proxy
+    afterMiddleware: compression
+    configuration:
+      ignoreCertError: false
+      backend:
+        - path: /odata
+          url: http://localhost:4004
+        - path: /api
+          url: http://localhost:4004
+        - path: /$metadata
+          url: http://localhost:4004

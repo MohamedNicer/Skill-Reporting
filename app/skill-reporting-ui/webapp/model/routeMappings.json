@@ -1,0 +1,38 @@
+[
+  {
+    "route": "RouteHomepage",
+    "pageLabelKey": "homepage"
+  },
+  {
+    "route": "RoutePersonnel",
+    "pageLabelKey": "personnel"
+  },
+  {
+    "route": "RouteSkills",
+    "pageLabelKey": "skills"
+  },
+  {
+    "route": "RouteEmployeeSkills",
+    "pageLabelKey": "employeeSkills"
+  },
+  {
+    "route": "RouteConfigurations",
+    "pageLabelKey": "configurations"
+  },
+  {
+    "route": "RouteNoAuthorization",
+    "pageLabelKey": "noAuthorization"
+  },
+  {
+    "route": "RouteCVCenter",
+    "pageLabelKey": "cvCenter"
+  },
+  {
+    "route": "RouteManagerWorkspace",
+    "pageLabelKey": "managerWorkspace"
+  },
+  {
+    "route": "RouteReports",
+    "pageLabelKey": "reports"
+  }
+]

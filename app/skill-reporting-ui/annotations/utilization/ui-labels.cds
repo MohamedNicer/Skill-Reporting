@@ -1,0 +1,55 @@
+using TechTeamReporting as service from '../../../../srv/cds-models/utilization';
+
+annotate service.VUtilizationReport with {
+    personnelID       @Common.Label: '{i18n>personnelID}';
+    fullName          @Common.Label: '{i18n>fullName}';
+    eventDate         @Common.Label: '{i18n>date}';
+    teamID            @Common.Label: '{i18n>teamID}';
+    billableHours     @Common.Label: '{i18n>billableHours}';
+    investmentHours   @Common.Label: '{i18n>investmentHours}';
+    nonBillableHours  @Common.Label: '{i18n>nonBillableHour}';
+    eventWeek         @Common.Label: '{i18n>eventWeek}';
+    eventMonth        @Common.Label: '{i18n>eventMonth}';
+    eventYear         @Common.Label: '{i18n>eventYear}';
+    plannedHours      @Common.Label: '{i18n>plannedHours}';
+    availableHours    @Common.Label: '{i18n>availableHours}';
+    targetUtilization @Common.Label: '{i18n>targetUtilization}';
+    actualUtilization @Common.Label: '{i18n>actualUtilization}';
+    performanceRate   @Common.Label: '{i18n>performanceRate}';
+    teamName          @Common.Label: '{i18n>teamName}';
+    rowNum            @Common.Label: '{i18n>rowNum}';
+    reportType        @Common.Label: '{i18n>reportType}';
+    approvalStatus    @Common.Label: '{i18n>approvalStatus}';
+    levelID           @Common.Label: '{i18n>employeeLevelID}';
+    levelName         @Common.Label: '{i18n>employeeLevelName}';
+    positionID        @Common.Label: '{i18n>positionID}';
+    positionName      @Common.Label: '{i18n>positionName}';
+    country           @Common.Label: '{i18n>country}';
+};
+
+annotate service.VUtilizationTable with {
+    personnelID       @Common.Label: '{i18n>personnelID}';
+    fullName          @Common.Label: '{i18n>fullName}';
+    eventDate         @Common.Label: '{i18n>date}';
+    teamID            @Common.Label: '{i18n>teamID}';
+    billableHours     @Common.Label: '{i18n>billableHours}';
+    investmentHours   @Common.Label: '{i18n>investmentHours}';
+    nonBillableHours  @Common.Label: '{i18n>nonBillableHour}';
+    eventWeek         @Common.Label: '{i18n>eventWeek}';
+    eventMonth        @Common.Label: '{i18n>eventMonth}';
+    eventYear         @Common.Label: '{i18n>eventYear}';
+    plannedHours      @Common.Label: '{i18n>plannedHours}';
+    availableHours    @Common.Label: '{i18n>availableHours}';
+    targetUtilization @Common.Label: '{i18n>targetUtilization}';
+    actualUtilization @Common.Label: '{i18n>actualUtilization}';
+    performanceRate   @Common.Label: '{i18n>performanceRate}';
+    teamName          @Common.Label: '{i18n>teamName}';
+    rowNum            @Common.Label: '{i18n>rowNum}';
+    reportType        @Common.Label: '{i18n>reportType}';
+    approvalStatus    @Common.Label: '{i18n>approvalStatus}';
+    levelID           @Common.Label: '{i18n>employeeLevelID}';
+    levelName         @Common.Label: '{i18n>employeeLevelName}';
+    positionID        @Common.Label: '{i18n>positionID}';
+    positionName      @Common.Label: '{i18n>positionName}';
+    country           @Common.Label: '{i18n>country}';
+};

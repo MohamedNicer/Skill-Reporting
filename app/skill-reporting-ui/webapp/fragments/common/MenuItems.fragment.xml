@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <MenuItem
+        id="mnitHomepage"
+        text="{i18n>homepage}"
+        icon="sap-icon://home"
+        press="onNavToView('RouteHomepage')"
+    />
+    <MenuItem
+        id="mnitPersonnel"
+        text="{i18n>personnel}"
+        icon="sap-icon://company-view"
+        press="onNavToView('RoutePersonnel')"
+    />
+    <MenuItem
+        id="mnitSkills"
+        text="{i18n>skillCatalog}"
+        icon="sap-icon://education"
+        press="onNavToView('RouteSkills')"
+    />
+    <MenuItem
+        id="mnitEmployeeSkills"
+        text="{i18n>employeeSkills}"
+        icon="sap-icon://employee-approvals"
+        press="onNavToView('RouteEmployeeSkills')"
+    />
+    <MenuItem
+        id="mnitAdministration"
+        text="{i18n>administration}"
+        icon="sap-icon://key-user-settings"
+    >
+        <items>
+            <MenuItem
+                id="mnitConfigurations"
+                text="{i18n>configurations}"
+                icon="sap-icon://settings"
+                press="onNavToView('RouteConfigurations')"
+            />
+        </items>
+    </MenuItem>
+</core:FragmentDefinition>

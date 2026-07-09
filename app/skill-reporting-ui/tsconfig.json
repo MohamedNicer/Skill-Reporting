@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "es2022",
+        "skipLibCheck": false,
+        "allowJs": false,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "moduleResolution": "node",
+        "rootDir": "./webapp",
+        "sourceMap": true,
+        "baseUrl": "./",
+        "paths": {
+            "com/ndbs/skillreportingui/*": [
+                "./webapp/*"
+            ],
+            "unit/*": [
+                "./webapp/test/unit/*"
+            ],
+            "integration/*": [
+                "./webapp/test/integration/*"
+            ]
+        },
+        "typeRoots": [
+            "./node_modules/@types",
+            "./node_modules/@sapui5/types",
+            "./node_modules/ui5-antares"
+        ]
+    },
+    "include": [
+        "./webapp/**/*"
+    ]
+}

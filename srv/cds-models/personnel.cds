@@ -1,23 +1,21 @@
-﻿using EmployeeSkillsCV from '../data-provider';
+using {
+    AdminService,
+    EmployeeProfileService
+} from '../data-provider';
 
 using {
     Departments as DBDepartments,
     Employees   as DBEmployees
 } from '../../db/cds-models/personnel';
 
-extend service EmployeeSkillsCV with {
-    /********************************************************************************************************/
-    /* Main Entities                                                                                        */
-    /********************************************************************************************************/
-
+// -------------------------------------------------------------------------
+// Admin Service (Full CRUD on personnel)
+// -------------------------------------------------------------------------
+extend service AdminService with {
     entity Departments as projection on DBDepartments;
 
     @cds.redirection.target: true
     entity Employees   as projection on DBEmployees;
-
-    /********************************************************************************************************/
-    /* Composite or Table Views                                                                             */
-    /********************************************************************************************************/
 
     @readonly
     @cds.search: {fullName, email, employeeNumber}
@@ -38,4 +36,13 @@ extend service EmployeeSkillsCV with {
                 location,
                 isActive
         };
-};
+}
+
+// -------------------------------------------------------------------------
+// Employee Profile Service (Read own info)
+// -------------------------------------------------------------------------
+extend service EmployeeProfileService with {
+    @readonly
+    @cds.redirection.target: true
+    entity Employees as projection on DBEmployees;
+}

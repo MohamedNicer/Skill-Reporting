@@ -1,0 +1,195 @@
+<mvc:View
+    controllerName="com.ndbs.skillreportingui.controller.Configurations"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+>
+    <Page id="Configurations" showHeader="false">
+        <IconTabBar
+            id="itbConfigurations"
+            select="onTabSelect"
+            class="sapUiResponsiveContentPadding"
+            expandable="false"
+        >
+            <items>
+                <!-- Skill Categories Tab -->
+                <IconTabFilter
+                    key="skillCategories"
+                    text="{i18n>skillCategories}"
+                    icon="sap-icon://list"
+                >
+                    <smartFilterBar:SmartFilterBar
+                        id="sfbCategories"
+                        entitySet="SkillCategories"
+
+                    />
+                    <smartTable:SmartTable
+                        id="stCategories"
+                        entitySet="SkillCategories"
+                        smartFilterId="sfbCategories"
+                        tableType="ResponsiveTable"
+                        enableAutoBinding="true"
+                        useVariantManagement="false"
+                        useTablePersonalisation="true"
+                        showFullScreenButton="true"
+                        showRowCount="true"
+                        editTogglable="false"
+                        initiallyVisibleFields="name,description,sortOrder,isActive"
+                    >
+                        <smartTable:customToolbar>
+                            <OverflowToolbar design="Transparent">
+                                <ToolbarSpacer />
+                                <OverflowToolbarButton
+                                    id="btnCreateCategory"
+                                    icon="sap-icon://add"
+                                    press="onCreateCategory"
+                                />
+                                <OverflowToolbarButton
+                                    id="btnUpdateCategory"
+                                    icon="sap-icon://edit"
+                                    press="onUpdateCategory"
+                                    enabled="false"
+                                />
+                                <OverflowToolbarButton
+                                    id="btnDeleteCategory"
+                                    icon="sap-icon://delete"
+                                    press="onDeleteCategory"
+                                    enabled="false"
+                                />
+                            </OverflowToolbar>
+                        </smartTable:customToolbar>
+                        <Table
+                            id="tblCategories"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            selectionChange="onCategorySelectionChange"
+                            mode="SingleSelectLeft"
+                        />
+                    </smartTable:SmartTable>
+                </IconTabFilter>
+
+                <!-- Proficiency Levels Tab -->
+                <IconTabFilter
+                    key="proficiencyLevels"
+                    text="{i18n>proficiencyLevels}"
+                    icon="sap-icon://measure"
+                >
+                    <smartFilterBar:SmartFilterBar
+                        id="sfbProficiencyLevels"
+                        entitySet="ProficiencyLevels"
+
+                    />
+                    <smartTable:SmartTable
+                        id="stProficiencyLevels"
+                        entitySet="ProficiencyLevels"
+                        smartFilterId="sfbProficiencyLevels"
+                        tableType="ResponsiveTable"
+                        enableAutoBinding="true"
+                        useVariantManagement="false"
+                        useTablePersonalisation="true"
+                        showFullScreenButton="true"
+                        showRowCount="true"
+                        editTogglable="false"
+                        initiallyVisibleFields="categoryID,code,label,scaleType,rank,isActive"
+                    >
+                        <smartTable:customToolbar>
+                            <OverflowToolbar design="Transparent">
+                                <ToolbarSpacer />
+                                <OverflowToolbarButton
+                                    id="btnCreateProficiencyLevel"
+                                    icon="sap-icon://add"
+                                    press="onCreateProficiencyLevel"
+                                />
+                                <OverflowToolbarButton
+                                    id="btnUpdateProficiencyLevel"
+                                    icon="sap-icon://edit"
+                                    press="onUpdateProficiencyLevel"
+                                    enabled="false"
+                                />
+                                <OverflowToolbarButton
+                                    id="btnDeleteProficiencyLevel"
+                                    icon="sap-icon://delete"
+                                    press="onDeleteProficiencyLevel"
+                                    enabled="false"
+                                />
+                            </OverflowToolbar>
+                        </smartTable:customToolbar>
+                        <Table
+                            id="tblProficiencyLevels"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            selectionChange="onProficiencyLevelSelectionChange"
+                            mode="SingleSelectLeft"
+                        />
+                    </smartTable:SmartTable>
+                </IconTabFilter>
+
+                <!-- Skill Requests Tab -->
+                <IconTabFilter
+                    key="skillRequests"
+                    text="{i18n>skillRequests}"
+                    icon="sap-icon://message-popup"
+                >
+                    <smartFilterBar:SmartFilterBar
+                        id="sfbSkillRequests"
+                        entitySet="SkillRequests"
+
+                    />
+                    <smartTable:SmartTable
+                        id="stSkillRequests"
+                        entitySet="SkillRequests"
+                        smartFilterId="sfbSkillRequests"
+                        tableType="ResponsiveTable"
+                        enableAutoBinding="true"
+                        useVariantManagement="false"
+                        useTablePersonalisation="true"
+                        showFullScreenButton="true"
+                        showRowCount="true"
+                        editTogglable="false"
+                        initiallyVisibleFields="requestedByID,requestedText,requestType,status,decision,requestedAt"
+                    >
+                        <smartTable:customToolbar>
+                            <OverflowToolbar design="Transparent">
+                                <ToolbarSpacer />
+                                <Button
+                                    id="btnApproveRequest"
+                                    text="{i18n>approve}"
+                                    icon="sap-icon://accept"
+                                    press="onApproveRequest"
+                                    enabled="false"
+                                />
+                                <Button
+                                    id="btnRejectRequest"
+                                    text="{i18n>reject}"
+                                    icon="sap-icon://decline"
+                                    press="onRejectRequest"
+                                    enabled="false"
+                                />
+                            </OverflowToolbar>
+                        </smartTable:customToolbar>
+                        <Table
+                            id="tblSkillRequests"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            selectionChange="onSkillRequestSelectionChange"
+                            mode="SingleSelectLeft"
+                        />
+                    </smartTable:SmartTable>
+                </IconTabFilter>
+
+            </items>
+        </IconTabBar>
+        <footer>
+            <OverflowToolbar id="otbFooter">
+                <Button
+                    id="btnMessages"
+                    icon="sap-icon://alert"
+                    text="{=${message>/}.length}"
+                    type="Emphasized"
+                    press="onMessagePopoverPress"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

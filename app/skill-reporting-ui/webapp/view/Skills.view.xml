@@ -1,0 +1,83 @@
+<mvc:View
+    controllerName="com.ndbs.skillreportingui.controller.Skills"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+>
+    <Page id="Skills" showHeader="false">
+        <FlexBox justifyContent="Center" alignItems="Center">
+            <VBox width="95%">
+                <smartFilterBar:SmartFilterBar
+                    id="sfbSkills"
+                    entitySet="VSkills"
+                    enableBasicSearch="true"
+                />
+                <smartTable:SmartTable
+                    id="stSkills"
+                    entitySet="VSkills"
+                    smartFilterId="sfbSkills"
+                    tableType="ResponsiveTable"
+                    enableAutoBinding="true"
+                    enableExport="true"
+                    useVariantManagement="false"
+                    useTablePersonalisation="true"
+                    showFullScreenButton="true"
+                    showRowCount="true"
+                    editTogglable="false"
+                    header="{i18n>skillCatalog}"
+                    initiallyVisibleFields="canonicalName,categoryName,statusText,description,isActive"
+                >
+                    <smartTable:customToolbar>
+                        <OverflowToolbar design="Transparent">
+                            <ToolbarSpacer />
+                            <OverflowToolbarButton
+                                id="btnCreateSkill"
+                                icon="sap-icon://add"
+                                tooltip="{i18n>createSkill}"
+                                press="onCreateSkill"
+
+                            />
+                            <OverflowToolbarButton
+                                id="btnUpdateSkill"
+                                icon="sap-icon://edit"
+                                tooltip="{i18n>editSkill}"
+                                press="onUpdateSkill"
+                                enabled="false"
+
+                            />
+                            <OverflowToolbarButton
+                                id="btnDeprecateSkill"
+                                icon="sap-icon://decline"
+                                tooltip="{i18n>deprecateSkill}"
+                                press="onDeprecateSkill"
+                                enabled="false"
+
+                            />
+                        </OverflowToolbar>
+                    </smartTable:customToolbar>
+                    <Table
+                        id="tblSkills"
+                        sticky="ColumnHeaders,HeaderToolbar"
+                        selectionChange="onSkillSelectionChange"
+                        mode="SingleSelectLeft"
+                    />
+                </smartTable:SmartTable>
+            </VBox>
+        </FlexBox>
+        <footer>
+            <OverflowToolbar id="otbFooter">
+                <Button
+                    id="btnMessages"
+                    icon="sap-icon://alert"
+                    text="{=${message>/}.length}"
+                    type="Emphasized"
+                    press="onMessagePopoverPress"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

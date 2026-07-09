@@ -1,0 +1,9 @@
+/* Enter your custom styles here */
+.no-space-link {
+    margin-left: 1 !important; /* Removes the left margin */
+    padding-left: 0 !important; /* Removes the left padding */
+}
+
+.sapMColorPalette .sapMColorPaletteContent {
+    padding: 0 !important;
+}

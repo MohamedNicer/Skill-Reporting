@@ -1,0 +1,305 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "com.ndbs.skillreportingui",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.10.3",
+      "toolsId": "792d7177-347d-4561-aec9-9bbf1348213b"
+    },
+    "dataSources": {
+      "adminService": {
+        "uri": "/odata/v2/admin/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/admin/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "catalogService": {
+        "uri": "/odata/v2/catalog/",
+        "type": "OData",
+        "settings": { "odataVersion": "2.0" }
+      },
+      "employeeProfileService": {
+        "uri": "/odata/v2/employee-profile/",
+        "type": "OData",
+        "settings": { "odataVersion": "2.0" }
+      },
+      "cvService": {
+        "uri": "/odata/v2/cv/",
+        "type": "OData",
+        "settings": { "odataVersion": "2.0" }
+      },
+      "analyticsService": {
+        "uri": "/odata/v2/analytics/",
+        "type": "OData",
+        "settings": { "odataVersion": "2.0" }
+      },
+      "globalModelSource": {
+        "uri": "./model/globalModel.json",
+        "type": "JSON"
+      },
+      "routeMappingsSource": {
+        "uri": "./model/routeMappings.json",
+        "type": "JSON"
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "resourceRoots": {
+      "ui5.antares": "./resources/ui5/antares"
+    },
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.120.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.f": {},
+        "sap.suite.ui.generic.template": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.ui.table": {},
+        "sap.ushell": {},
+        "ui5.antares": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.ndbs.skillreportingui.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "adminService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "useBatch": true,
+          "defaultCountMode": "Inline"
+        }
+      },
+      "catalog": {
+        "dataSource": "catalogService",
+        "preload": true,
+        "settings": { "defaultBindingMode": "TwoWay", "useBatch": true, "defaultCountMode": "Inline" }
+      },
+      "profile": {
+        "dataSource": "employeeProfileService",
+        "preload": true,
+        "settings": { "defaultBindingMode": "TwoWay", "useBatch": true, "defaultCountMode": "Inline" }
+      },
+      "cv": {
+        "dataSource": "cvService",
+        "preload": true,
+        "settings": { "defaultBindingMode": "TwoWay", "useBatch": true, "defaultCountMode": "Inline" }
+      },
+      "analytics": {
+        "dataSource": "analyticsService",
+        "preload": true,
+        "settings": { "defaultBindingMode": "TwoWay", "useBatch": true, "defaultCountMode": "Inline" }
+      },
+      "globalJSONModel": {
+        "dataSource": "globalModelSource",
+        "preload": true,
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "routeMappingsModel": {
+        "dataSource": "routeMappingsSource",
+        "preload": true,
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.f.routing.Router",
+        "viewType": "XML",
+        "type": "View",
+        "async": true,
+        "viewPath": "com.ndbs.skillreportingui.view",
+        "transition": "slide",
+        "controlId": "fcl"
+      },
+      "routes": [
+        {
+          "name": "RouteHomepage",
+          "pattern": "",
+          "target": [
+            "TargetHomepage"
+          ]
+        },
+        {
+          "name": "RoutePersonnel",
+          "pattern": "employees",
+          "target": [
+            "TargetPersonnel"
+          ]
+        },
+        {
+          "name": "RouteSkills",
+          "pattern": "skills",
+          "target": [
+            "TargetSkills"
+          ]
+        },
+        {
+          "name": "RouteEmployeeSkills",
+          "pattern": "employee-skills",
+          "target": [
+            "TargetEmployeeSkills"
+          ]
+        },
+        {
+          "name": "RouteConfigurations",
+          "pattern": "configurations",
+          "target": [
+            "TargetConfigurations"
+          ]
+        },
+        {
+          "name": "RouteNoAuthorization",
+          "pattern": "no-auth",
+          "target": [
+            "TargetNoAuthorization"
+          ]
+        },
+        {
+          "name": "RouteCVCenter",
+          "pattern": "cv-center",
+          "target": [
+            "TargetCVCenter"
+          ]
+        },
+        {
+          "name": "RouteManagerWorkspace",
+          "pattern": "manager",
+          "target": [
+            "TargetManagerWorkspace"
+          ]
+        },
+        {
+          "name": "RouteReports",
+          "pattern": "reports",
+          "target": [
+            "TargetReports"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetHomepage": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "Homepage",
+          "viewName": "Homepage"
+        },
+        "TargetPersonnel": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "Personnel",
+          "viewName": "Personnel"
+        },
+        "TargetSkills": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "Skills",
+          "viewName": "Skills"
+        },
+        "TargetEmployeeSkills": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "EmployeeSkills",
+          "viewName": "EmployeeSkills"
+        },
+        "TargetConfigurations": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "Configurations",
+          "viewName": "Configurations"
+        },
+        "TargetNoAuthorization": {
+          "viewType": "XML",
+          "transition": "show",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "NoAuthorization",
+          "viewName": "NoAuthorization"
+        },
+        "TargetCVCenter": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "CVCenter",
+          "viewName": "CVCenter"
+        },
+        "TargetManagerWorkspace": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "ManagerWorkspace",
+          "viewName": "ManagerWorkspace"
+        },
+        "TargetReports": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "Reports",
+          "viewName": "Reports"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.ndbs.skillreportingui.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "App"
+    }
+  }
+}

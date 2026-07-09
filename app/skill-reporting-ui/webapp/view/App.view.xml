@@ -1,0 +1,45 @@
+<mvc:View
+    controllerName="com.ndbs.skillreportingui.controller.App"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    displayBlock="true"
+>
+    <App id="app">
+        <Page>
+            <customHeader>
+                <f:ShellBar
+                    id="sbApplication"
+                    title="{i18n>title}"
+                    homeIcon="./img/app_logo.png"
+                    homeIconPressed="onNavToView('RouteHomepage')"
+                    showNotifications="false"
+                    busyIndicatorDelay="1"
+                >
+                    <f:menu>
+                        <Menu>
+                            <core:Fragment
+                                fragmentName="com.ndbs.skillreportingui.fragments.common.MenuItems"
+                                type="XML"
+                            />
+                        </Menu>
+                    </f:menu>
+                    <f:profile>
+                        <Avatar
+                            initials="{globalJSONModel>/user}"
+                            press="onOpenPersonalMenu"
+                        />
+                    </f:profile>
+                </f:ShellBar>
+            </customHeader>
+            <f:FlexibleColumnLayout
+                id="fcl"
+                stateChange="onFclStateChanged"
+                layout="{fclModel>/layout}"
+                backgroundDesign="Solid"
+            />
+        </Page>
+    </App>
+</mvc:View>

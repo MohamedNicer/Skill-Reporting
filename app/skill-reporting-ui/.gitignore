@@ -1,0 +1,3 @@
+webapp/**/*.js
+webapp/**/*.js.map
+!webapp/resources/**/*.js

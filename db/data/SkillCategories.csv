@@ -1,0 +1,4 @@
+ID;name;description;sortOrder;isActive
+CAT1;Programming Languages;Languages used to write code;1;true
+CAT2;Cloud Providers;Cloud computing platforms;2;true
+CAT3;Soft Skills;Interpersonal skills;3;true
