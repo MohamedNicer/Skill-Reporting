@@ -87,29 +87,8 @@ export default class UserAPI {
     public async whoami(): Promise<IWhoami> {
         await this.getLoggedOnUser();
 
-        const odata = new ODataReadCL<IWhoami>(this.sourceController, "Whoami");
-        odata.addFilter(new Filter("successFactorsID", FilterOperator.EQ, this.ID));
-
-        try {
-            const user = await odata.read();
-
-            if (user.length) {
-                return {
-                    personnelID: user[0].personnelID as string,
-                    successFactorsID: this.ID as string,
-                    firstName: user[0].firstName as string,
-                    lastName: user[0].lastName as string,
-                    team: user[0].team,
-                    country: user[0].country,
-                    role: user[0].role,
-                    roleDescription: user[0].roleDescription,
-                    createRequired: false,
-                    email: this.email as string
-                };
-            } else {
-                throw new Error("No user found");
-            }
-        } catch (error) {
+        // Bypass OData call for demo purposes to avoid UI5 MessageManager errors
+        // since the Whoami entity does not exist in the current mock backend.
             // Fallback for demo purposes when Whoami entity is unavailable
             return {
                 personnelID: null,
@@ -123,6 +102,5 @@ export default class UserAPI {
                 createRequired: true,
                 email: this.email || "demo.user@example.com"
             };
-        }
     }
 }

@@ -12,9 +12,6 @@ import { Avatar$PressEvent } from "sap/m/Avatar";
 import PersonalMenu from "com/ndbs/skillreportingui/util/common/PersonalMenu";
 import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayout";
 import { URLHelper } from "sap/m/library";
-import ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import Filter from "sap/ui/model/Filter";
-import FilterOperator from "sap/ui/model/FilterOperator";
 import { IShellBarExtension } from "../types/notification.types";
 import Fragment from "sap/ui/core/Fragment";
 import ResponsivePopover from "sap/m/ResponsivePopover";
@@ -163,10 +160,6 @@ export default class App extends Controller {
         return this.getView() as View;
     }
 
-    private getODataModel() {
-        return this.getCurrentView().getModel() as ODataModel;
-    }
-
     // // private pullNotifications() {
     //     this.updateNofiticationNumber();
     // }
@@ -176,17 +169,10 @@ export default class App extends Controller {
         (this.getCurrentView().byId("sbApplication") as unknown as IShellBarExtension).setNotificationsNumber(notificationNumber);
     }
 
-    private getNotificationNumber(unread = true): Promise<string> {
+    private getNotificationNumber(_unread = true): Promise<string> {
         return new Promise((resolve) => {
-            this.getODataModel().read("/Notifications/$count", {
-                filters: unread === true ? [new Filter("unread", FilterOperator.EQ, true)] : undefined,
-                success: (data: string) => {
-                    resolve(data);
-                },
-                error: () => {
-                    resolve("0");
-                }
-            });
+            // Bypass OData call for demo purposes to avoid UI5 MessageManager errors
+            resolve("0");
         });
     }
 
