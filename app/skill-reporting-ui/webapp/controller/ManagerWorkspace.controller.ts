@@ -11,7 +11,7 @@ export default class ManagerWorkspace extends Controller {
         }
     }
 
-    public onMessagePopoverPress(event: any): void {
+    public onMessagePopoverPress(_event: any): void {
         // Implementation for message popover (optional for MVP)
     }
 }

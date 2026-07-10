@@ -26,12 +26,6 @@
                             />
                         </Menu>
                     </f:menu>
-                    <f:profile>
-                        <Avatar
-                            initials="{globalJSONModel>/user}"
-                            press="onOpenPersonalMenu"
-                        />
-                    </f:profile>
                 </f:ShellBar>
             </customHeader>
             <f:FlexibleColumnLayout

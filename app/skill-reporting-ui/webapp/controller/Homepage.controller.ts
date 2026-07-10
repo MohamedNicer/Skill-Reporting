@@ -33,7 +33,7 @@ export default class Homepage extends BaseController implements IPage {
         this.loadKPIs();
     }
 
-    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+    public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
 

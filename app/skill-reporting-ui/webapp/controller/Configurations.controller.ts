@@ -16,7 +16,7 @@ import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import { ButtonType } from "sap/m/library";
-import { ISkillCategories, ISkillCategoriesKeys } from "../types/skill.types";
+import { ISkillCategories } from "../types/skill.types";
 
 interface IProficiencyLevels {
     ID: string;
@@ -47,7 +47,7 @@ export default class Configurations extends BaseController implements IPage {
         page.initialize();
     }
 
-    public onTabSelect(event: any): void {
+    public onPageLoaded(_event?: any): void {
         // Handle tab specific logic if needed
     }
 
@@ -216,7 +216,7 @@ export default class Configurations extends BaseController implements IPage {
 
         const textArea = new TextArea({ width: "100%", placeholder: "Rejection Reason", required: true });
 
-        const dialog = new Dialog({
+        const dialog: Dialog = new Dialog({
             title: "Reject Skill Request",
             content: [textArea],
             beginButton: new Button({
@@ -264,7 +264,7 @@ export default class Configurations extends BaseController implements IPage {
         oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
     }
 
-    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+    public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
 

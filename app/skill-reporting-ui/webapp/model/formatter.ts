@@ -55,4 +55,4 @@ export default {
     convertToFloat: function (value: string): number {
         return parseFloat(value);
     }
-} 
+}; 

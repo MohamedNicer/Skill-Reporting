@@ -3,7 +3,7 @@ import { IPage } from "../util/common/common.types";
 import { Model$RequestFailedEvent } from "sap/ui/model/Model";
 import formatter from "com/ndbs/skillreportingui/model/formatter";
 import PageCL from "com/ndbs/skillreportingui/util/common/PageCL";
-import { Routes, UserRoles } from "../types/global.types";
+import { Routes } from "../types/global.types";
 import Table from "sap/m/Table";
 import EntryCreateCL from "ui5/antares/entry/v2/EntryCreateCL";
 import { IVSkills, IVSkillsKeys } from "../types/skill.types";
@@ -14,10 +14,6 @@ import Context from "sap/ui/model/Context";
 import SmartTable from "sap/ui/comp/smarttable/SmartTable";
 import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
 import Button from "sap/m/Button";
-import Filter from "sap/ui/model/Filter";
-import FilterOperator from "sap/ui/model/FilterOperator";
-import UIComponent from "sap/ui/core/UIComponent";
-import JSONModel from "sap/ui/model/json/JSONModel";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
@@ -144,7 +140,7 @@ export default class Skills extends BaseController implements IPage {
         (this.byId("btnDeprecateSkill") as Button).setVisible(true);
     }
 
-    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+    public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
 

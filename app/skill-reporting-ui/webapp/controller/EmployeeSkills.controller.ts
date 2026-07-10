@@ -3,16 +3,14 @@ import { IPage } from "../util/common/common.types";
 import { Model$RequestFailedEvent } from "sap/ui/model/Model";
 import formatter from "com/ndbs/skillreportingui/model/formatter";
 import PageCL from "com/ndbs/skillreportingui/util/common/PageCL";
-import { Routes, ApplicationModels } from "../types/global.types";
+import { Routes } from "../types/global.types";
 import Table from "sap/m/Table";
 import MessageBox from "sap/m/MessageBox";
 import Context from "sap/ui/model/Context";
 import SmartTable from "sap/ui/comp/smarttable/SmartTable";
 import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
 import Button from "sap/m/Button";
-import JSONModel from "sap/ui/model/json/JSONModel";
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import UIComponent from "sap/ui/core/UIComponent";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
@@ -112,7 +110,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
     }
 
-    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+    public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
 

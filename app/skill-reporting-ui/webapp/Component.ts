@@ -1,18 +1,10 @@
 import UIComponent from "sap/ui/core/UIComponent";
 import { createDeviceModel, createVisibilityModel } from "./model/models";
-import { IAppVisibilities } from "./types/visibility.types";
-import MessageBox from "sap/m/MessageBox";
-import ResourceBundle from "sap/base/i18n/ResourceBundle";
-import ResourceModel from "sap/ui/model/resource/ResourceModel";
-import { ApplicationModels, DefaultMessages, IAppActivityLogs, IAppActivityLogsKeys } from "./types/global.types";
+import { ApplicationModels } from "./types/global.types";
 import Storage from "sap/ui/util/Storage";
 import Theming from "sap/ui/core/Theming";
 import IllustrationPool from "sap/m/IllustrationPool";
 import JSONModel from "sap/ui/model/json/JSONModel";
-import UserAPI from "com/ndbs/skillreportingui/util/session/UserAPI";
-import ODataReadCL from "ui5/antares/odata/v2/ODataReadCL";
-import ODataUpdateCL from "ui5/antares/odata/v2/ODataUpdateCL";
-import ODataCreateCL from "ui5/antares/odata/v2/ODataCreateCL";
 import View from "sap/ui/core/mvc/View";
 import FlexibleColumnLayout from "sap/f/FlexibleColumnLayout";
 import { LayoutType } from "sap/f/library";
@@ -67,40 +59,6 @@ export default class Component extends UIComponent {
     }
 
     // MVP: getAppVisibilities disabled - VHAppVisibilities not yet in service
-
-    private async insertActivityLogs(): Promise<void> {
-        const currentUser = new UserAPI(this);
-        await currentUser.getLoggedOnUser();
-
-        (this.getModel(ApplicationModels.GLOBAL_JSON) as JSONModel).setProperty("/user", currentUser.nameAbbreviation);
-
-        const reader = new ODataReadCL<IAppActivityLogs, IAppActivityLogsKeys>(this, "AppActivityLogs");
-        let createNewEntry = true;
-
-        try {
-            const appActivityLogs = await reader.readByKey({ ID: currentUser.ID as string });
-            createNewEntry = false;
-
-            const updater = new ODataUpdateCL<IAppActivityLogs, IAppActivityLogsKeys>(this, "AppActivityLogs");
-            appActivityLogs.loginCount++;
-            updater.setData(appActivityLogs);
-            updater.update({ ID: currentUser.ID as string });
-        } catch (error) {
-            if (createNewEntry) {
-                const newAppActivity: IAppActivityLogs = {
-                    ID: currentUser.ID as string,
-                    firstName: currentUser.firstName as string,
-                    lastName: currentUser.lastName as string,
-                    email: currentUser.email as string,
-                    loginCount: 1
-                };
-                const creator = new ODataCreateCL<IAppActivityLogs>(this, "AppActivityLogs");
-
-                creator.setData(newAppActivity);
-                creator.create();
-            }
-        }
-    }
 
     public getFclSemanticHelper(): FlexibleColumnLayoutSemanticHelper {
         const flexibleColumnLayout = (this.getRootControl() as View).byId("fcl") as FlexibleColumnLayout;

@@ -20,7 +20,7 @@ export default class CVCenter extends Controller {
         MessageToast.show("CV Generation logic will be implemented in Phase 2 with BTP integration.");
     }
 
-    public onMessagePopoverPress(event: any): void {
+    public onMessagePopoverPress(_event: any): void {
         // Implementation for message popover (optional for MVP)
     }
 }

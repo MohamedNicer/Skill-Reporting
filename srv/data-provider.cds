@@ -5,20 +5,14 @@ using from './cds-models/documents';
 using from './cds-models/common';
 
 
-@(requires: 'authenticated-user')
 service CatalogService {}
 
-@(requires: 'authenticated-user')
 service EmployeeProfileService {}
 
-@(requires: 'authenticated-user')
 service CVService {}
 
-@(requires: 'authenticated-user')
 service AdminService {}
 
-@(requires: 'authenticated-user')
 service AnalyticsService {}
 
-@(requires: 'authenticated-user')
 service IntegrationService {}

@@ -98,7 +98,7 @@ export default class Personnel extends BaseController implements IPage {
 
     public onPersonnelInitialized(): void {
         const table = this.byId("uiTblPersonnel") as Table;
-        table.attachSelectionChange((event: any) => {
+        table.attachSelectionChange((_event: any) => {
             this.setPersonnelButtonsState(!!table.getSelectedItem());
         });
     }
@@ -113,7 +113,7 @@ export default class Personnel extends BaseController implements IPage {
         (this.byId("btnDeletePersonnel") as Button).setVisible(true);
     }
 
-    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+    public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
 
