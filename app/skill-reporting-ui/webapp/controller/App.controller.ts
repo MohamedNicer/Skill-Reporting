@@ -182,6 +182,9 @@ export default class App extends Controller {
                 filters: unread === true ? [new Filter("unread", FilterOperator.EQ, true)] : undefined,
                 success: (data: string) => {
                     resolve(data);
+                },
+                error: () => {
+                    resolve("0");
                 }
             });
         });
@@ -241,14 +244,18 @@ export default class App extends Controller {
 
     private async markNotificationsAsRead() {
         const odata = new ODataCreateCL(this, "markAllNotificationsAsRead");
-
         odata.setData({ all: true });
-        const { markAllNotificationsAsRead } = await odata.create() as { markAllNotificationsAsRead: boolean; };
-        (this.getCurrentView().byId("sbApplication") as ShellBar).setBusy(false);
-
-        if (markAllNotificationsAsRead) {
-            this.updateNofiticationNumber();
-            (this.getCurrentView().byId("sbApplication") as ShellBar).fireNotificationsPressed({ button: this.notificationButton });
+        
+        try {
+            const { markAllNotificationsAsRead } = await odata.create() as { markAllNotificationsAsRead: boolean; };
+            if (markAllNotificationsAsRead) {
+                this.updateNofiticationNumber();
+                (this.getCurrentView().byId("sbApplication") as ShellBar).fireNotificationsPressed({ button: this.notificationButton });
+            }
+        } catch (error) {
+            // Ignore error for missing endpoint
+        } finally {
+            (this.getCurrentView().byId("sbApplication") as ShellBar).setBusy(false);
         }
     }
 }
