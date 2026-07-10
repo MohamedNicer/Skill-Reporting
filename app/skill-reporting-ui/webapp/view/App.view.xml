@@ -15,7 +15,8 @@
                     title="{i18n>title}"
                     homeIcon="./img/app_logo.png"
                     homeIconPressed="onNavToView('RouteHomepage')"
-                    showNotifications="false"
+                    showNotifications="true"
+                    notificationsPressed="onOpenNotifications"
                     busyIndicatorDelay="1"
                 >
                     <f:menu>
@@ -26,6 +27,12 @@
                             />
                         </Menu>
                     </f:menu>
+                    <f:profile>
+                        <Avatar
+                            initials="{globalJSONModel>/user}"
+                            press="onOpenPersonalMenu"
+                        />
+                    </f:profile>
                 </f:ShellBar>
             </customHeader>
             <f:FlexibleColumnLayout

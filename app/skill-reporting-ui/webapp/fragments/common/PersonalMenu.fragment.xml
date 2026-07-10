@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <ActionSheet placement="Bottom">
+        <Button
+            text="{i18n>settings}"
+            icon="sap-icon://action-settings"
+            press="onOpenSettings"
+        />
+        <Button
+            text="{i18n>whoami}"
+            icon="sap-icon://question-mark"
+            press="onOpenWhoami"
+        />
+        <Button
+            text="{i18n>userGuide}"
+            icon="sap-icon://document-text"
+            press="onOpenUserGuide"
+        />
+    </ActionSheet>
+</core:FragmentDefinition>

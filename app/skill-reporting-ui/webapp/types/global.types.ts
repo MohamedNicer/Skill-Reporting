@@ -1,3 +1,4 @@
+import Filter from "sap/ui/model/Filter";
 
 export enum DefaultMessages {
     NO_I18N_TEXT = "The message could not be displayed due to technical issues. Contact the administrator."
@@ -46,4 +47,75 @@ export enum UserRoles {
     MANAGER = "M",
     USER = "U",
     NONE = "N"
+}
+
+export interface IUserAPI {
+    name: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+}
+
+export interface IAppActivityLogs {
+    ID: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    lastLoginTime?: Date;
+    loginCount: number;
+}
+
+export interface IAppActivityLogsKeys {
+    ID: string;
+}
+
+export interface IBindingParams {
+    parameters: {
+        expand: string;
+    };
+    filters: Filter[];
+}
+
+export interface IUserRole {
+    ID: string;
+    sfUser: string | null;
+    userRole: UserRoles | null;
+}
+
+export interface ICurrentUserInfo {
+    personnelID?: string;
+    successFactorsID?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    teamID?: string | null;
+    teamName?: string | null;
+    userRole?: UserRoles | null;
+}
+
+export interface ISubmitChangeResponse<T> {
+    __batchResponses: IBatchResponses<T>[];
+}
+
+export interface IBatchResponses<T> {
+    __changeResponses?: IChangeResponses<T>[];
+    response?: ISubmitResponse;
+    $reported?: boolean;
+    message?: string;
+}
+
+export interface IChangeResponses<T> {
+    $reported?: boolean;
+    _imported?: boolean;
+    statusCode?: string;
+    statusText?: string;
+    headers?: object;
+    data?: T;
+    response?: ISubmitResponse;
+}
+
+export interface ISubmitResponse {
+    statusCode?: string;
+    body?: string;
+    statusText?: string;
+    headers?: object;
 }

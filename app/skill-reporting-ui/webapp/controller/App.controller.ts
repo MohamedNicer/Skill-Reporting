@@ -4,11 +4,24 @@ import UIComponent from "com/ndbs/skillreportingui/Component";
 import { Router$RouteMatchedEvent } from "sap/ui/core/routing/Router";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import View from "sap/ui/core/mvc/View";
-import ShellBar from "sap/f/ShellBar";
+import ShellBar, { ShellBar$NotificationsPressedEvent } from "sap/f/ShellBar";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import { DefaultMessages } from "../types/global.types";
+import { Avatar$PressEvent } from "sap/m/Avatar";
+import PersonalMenu from "com/ndbs/skillreportingui/util/common/PersonalMenu";
 import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayout";
+import { URLHelper } from "sap/m/library";
+import ODataModel from "sap/ui/model/odata/v2/ODataModel";
+import Filter from "sap/ui/model/Filter";
+import FilterOperator from "sap/ui/model/FilterOperator";
+import { IShellBarExtension } from "../types/notification.types";
+import Fragment from "sap/ui/core/Fragment";
+import ResponsivePopover from "sap/m/ResponsivePopover";
+import Button from "sap/m/Button";
+import Context from "sap/ui/model/odata/v2/Context";
+import { NotificationListItem$CloseEvent } from "sap/ui/webc/fiori/NotificationListItem";
+import ODataCreateCL from "ui5/antares/odata/v2/ODataCreateCL";
 
 
 /**
@@ -16,23 +29,72 @@ import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayou
  */
 export default class App extends Controller {
     private router: Router;
+    private personalMenu: PersonalMenu;
     private currentRoute: string;
     private currentEngagementID: string;
+    private notificationsPopover?: ResponsivePopover;
+    private notificationButton: Button;
 
     public onInit(): void {
         this.router = this.getUIComponent().getRouter() as Router;
         this.router.attachRouteMatched(this.onRouteMatched, this);
+        // MVP: notifications disabled (Notifications entity not yet in service)
+        // this.pullNotifications();
+        // this.openNotificationSocket();
     }
 
     public onNavToView(target: string): void {
         this.router.navTo(target);
     }
 
+    public onOpenPersonalMenu(_event: Avatar$PressEvent): void {
+        const menu = new PersonalMenu(this, "com.ndbs.skillreportingui.fragments.common.PersonalMenu");
+        menu.openPersonalMenu(_event.getSource());
+    }
 
+    public onOpenSettings(): void {
+        this.personalMenu = new PersonalMenu(this, "com.ndbs.skillreportingui.fragments.common.Settings");
+        this.personalMenu.openSettings();
+    }
 
-    public onFclStateChanged(event: FlexibleColumnLayout$StateChangeEvent) {
-        const isNavigationArrow = event.getParameter("isNavigationArrow");
-        const layout = event.getParameter("layout");
+    public onSaveSettings(): void {
+        this.personalMenu.saveSettings();
+    }
+
+    public onCloseSettingsDialog() {
+        this.personalMenu.closeSettings();
+    }
+
+    public onOpenWhoami() {
+        this.personalMenu = new PersonalMenu(this, "com.ndbs.skillreportingui.fragments.common.Whoami");
+        this.personalMenu.openWhoami();
+    }
+
+    public onCloseWhoamiDialog() {
+        this.personalMenu.closeWhoami();
+    }
+
+    public onOpenClaimRoleDialog() {
+        this.personalMenu.closeWhoami();
+        this.personalMenu = new PersonalMenu(this, "com.ndbs.skillreportingui.fragments.common.ClaimRole");
+        this.personalMenu.openClaimRole();
+    }
+
+    public onCloseClaimRoleDialog() {
+        this.personalMenu.closeClaimRole();
+    }
+
+    public onClaimRole() {
+        this.personalMenu.claimRole();
+    }
+
+    public onOpenUserGuide() {
+        URLHelper.redirect("https://itellicloud.sharepoint.com/:b:/t/MSTeams_GFC-GlobalOfferings/EW3RwzN72S5IkncHbG5Rmx0BeGjr62w9kuECUAAi80qVDQ?e=T9g07m", true);
+    }
+
+    public onFclStateChanged(_event: FlexibleColumnLayout$StateChangeEvent) {
+        const isNavigationArrow = _event.getParameter("isNavigationArrow");
+        const layout = _event.getParameter("layout");
 
         this.updateButtonVisibilities();
 
@@ -46,9 +108,9 @@ export default class App extends Controller {
         return this.getOwnerComponent() as UIComponent;
     }
 
-    private onRouteMatched(event: Router$RouteMatchedEvent) {
-        const routeName = event.getParameter("name") as string;
-        const routingArgs = event.getParameter("arguments") as { engagementID?: string; layout?: string; };
+    private onRouteMatched(_event: Router$RouteMatchedEvent) {
+        const routeName = _event.getParameter("name") as string;
+        const routingArgs = _event.getParameter("arguments") as { engagementID?: string; layout?: string; };
         const fclModel = this.getUIComponent().getModel("fclModel") as JSONModel;
         let layout = routingArgs.layout;
 
@@ -64,8 +126,8 @@ export default class App extends Controller {
         }
 
         this.updateButtonVisibilities();
-        this.setAppVisibilities(event);
-        this.changePageLabel(event);
+        this.setAppVisibilities(_event);
+        this.changePageLabel(_event);
         this.currentRoute = routeName;
         this.currentEngagementID = routingArgs.engagementID || "";
     }
@@ -74,8 +136,8 @@ export default class App extends Controller {
         // visibility checks disabled for MVP
     }
 
-    private changePageLabel(event: Router$RouteMatchedEvent) {
-        const routeName = event.getParameter("name") as string;
+    private changePageLabel(_event: Router$RouteMatchedEvent) {
+        const routeName = _event.getParameter("name") as string;
         const mappings = (this.getUIComponent().getModel("routeMappingsModel") as JSONModel).getData() as Array<{ route: string; pageLabelKey: string; }>;
         const routeMapping = mappings.find(map => map.route === routeName) as { route: string; pageLabelKey: string; };
 
@@ -97,5 +159,96 @@ export default class App extends Controller {
         fclModel.setData(uiState);
     }
 
+    private getCurrentView() {
+        return this.getView() as View;
+    }
 
+    private getODataModel() {
+        return this.getCurrentView().getModel() as ODataModel;
+    }
+
+    // // private pullNotifications() {
+    //     this.updateNofiticationNumber();
+    // }
+
+    private async updateNofiticationNumber() {
+        const notificationNumber = await this.getNotificationNumber();
+        (this.getCurrentView().byId("sbApplication") as unknown as IShellBarExtension).setNotificationsNumber(notificationNumber);
+    }
+
+    private getNotificationNumber(unread = true): Promise<string> {
+        return new Promise((resolve) => {
+            this.getODataModel().read("/Notifications/$count", {
+                filters: unread === true ? [new Filter("unread", FilterOperator.EQ, true)] : undefined,
+                success: (data: string) => {
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    public async onOpenNotifications(_event: ShellBar$NotificationsPressedEvent) {
+        (this.getCurrentView().byId("sbApplication") as ShellBar).setBusy(true);
+        const allNotifications = await this.getNotificationNumber(false);
+        const popover = await this.getNotificationsPopover();
+
+        this.notificationButton = _event.getParameter("button") as Button;
+        popover.openBy(this.notificationButton);
+        (this.getCurrentView().byId("btnDeleteAllNotifications") as Button).setEnabled(allNotifications !== "0");
+        this.markNotificationsAsRead();
+    }
+
+    private async getNotificationsPopover(): Promise<ResponsivePopover> {
+        if (this.notificationsPopover) {
+            this.notificationsPopover.destroy();
+            this.notificationsPopover = undefined;
+        }
+
+        this.notificationsPopover = await (Fragment.load({
+            id: this.getCurrentView().getId(),
+            name: "com.ndbs.skillreportingui.fragments.common.Notifications",
+            controller: this
+        }) as Promise<ResponsivePopover>);
+
+        this.getCurrentView().addDependent(this.notificationsPopover);
+        return this.notificationsPopover;
+    }
+
+    public async onDeleteAllNotifications() {
+        const odata = new ODataCreateCL(this, "deleteAllNotifications");
+
+        odata.setData({ all: true });
+        await odata.create();
+        this.updateNofiticationNumber();
+        (this.getCurrentView().byId("sbApplication") as ShellBar).fireNotificationsPressed({ button: this.notificationButton });
+    }
+
+    public async onDeleteNotification(_event: NotificationListItem$CloseEvent) {
+        const notificationID = (_event.getSource().getBindingContext() as Context).getProperty("ID") as string;
+        const odata = new ODataCreateCL(this, "deleteNotification");
+
+        odata.setData({
+            notificationID: notificationID
+        });
+
+        await odata.create();
+        this.updateNofiticationNumber();
+        (this.getCurrentView().byId("sbApplication") as ShellBar).fireNotificationsPressed({ button: this.notificationButton });
+    }
+
+
+
+
+    private async markNotificationsAsRead() {
+        const odata = new ODataCreateCL(this, "markAllNotificationsAsRead");
+
+        odata.setData({ all: true });
+        const { markAllNotificationsAsRead } = await odata.create() as { markAllNotificationsAsRead: boolean; };
+        (this.getCurrentView().byId("sbApplication") as ShellBar).setBusy(false);
+
+        if (markAllNotificationsAsRead) {
+            this.updateNofiticationNumber();
+            (this.getCurrentView().byId("sbApplication") as ShellBar).fireNotificationsPressed({ button: this.notificationButton });
+        }
+    }
 }

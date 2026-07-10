@@ -1,0 +1,79 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="diaWhoami"
+        showHeader="true"
+        title="{i18n>whoami}"
+        initialFocus="btnCloseWhoamiDialog"
+    >
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="3"
+                labelSpanL="3"
+                labelSpanM="3"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="4"
+                emptySpanL="4"
+                emptySpanM="4"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false"
+            >
+                <form:content>
+                    <Label text="{i18n>successFactorsID}" />
+                    <Text text="{whoamiModel>/successFactorsID}" />
+                    <Label
+                        text="{i18n>personnelID}"
+                        visible="{= ${whoamiModel>/personnelID} !== null}"
+                    />
+                    <Text
+                        text="{whoamiModel>/personnelID}"
+                        visible="{= ${whoamiModel>/personnelID} !== null}"
+                    />
+                    <Label text="{i18n>firstName}" />
+                    <Text text="{whoamiModel>/firstName}" />
+                    <Label text="{i18n>lastName}" />
+                    <Text text="{whoamiModel>/lastName}" />
+                    <Label
+                        text="{i18n>country}"
+                        visible="{= ${whoamiModel>/country} !== null}"
+                    />
+                    <Text
+                        text="{whoamiModel>/country}"
+                        visible="{= ${whoamiModel>/country} !== null}"
+                    />
+                    <Label
+                        text="{i18n>team}"
+                        visible="{= ${whoamiModel>/team} !== null}"
+                    />
+                    <Text
+                        text="{whoamiModel>/team}"
+                        visible="{= ${whoamiModel>/team} !== null}"
+                    />
+                    <Label text="{i18n>myRole}" />
+                    <Text text="{whoamiModel>/roleDescription}" />
+                </form:content>
+            </form:SimpleForm>
+            <Link
+                text="{i18n>claimRole}"
+                class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                press="onOpenClaimRoleDialog"
+            />
+        </content>
+        <endButton>
+            <Button
+                id="btnCloseWhoamiDialog"
+                text="Close"
+                press="onCloseWhoamiDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
