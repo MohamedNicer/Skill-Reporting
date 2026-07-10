@@ -38,6 +38,14 @@ export default class UserAPI {
                     this.email = user.email;
                     this.nameAbbreviation = this.firstName.substring(0, 1) + this.lastName.substring(0, 1);
                     resolve();
+                },
+                error: () => {
+                    this.ID = "demo_admin";
+                    this.firstName = "Demo";
+                    this.lastName = "User";
+                    this.email = "demo.user@example.com";
+                    this.nameAbbreviation = "DU";
+                    resolve();
                 }
             });
         });
