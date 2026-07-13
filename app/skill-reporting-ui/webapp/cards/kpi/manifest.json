@@ -1,0 +1,57 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.kpi",
+		"type": "card",
+		"title": "KPIs"
+	},
+	"sap.card": {
+		"type": "List",
+		"header": {
+			"title": "Overview",
+			"subTitle": "Application Metrics",
+			"icon": {
+				"src": "sap-icon://business-objects-experience"
+			}
+		},
+		"content": {
+			"data": {
+				"json": [
+					{
+						"title": "Total Employees",
+						"value": "{parameters>/employees}",
+						"icon": "sap-icon://group",
+						"state": "Success"
+					},
+					{
+						"title": "Skill Catalog",
+						"value": "{parameters>/skills}",
+						"icon": "sap-icon://learning-assistant",
+						"state": "None"
+					},
+					{
+						"title": "Employee Skills",
+						"value": "{parameters>/employeeSkills}",
+						"icon": "sap-icon://employee-approvals",
+						"state": "None"
+					},
+					{
+						"title": "Pending Requests",
+						"value": "{parameters>/pendingRequests}",
+						"icon": "sap-icon://message-warning",
+						"state": "Error"
+					}
+				]
+			},
+			"item": {
+				"title": "{title}",
+				"icon": {
+					"src": "{icon}"
+				},
+				"info": {
+					"value": "{value}",
+					"state": "{state}"
+				}
+			}
+		}
+	}
+}

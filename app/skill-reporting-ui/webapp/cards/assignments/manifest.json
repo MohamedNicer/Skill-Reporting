@@ -1,0 +1,38 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.assignments",
+		"type": "card",
+		"title": "Recent Assignments"
+	},
+	"sap.card": {
+		"type": "Table",
+		"header": {
+			"title": "Recent Skill Assignments",
+			"subTitle": "Latest recorded skills",
+			"icon": {
+				"src": "sap-icon://employee-approvals"
+			}
+		},
+		"content": {
+			"data": {
+				"json": "{parameters>/assignments}"
+			},
+			"row": {
+				"columns": [
+					{
+						"title": "Employee",
+						"value": "{employeeName}"
+					},
+					{
+						"title": "Skill",
+						"value": "{skillName}"
+					},
+					{
+						"title": "Proficiency",
+						"value": "{proficiencyLevel}"
+					}
+				]
+			}
+		}
+	}
+}

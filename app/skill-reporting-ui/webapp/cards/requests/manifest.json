@@ -1,0 +1,30 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.requests",
+		"type": "card",
+		"title": "Pending Requests"
+	},
+	"sap.card": {
+		"type": "List",
+		"header": {
+			"title": "Pending Skill Requests",
+			"subTitle": "Requires approval",
+			"icon": {
+				"src": "sap-icon://message-warning"
+			}
+		},
+		"content": {
+			"data": {
+				"json": "{parameters>/requests}"
+			},
+			"item": {
+				"title": "{employeeName}",
+				"description": "{skillName}",
+				"info": {
+					"value": "{proficiencyLevel}",
+					"state": "Warning"
+				}
+			}
+		}
+	}
+}

@@ -7,167 +7,39 @@
     xmlns:f="sap.f"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:w="sap.ui.integration.widgets"
+    xmlns:grid="sap.ui.layout.cssgrid"
 >
     <Page id="Homepage" showHeader="false">
         <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
 
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <!-- KPI Tiles                                               -->
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <HBox justifyContent="Start" wrap="Wrap" class="sapUiSmallMarginBottom">
-                <GenericTile
-                    id="tileEmployees"
-                    header="{i18n>employees}"
-                    subheader="{i18n>totalEmployees}"
-                    press=".onNavToView('RoutePersonnel')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            value="{globalJSONModel>/kpi/employees}"
-                            valueColor="Good"
-                            icon="sap-icon://group"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
+            <grid:CSSGrid gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
+                <grid:items>
+                    <w:Card manifest="./cards/profile/manifest.json" parameters="{globalJSONModel>/cards/profile}">
+                        <w:layoutData>
+                            <grid:GridItemLayoutData gridColumn="span 1" />
+                        </w:layoutData>
+                    </w:Card>
 
-                <GenericTile
-                    id="tileSkills"
-                    header="{i18n>skillCatalog}"
-                    subheader="{i18n>totalSkills}"
-                    press=".onNavToView('RouteSkills')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            value="{globalJSONModel>/kpi/skills}"
-                            valueColor="Neutral"
-                            icon="sap-icon://learning-assistant"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
+                    <w:Card manifest="./cards/kpi/manifest.json" parameters="{globalJSONModel>/kpi}">
+                        <w:layoutData>
+                            <grid:GridItemLayoutData gridColumn="span 1" />
+                        </w:layoutData>
+                    </w:Card>
 
-                <GenericTile
-                    id="tileEmployeeSkills"
-                    header="{i18n>employeeSkills}"
-                    subheader="{i18n>totalAssignments}"
-                    press=".onNavToView('RouteEmployeeSkills')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            value="{globalJSONModel>/kpi/employeeSkills}"
-                            valueColor="Neutral"
-                            icon="sap-icon://employee-approvals"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
+                    <w:Card manifest="./cards/assignments/manifest.json" parameters="{globalJSONModel>/cards}">
+                        <w:layoutData>
+                            <grid:GridItemLayoutData gridColumn="span 2" />
+                        </w:layoutData>
+                    </w:Card>
 
-                <GenericTile
-                    id="tilePendingRequests"
-                    header="{i18n>skillRequests}"
-                    subheader="{i18n>pendingRequests}"
-                    press=".onNavToView('RouteConfigurations')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            value="{globalJSONModel>/kpi/pendingRequests}"
-                            valueColor="Critical"
-                            icon="sap-icon://message-warning"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
-
-                <GenericTile
-                    id="tileCVCenter"
-                    header="{i18n>cvCenter}"
-                    subheader="{i18n>uploadCV}"
-                    press=".onNavToView('RouteCVCenter')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            valueColor="Neutral"
-                            icon="sap-icon://document"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
-
-                <GenericTile
-                    id="tileManagerWorkspace"
-                    header="{i18n>managerWorkspace}"
-                    subheader="{i18n>teamSkills}"
-                    press=".onNavToView('RouteManagerWorkspace')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            valueColor="Neutral"
-                            icon="sap-icon://manager"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
-
-                <GenericTile
-                    id="tileReports"
-                    header="{i18n>reports}"
-                    subheader="{i18n>analytics}"
-                    press=".onNavToView('RouteReports')"
-                    frameType="TwoByOne"
-                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                >
-                    <TileContent>
-                        <NumericContent
-                            valueColor="Neutral"
-                            icon="sap-icon://business-objects-experience"
-                            withMargin="false"
-                        />
-                    </TileContent>
-                </GenericTile>
-            </HBox>
-
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <!-- Recent Skill Assignments                                -->
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <smartFilterBar:SmartFilterBar
-                id="sfbHomeSkills"
-                entitySet="VEmployeeSkills"
-
-            />
-            <smartTable:SmartTable
-                id="stHomeSkills"
-                entitySet="VEmployeeSkills"
-                smartFilterId="sfbHomeSkills"
-                tableType="ResponsiveTable"
-                enableAutoBinding="true"
-                useVariantManagement="false"
-                useTablePersonalisation="false"
-                showFullScreenButton="false"
-                showRowCount="true"
-                editTogglable="false"
-                header="{i18n>recentSkillAssignments}"
-                initiallyVisibleFields="employeeName,skillName,categoryName,proficiencyLevel,yearsExperience,validationStatusText"
-            >
-                <Table
-                    id="tblHomeSkills"
-                    growing="true"
-                    growingThreshold="8"
-                    sticky="ColumnHeaders,HeaderToolbar"
-                />
-            </smartTable:SmartTable>
+                    <w:Card manifest="./cards/requests/manifest.json" parameters="{globalJSONModel>/cards}">
+                        <w:layoutData>
+                            <grid:GridItemLayoutData gridColumn="span 2" />
+                        </w:layoutData>
+                    </w:Card>
+                </grid:items>
+            </grid:CSSGrid>
 
         </VBox>
         <footer>

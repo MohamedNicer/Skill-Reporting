@@ -1,0 +1,51 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.profile",
+		"type": "card",
+		"title": "User Profile"
+	},
+	"sap.card": {
+		"type": "Object",
+		"header": {
+			"icon": {
+				"src": "sap-icon://customer"
+			},
+			"title": "{parameters>/firstName} {parameters>/lastName}",
+			"subTitle": "{parameters>/roleDescription}"
+		},
+		"content": {
+			"groups": [
+				{
+					"title": "Contact Details",
+					"items": [
+						{
+							"label": "Email",
+							"value": "{parameters>/email}"
+						},
+						{
+							"label": "SF ID",
+							"value": "{parameters>/successFactorsID}"
+						}
+					]
+				},
+				{
+					"title": "Company Details",
+					"items": [
+						{
+							"label": "Personnel ID",
+							"value": "{parameters>/personnelID}"
+						},
+						{
+							"label": "Team",
+							"value": "{parameters>/team}"
+						},
+						{
+							"label": "Country",
+							"value": "{parameters>/country}"
+						}
+					]
+				}
+			]
+		}
+	}
+}
