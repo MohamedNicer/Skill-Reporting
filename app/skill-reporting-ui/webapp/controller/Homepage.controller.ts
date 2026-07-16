@@ -43,88 +43,38 @@ export default class Homepage extends BaseController implements IPage {
 
     private loadKPIs(): void {
         const oDataModel = this.getComponentModel() as ODataModel;
-        const globalModel = (this.getOwnerComponent() as UIComponent).getModel(ApplicationModels.GLOBAL_JSON) as JSONModel;
 
-        if (!globalModel) { return; }
-
-        globalModel.setProperty("/kpi", {
-            employees: "–",
-            skills: "–",
-            employeeSkills: "–",
-            pendingRequests: "–"
-        });
+        const setKpiParam = (key: string, value: string) => {
+            const card = this.byId("cardKpi") as any;
+            if (card && card.setParameters) {
+                card.setParameters({ [key]: value });
+            }
+        };
 
         // Total employees
         oDataModel.read("/VEmployees/$count", {
-            success: (data: string) => globalModel.setProperty("/kpi/employees", data),
-            error: () => globalModel.setProperty("/kpi/employees", "?")
+            success: (data: string) => setKpiParam("employees", data),
+            error: () => setKpiParam("employees", "?")
         });
 
-        // Active skills in catalog
+        // Active approved skills in catalog
         oDataModel.read("/VSkills/$count", {
             urlParameters: { "$filter": "isActive eq true" },
-            success: (data: string) => globalModel.setProperty("/kpi/skills", data),
-            error: () => globalModel.setProperty("/kpi/skills", "?")
+            success: (data: string) => setKpiParam("skills", data),
+            error: () => setKpiParam("skills", "?")
         });
 
         // Total employee-skill assignments
         oDataModel.read("/VEmployeeSkills/$count", {
-            success: (data: string) => globalModel.setProperty("/kpi/employeeSkills", data),
-            error: () => globalModel.setProperty("/kpi/employeeSkills", "?")
+            success: (data: string) => setKpiParam("employeeSkills", data),
+            error: () => setKpiParam("employeeSkills", "?")
         });
 
         // Pending skill requests
         oDataModel.read("/SkillRequests/$count", {
             filters: [new Filter("status", FilterOperator.EQ, "pendingReview")],
-            success: (data: string) => globalModel.setProperty("/kpi/pendingRequests", data),
-            error: () => globalModel.setProperty("/kpi/pendingRequests", "?")
-        });
-
-        // --- Populate Cards Data ---
-
-        // Mock User Profile
-        globalModel.setProperty("/cards", {
-            profile: {
-                firstName: "Demo",
-                lastName: "Manager",
-                roleDescription: "System Administrator",
-                email: "admin@company.com",
-                successFactorsID: "SF-90192",
-                personnelID: "P10001",
-                team: "IT Operations",
-                country: "USA"
-            },
-            assignments: [],
-            requests: []
-        });
-
-        // Recent Assignments
-        oDataModel.read("/VEmployeeSkills", {
-            urlParameters: { "$top": "5", "$orderby": "confirmedAt desc" },
-            success: (data: any) => {
-                const currentCards = globalModel.getProperty("/cards");
-                currentCards.assignments = data.results || [];
-                globalModel.setProperty("/cards", Object.assign({}, currentCards));
-            },
-            error: () => globalModel.setProperty("/cards/assignments", [])
-        });
-
-        // Pending Requests Data
-        oDataModel.read("/SkillRequests", {
-            filters: [new Filter("status", FilterOperator.EQ, "pendingReview")],
-            urlParameters: { "$top": "5", "$orderby": "requestedAt desc", "$expand": "toRequestedBy" },
-            success: (data: any) => {
-                const results = data.results || [];
-                const formatted = results.map((r: any) => ({
-                    employeeName: r.toRequestedBy ? `${r.toRequestedBy.firstName} ${r.toRequestedBy.lastName}` : r.requestedByID,
-                    skillName: r.requestedText,
-                    proficiencyLevel: "Pending"
-                }));
-                const currentCards = globalModel.getProperty("/cards");
-                currentCards.requests = formatted;
-                globalModel.setProperty("/cards", Object.assign({}, currentCards));
-            },
-            error: () => globalModel.setProperty("/cards/requests", [])
+            success: (data: string) => setKpiParam("pendingRequests", data),
+            error: () => setKpiParam("pendingRequests", "?")
         });
     }
 }

@@ -24,7 +24,7 @@
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/kpi/manifest.json">
+                                <w:Card id="cardKpi" manifest="./cards/kpi/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>

@@ -12,9 +12,6 @@
 			"icon": {
 				"src": "sap-icon://message-warning"
 			},
-			"status": {
-				"text": "5 Pending"
-			},
 			"actions": [
 				{
 					"type": "Navigation",
@@ -24,24 +21,27 @@
 				}
 			]
 		},
-		"content": {
-			"data": {
-				"json": [
-					{ "employeeName": "Alice Smith", "skillName": "Angular", "requestType": "New Skill", "requestedAt": "Jul 16, 2026" },
-					{ "employeeName": "Bob Johnson", "skillName": "React", "requestType": "New Skill", "requestedAt": "Jul 15, 2026" },
-					{ "employeeName": "Charlie Brown", "skillName": "Vue.js", "requestType": "New Skill", "requestedAt": "Jul 14, 2026" },
-					{ "employeeName": "Alice Smith", "skillName": "Svelte", "requestType": "New Skill", "requestedAt": "Jul 13, 2026" },
-					{ "employeeName": "Diana Prince", "skillName": "SAP Fiori Elements", "requestType": "New Skill", "requestedAt": "Jul 12, 2026" }
-				]
+		"data": {
+			"request": {
+				"url": "/odata/v2/admin/SkillRequests",
+				"parameters": {
+					"$top": "10",
+					"$filter": "status eq 'pendingReview'",
+					"$orderby": "requestedAt desc",
+					"$expand": "toRequestedBy"
+				}
 			},
+			"path": "/d/results"
+		},
+		"content": {
 			"item": {
-				"title": "{employeeName}",
-				"description": "{skillName} · {requestType}",
+				"title": "{toRequestedBy/firstName} {toRequestedBy/lastName}",
+				"description": "{requestedText}",
 				"icon": {
 					"src": "sap-icon://person-placeholder"
 				},
 				"info": {
-					"value": "{requestedAt}",
+					"value": "Pending",
 					"state": "Warning"
 				},
 				"actions": [

@@ -21,20 +21,17 @@
 				}
 			]
 		},
-		"content": {
-			"data": {
-				"json": [
-					{ "employeeName": "Alice Smith", "skillName": "JavaScript", "proficiencyLevel": "Expert", "validationStatus": "Verified" },
-					{ "employeeName": "Alice Smith", "skillName": "Java", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
-					{ "employeeName": "Bob Johnson", "skillName": "JavaScript", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared" },
-					{ "employeeName": "Bob Johnson", "skillName": "AWS", "proficiencyLevel": "Beginner", "validationStatus": "Self Declared" },
-					{ "employeeName": "Charlie Brown", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed" },
-					{ "employeeName": "Diana Prince", "skillName": "AWS", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
-					{ "employeeName": "Diana Prince", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed" },
-					{ "employeeName": "Bob Johnson", "skillName": "Azure", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared" },
-					{ "employeeName": "Charlie Brown", "skillName": "JavaScript", "proficiencyLevel": "Beginner", "validationStatus": "Verified" }
-				]
+		"data": {
+			"request": {
+				"url": "/odata/v2/admin/VEmployeeSkills",
+				"parameters": {
+					"$top": "10",
+					"$orderby": "confirmedAt desc"
+				}
 			},
+			"path": "/d/results"
+		},
+		"content": {
 			"row": {
 				"actions": [
 					{
@@ -60,8 +57,8 @@
 					},
 					{
 						"title": "Status",
-						"value": "{validationStatus}",
-						"state": "{= ${validationStatus} === 'Verified' ? 'Success' : ${validationStatus} === 'Manager Confirmed' ? 'Information' : 'Warning' }"
+						"value": "{validationStatusText}",
+						"state": "{= ${validationStatus} === 'verified' ? 'Success' : ${validationStatus} === 'managerConfirmed' ? 'Information' : 'Warning' }"
 					}
 				]
 			}
