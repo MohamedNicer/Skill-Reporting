@@ -60,3 +60,26 @@ export class IntegrationService extends cds.ApplicationService {
         return super.init();
     }
 }
+
+export class DashboardService extends cds.ApplicationService {
+    async init(): Promise<void> {
+        const service = this as any;
+        service.on("kpi", async () => {
+            const db = await cds.connect.to("db");
+            const { Employees, Skills, EmployeeSkills, SkillRequests } = db.entities;
+            const [employees, skills, employeeSkills, pendingRequests] = await Promise.all([
+                db.run(SELECT.one`count(*) as cnt`.from(Employees).where({ isActive: true })),
+                db.run(SELECT.one`count(*) as cnt`.from(Skills).where({ isActive: true, status: "approved" })),
+                db.run(SELECT.one`count(*) as cnt`.from(EmployeeSkills)),
+                db.run(SELECT.one`count(*) as cnt`.from(SkillRequests).where({ status: "pendingReview" }))
+            ]);
+            return {
+                employees: parseInt(employees?.cnt ?? "0"),
+                skills: parseInt(skills?.cnt ?? "0"),
+                employeeSkills: parseInt(employeeSkills?.cnt ?? "0"),
+                pendingRequests: parseInt(pendingRequests?.cnt ?? "0")
+            };
+        });
+        return super.init();
+    }
+}

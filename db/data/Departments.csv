@@ -1,4 +1,5 @@
-ID;name;costCenter
-DEPT1;Engineering;CC100
-DEPT2;Human Resources;CC200
-DEPT3;Sales;CC300
+ID;name
+DEPT1;Engineering
+DEPT2;Human Resources
+DEPT3;Sales
+DEPT4;Finance

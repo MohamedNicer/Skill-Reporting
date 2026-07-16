@@ -1,5 +1,13 @@
 ID;employeeNumber;firstName;lastName;email;departmentID;managerID;jobTitle;jobFamily;location;isActive
-EMP1;E001;Alice;Smith;alice@example.com;DEPT1;;Engineering Manager;Engineering;New York;true
-EMP2;E002;Bob;Johnson;bob@example.com;DEPT1;EMP1;Software Engineer;Engineering;New York;true
-EMP3;E003;Charlie;Brown;charlie@example.com;DEPT2;;HR Director;HR;London;true
-EMP4;E004;Diana;Prince;diana@example.com;DEPT3;;Sales Lead;Sales;San Francisco;true
+EMP1;E001;Alice;Smith;alice.smith@nttdata.com;DEPT1;;Engineering Manager;Engineering;New York;true
+EMP2;E002;Bob;Johnson;bob.johnson@nttdata.com;DEPT1;EMP1;Senior Software Engineer;Engineering;New York;true
+EMP3;E003;Charlie;Brown;charlie.brown@nttdata.com;DEPT2;;HR Director;HR;London;true
+EMP4;E004;Diana;Prince;diana.prince@nttdata.com;DEPT3;;Sales Lead;Sales;San Francisco;true
+EMP5;E005;Ethan;Hunt;ethan.hunt@nttdata.com;DEPT1;EMP1;Full Stack Developer;Engineering;New York;true
+EMP6;E006;Fiona;Green;fiona.green@nttdata.com;DEPT2;EMP3;HR Business Partner;HR;London;true
+EMP7;E007;George;Miller;george.miller@nttdata.com;DEPT1;EMP1;DevOps Engineer;Engineering;Berlin;true
+EMP8;E008;Helen;Troy;helen.troy@nttdata.com;DEPT3;EMP4;Account Executive;Sales;Paris;true
+EMP9;E009;Ivan;Drago;ivan.drago@nttdata.com;DEPT1;EMP1;Backend Developer;Engineering;Madrid;true
+EMP10;E010;Julia;Roberts;julia.roberts@nttdata.com;DEPT4;;Finance Director;Finance;London;true
+EMP11;E011;Kevin;Bacon;kevin.bacon@nttdata.com;DEPT1;EMP2;Junior Developer;Engineering;New York;true
+EMP12;E012;Laura;Palmer;laura.palmer@nttdata.com;DEPT4;EMP10;Financial Analyst;Finance;London;true

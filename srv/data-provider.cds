@@ -16,3 +16,13 @@ service AdminService {}
 service AnalyticsService {}
 
 service IntegrationService {}
+
+@path: '/api/dashboard'
+service DashboardService {
+    function kpi() returns {
+        employees      : Integer;
+        skills         : Integer;
+        employeeSkills : Integer;
+        pendingRequests: Integer;
+    };
+}

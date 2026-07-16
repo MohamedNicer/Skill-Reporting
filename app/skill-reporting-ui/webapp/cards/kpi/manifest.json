@@ -5,7 +5,7 @@
 		"title": "KPIs"
 	},
 	"sap.card": {
-		"type": "List",
+		"type": "Object",
 		"header": {
 			"title": "Overview",
 			"subTitle": "Live Application Metrics",
@@ -15,73 +15,48 @@
 		},
 		"data": {
 			"request": {
-				"url": "/odata/v2/admin/VEmployees",
-				"parameters": {
-					"$inlinecount": "allpages",
-					"$top": "0"
-				}
+				"url": "/api/dashboard/kpi()"
 			},
-			"path": "/d"
+			"path": "/value"
 		},
 		"content": {
-			"data": {
-				"json": [
-					{
-						"title": "Total Employees",
-						"value": "{parameters>/employees/value}",
-						"icon": "sap-icon://group",
-						"state": "Success",
-						"url": "#/employees"
-					},
-					{
-						"title": "Approved Skills",
-						"value": "{parameters>/skills/value}",
-						"icon": "sap-icon://learning-assistant",
-						"state": "None",
-						"url": "#/skills"
-					},
-					{
-						"title": "Skill Assignments",
-						"value": "{parameters>/employeeSkills/value}",
-						"icon": "sap-icon://employee-approvals",
-						"state": "Information",
-						"url": "#/employee-skills"
-					},
-					{
-						"title": "Pending Requests",
-						"value": "{parameters>/pendingRequests/value}",
-						"icon": "sap-icon://message-warning",
-						"state": "Error",
-						"url": "#/configurations"
-					}
-				]
-			},
-			"item": {
-				"title": "{title}",
-				"icon": {
-					"src": "{icon}"
-				},
-				"info": {
-					"value": "{value}",
-					"state": "{state}"
-				},
-				"actions": [
-					{
-						"type": "Navigation",
-						"parameters": {
-							"url": "{url}"
+			"groups": [
+				{
+					"title": "Headcount",
+					"items": [
+						{
+							"label": "Total Employees",
+							"value": "{employees}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employees" } }]
 						}
-					}
-				]
-			}
-		},
-		"configuration": {
-			"parameters": {
-				"employees": { "value": "..." },
-				"skills": { "value": "..." },
-				"employeeSkills": { "value": "..." },
-				"pendingRequests": { "value": "..." }
-			}
+					]
+				},
+				{
+					"title": "Skills",
+					"items": [
+						{
+							"label": "Approved Skills",
+							"value": "{skills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
+						},
+						{
+							"label": "Skill Assignments",
+							"value": "{employeeSkills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+						}
+					]
+				},
+				{
+					"title": "Requests",
+					"items": [
+						{
+							"label": "Pending Requests",
+							"value": "{pendingRequests}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+						}
+					]
+				}
+			]
 		}
 	}
 }

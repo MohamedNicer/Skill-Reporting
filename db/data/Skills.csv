@@ -1,6 +1,16 @@
 ID;categoryID;canonicalName;normalizedName;description;status;isActive
 11111111-1111-1111-1111-111111111111;CAT1;JavaScript;javascript;Programming language of the web;approved;true
 22222222-2222-2222-2222-222222222222;CAT1;Java;java;Enterprise programming language;approved;true
-33333333-3333-3333-3333-333333333333;CAT2;AWS;aws;Amazon Web Services;approved;true
-44444444-4444-4444-4444-444444444444;CAT2;Azure;azure;Microsoft Cloud;approved;true
+33333333-3333-3333-3333-333333333333;CAT2;AWS;aws;Amazon Web Services cloud platform;approved;true
+44444444-4444-4444-4444-444444444444;CAT2;Azure;azure;Microsoft Azure cloud platform;approved;true
 55555555-5555-5555-5555-555555555555;CAT3;Communication;communication;Effective communication skills;approved;true
+66666666-6666-6666-6666-111111111111;CAT1;TypeScript;typescript;Typed superset of JavaScript;approved;true
+77777777-7777-7777-7777-111111111111;CAT1;Python;python;General purpose programming language;approved;true
+88888888-8888-8888-8888-111111111111;CAT1;React;react;JavaScript UI library by Facebook;approved;true
+99999999-9999-9999-9999-111111111111;CAT2;Docker;docker;Containerization platform;approved;true
+aaaaaaaa-aaaa-aaaa-aaaa-111111111111;CAT2;Kubernetes;kubernetes;Container orchestration platform;approved;true
+bbbbbbbb-bbbb-bbbb-bbbb-111111111111;CAT3;Leadership;leadership;Team leadership and management;approved;true
+cccccccc-cccc-cccc-cccc-111111111111;CAT3;Project Management;projectmanagement;Agile and waterfall project management;approved;true
+dddddddd-dddd-dddd-dddd-111111111111;CAT1;Node.js;nodejs;JavaScript runtime environment;approved;true
+eeeeeeee-eeee-eeee-eeee-111111111111;CAT2;GCP;gcp;Google Cloud Platform;approved;true
+ffffffff-ffff-ffff-ffff-111111111111;CAT3;Presentation Skills;presentationskills;Public speaking and presentation design;approved;true
