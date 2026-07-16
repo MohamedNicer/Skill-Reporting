@@ -9,51 +9,28 @@
 		"header": {
 			"title": "Pending Skill Requests",
 			"subTitle": "Awaiting admin approval",
-			"icon": {
-				"src": "sap-icon://message-warning"
-			},
-			"status": {
-				"text": "7 Pending"
-			},
-			"actions": [
-				{
-					"type": "Navigation",
-					"parameters": {
-						"url": "#/configurations"
-					}
+			"icon": { "src": "sap-icon://message-warning" },
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+		},
+		"data": {
+			"request": {
+				"url": "/odata/v2/admin/SkillRequests",
+				"parameters": {
+					"$top": "10",
+					"$filter": "status eq 'pendingReview'",
+					"$orderby": "requestedAt desc",
+					"$expand": "toRequestedBy"
 				}
-			]
+			},
+			"path": "/d/results"
 		},
 		"content": {
-			"data": {
-				"json": [
-					{ "employeeName": "Alice Smith", "skillName": "Angular", "requestedAt": "Jul 16, 2026" },
-					{ "employeeName": "Bob Johnson", "skillName": "React Native", "requestedAt": "Jul 15, 2026" },
-					{ "employeeName": "Charlie Brown", "skillName": "Conflict Resolution", "requestedAt": "Jul 14, 2026" },
-					{ "employeeName": "Ethan Hunt", "skillName": "Svelte", "requestedAt": "Jul 13, 2026" },
-					{ "employeeName": "George Miller", "skillName": "Terraform", "requestedAt": "Jul 12, 2026" },
-					{ "employeeName": "Ivan Drago", "skillName": "Spring Boot", "requestedAt": "Jul 11, 2026" },
-					{ "employeeName": "Kevin Bacon", "skillName": "Vue.js", "requestedAt": "Jul 10, 2026" }
-				]
-			},
 			"item": {
-				"title": "{employeeName}",
-				"description": "{skillName}",
-				"icon": {
-					"src": "sap-icon://person-placeholder"
-				},
-				"info": {
-					"value": "{requestedAt}",
-					"state": "Warning"
-				},
-				"actions": [
-					{
-						"type": "Navigation",
-						"parameters": {
-							"url": "#/configurations"
-						}
-					}
-				]
+				"title": "{toRequestedBy/firstName} {toRequestedBy/lastName}",
+				"description": "{requestedText}",
+				"icon": { "src": "sap-icon://person-placeholder" },
+				"info": { "value": "Pending Review", "state": "Warning" },
+				"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
 			}
 		}
 	}

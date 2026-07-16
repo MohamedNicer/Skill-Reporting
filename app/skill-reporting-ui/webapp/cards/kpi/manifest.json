@@ -5,65 +5,55 @@
 		"title": "KPIs"
 	},
 	"sap.card": {
-		"type": "List",
+		"type": "Object",
 		"header": {
 			"title": "Overview",
-			"subTitle": "Application Metrics",
-			"icon": {
-				"src": "sap-icon://business-objects-experience"
+			"subTitle": "Live Application Metrics",
+			"icon": { "src": "sap-icon://business-objects-experience" }
+		},
+		"data": {
+			"request": {
+				"url": "/api/dashboard/kpi()"
 			}
 		},
 		"content": {
-			"data": {
-				"json": [
-					{
-						"title": "Total Employees",
-						"value": "12",
-						"icon": "sap-icon://group",
-						"state": "Success",
-						"url": "#/employees"
-					},
-					{
-						"title": "Approved Skills",
-						"value": "15",
-						"icon": "sap-icon://learning-assistant",
-						"state": "None",
-						"url": "#/skills"
-					},
-					{
-						"title": "Skill Assignments",
-						"value": "32",
-						"icon": "sap-icon://employee-approvals",
-						"state": "Information",
-						"url": "#/employee-skills"
-					},
-					{
-						"title": "Pending Requests",
-						"value": "7",
-						"icon": "sap-icon://message-warning",
-						"state": "Error",
-						"url": "#/configurations"
-					}
-				]
-			},
-			"item": {
-				"title": "{title}",
-				"icon": {
-					"src": "{icon}"
-				},
-				"info": {
-					"value": "{value}",
-					"state": "{state}"
-				},
-				"actions": [
-					{
-						"type": "Navigation",
-						"parameters": {
-							"url": "{url}"
+			"groups": [
+				{
+					"title": "Headcount",
+					"items": [
+						{
+							"label": "Total Employees",
+							"value": "{employees}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employees" } }]
 						}
-					}
-				]
-			}
+					]
+				},
+				{
+					"title": "Skills",
+					"items": [
+						{
+							"label": "Approved Skills",
+							"value": "{skills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
+						},
+						{
+							"label": "Skill Assignments",
+							"value": "{employeeSkills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+						}
+					]
+				},
+				{
+					"title": "Requests",
+					"items": [
+						{
+							"label": "Pending Reviews",
+							"value": "{pendingRequests}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+						}
+					]
+				}
+			]
 		}
 	}
 }
