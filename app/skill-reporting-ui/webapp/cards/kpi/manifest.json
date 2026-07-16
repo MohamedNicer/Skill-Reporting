@@ -18,19 +18,19 @@
 				"json": [
 					{
 						"title": "Total Employees",
-						"value": "{/kpi/employees}",
+						"value": "4",
 						"icon": "sap-icon://group",
 						"state": "Success"
 					},
 					{
 						"title": "Skill Catalog",
-						"value": "{/kpi/skills}",
+						"value": "5",
 						"icon": "sap-icon://learning-assistant",
 						"state": "None"
 					},
 					{
 						"title": "Employee Skills",
-						"value": "{/kpi/employeeSkills}",
+						"value": "9",
 						"icon": "sap-icon://employee-approvals",
 						"state": "Information"
 					},
