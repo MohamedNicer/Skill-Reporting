@@ -6,6 +6,13 @@
 	},
 	"sap.card": {
 		"type": "List",
+		"configuration": {
+			"parameters": {
+				"requests": {
+					"value": []
+				}
+			}
+		},
 		"header": {
 			"title": "Pending Skill Requests",
 			"subTitle": "Requires approval",
@@ -15,7 +22,7 @@
 		},
 		"content": {
 			"data": {
-				"json": "{parameters>/requests}"
+				"json": "{parameters>/requests/value}"
 			},
 			"item": {
 				"title": "{employeeName}",

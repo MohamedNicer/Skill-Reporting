@@ -6,12 +6,24 @@
 	},
 	"sap.card": {
 		"type": "Object",
+		"configuration": {
+			"parameters": {
+				"firstName": { "value": "" },
+				"lastName": { "value": "" },
+				"roleDescription": { "value": "" },
+				"email": { "value": "" },
+				"successFactorsID": { "value": "" },
+				"personnelID": { "value": "" },
+				"team": { "value": "" },
+				"country": { "value": "" }
+			}
+		},
 		"header": {
 			"icon": {
 				"src": "sap-icon://customer"
 			},
-			"title": "{parameters>/firstName} {parameters>/lastName}",
-			"subTitle": "{parameters>/roleDescription}"
+			"title": "{parameters>/firstName/value} {parameters>/lastName/value}",
+			"subTitle": "{parameters>/roleDescription/value}"
 		},
 		"content": {
 			"groups": [
@@ -20,11 +32,11 @@
 					"items": [
 						{
 							"label": "Email",
-							"value": "{parameters>/email}"
+							"value": "{parameters>/email/value}"
 						},
 						{
 							"label": "SF ID",
-							"value": "{parameters>/successFactorsID}"
+							"value": "{parameters>/successFactorsID/value}"
 						}
 					]
 				},
@@ -33,15 +45,15 @@
 					"items": [
 						{
 							"label": "Personnel ID",
-							"value": "{parameters>/personnelID}"
+							"value": "{parameters>/personnelID/value}"
 						},
 						{
 							"label": "Team",
-							"value": "{parameters>/team}"
+							"value": "{parameters>/team/value}"
 						},
 						{
 							"label": "Country",
-							"value": "{parameters>/country}"
+							"value": "{parameters>/country/value}"
 						}
 					]
 				}

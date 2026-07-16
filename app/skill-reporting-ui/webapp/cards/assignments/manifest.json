@@ -6,6 +6,13 @@
 	},
 	"sap.card": {
 		"type": "Table",
+		"configuration": {
+			"parameters": {
+				"assignments": {
+					"value": []
+				}
+			}
+		},
 		"header": {
 			"title": "Recent Skill Assignments",
 			"subTitle": "Latest recorded skills",
@@ -15,7 +22,7 @@
 		},
 		"content": {
 			"data": {
-				"json": "{parameters>/assignments}"
+				"json": "{parameters>/assignments/value}"
 			},
 			"row": {
 				"columns": [
