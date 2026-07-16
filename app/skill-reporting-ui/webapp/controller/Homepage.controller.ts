@@ -83,22 +83,28 @@ export default class Homepage extends BaseController implements IPage {
         // --- Populate Cards Data ---
 
         // Mock User Profile
-        globalModel.setProperty("/cards/profile", {
-            firstName: "Demo",
-            lastName: "Manager",
-            roleDescription: "System Administrator",
-            email: "admin@company.com",
-            successFactorsID: "SF-90192",
-            personnelID: "P10001",
-            team: "IT Operations",
-            country: "USA"
+        globalModel.setProperty("/cards", {
+            profile: {
+                firstName: "Demo",
+                lastName: "Manager",
+                roleDescription: "System Administrator",
+                email: "admin@company.com",
+                successFactorsID: "SF-90192",
+                personnelID: "P10001",
+                team: "IT Operations",
+                country: "USA"
+            },
+            assignments: [],
+            requests: []
         });
 
         // Recent Assignments
         oDataModel.read("/VEmployeeSkills", {
             urlParameters: { "$top": "5", "$orderby": "confirmedAt desc" },
             success: (data: any) => {
-                globalModel.setProperty("/cards/assignments", data.results || []);
+                const currentCards = globalModel.getProperty("/cards");
+                currentCards.assignments = data.results || [];
+                globalModel.setProperty("/cards", Object.assign({}, currentCards));
             },
             error: () => globalModel.setProperty("/cards/assignments", [])
         });
@@ -114,7 +120,9 @@ export default class Homepage extends BaseController implements IPage {
                     skillName: r.requestedText,
                     proficiencyLevel: "Pending"
                 }));
-                globalModel.setProperty("/cards/requests", formatted);
+                const currentCards = globalModel.getProperty("/cards");
+                currentCards.requests = formatted;
+                globalModel.setProperty("/cards", Object.assign({}, currentCards));
             },
             error: () => globalModel.setProperty("/cards/requests", [])
         });

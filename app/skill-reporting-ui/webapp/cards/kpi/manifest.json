@@ -6,14 +6,6 @@
 	},
 	"sap.card": {
 		"type": "List",
-		"configuration": {
-			"parameters": {
-				"employees": { "value": 0 },
-				"skills": { "value": 0 },
-				"employeeSkills": { "value": 0 },
-				"pendingRequests": { "value": 0 }
-			}
-		},
 		"header": {
 			"title": "Overview",
 			"subTitle": "Application Metrics",
@@ -26,25 +18,25 @@
 				"json": [
 					{
 						"title": "Total Employees",
-						"value": "{parameters>/employees/value}",
+						"value": "{parameters>/employees}",
 						"icon": "sap-icon://group",
 						"state": "Success"
 					},
 					{
 						"title": "Skill Catalog",
-						"value": "{parameters>/skills/value}",
+						"value": "{parameters>/skills}",
 						"icon": "sap-icon://learning-assistant",
 						"state": "None"
 					},
 					{
 						"title": "Employee Skills",
-						"value": "{parameters>/employeeSkills/value}",
+						"value": "{parameters>/employeeSkills}",
 						"icon": "sap-icon://employee-approvals",
 						"state": "None"
 					},
 					{
 						"title": "Pending Requests",
-						"value": "{parameters>/pendingRequests/value}",
+						"value": "{parameters>/pendingRequests}",
 						"icon": "sap-icon://message-warning",
 						"state": "Error"
 					}
