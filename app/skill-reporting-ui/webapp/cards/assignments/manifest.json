@@ -11,23 +11,39 @@
 			"subTitle": "Latest recorded skills",
 			"icon": {
 				"src": "sap-icon://employee-approvals"
-			}
+			},
+			"actions": [
+				{
+					"type": "Navigation",
+					"parameters": {
+						"url": "#/employee-skills"
+					}
+				}
+			]
 		},
 		"content": {
 			"data": {
 				"json": [
-					{ "employeeName": "Alice Smith", "skillName": "JavaScript", "proficiencyLevel": "Expert", "validationStatus": "Verified", "source": "System" },
-					{ "employeeName": "Alice Smith", "skillName": "Java", "proficiencyLevel": "Advanced", "validationStatus": "Verified", "source": "System" },
-					{ "employeeName": "Bob Johnson", "skillName": "JavaScript", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared", "source": "System" },
-					{ "employeeName": "Bob Johnson", "skillName": "AWS", "proficiencyLevel": "Beginner", "validationStatus": "Self Declared", "source": "Manual" },
-					{ "employeeName": "Charlie Brown", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed", "source": "Manual" },
-					{ "employeeName": "Diana Prince", "skillName": "AWS", "proficiencyLevel": "Advanced", "validationStatus": "Verified", "source": "System" },
-					{ "employeeName": "Diana Prince", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed", "source": "Manual" },
-					{ "employeeName": "Bob Johnson", "skillName": "Azure", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared", "source": "Manual" },
-					{ "employeeName": "Charlie Brown", "skillName": "JavaScript", "proficiencyLevel": "Beginner", "validationStatus": "Verified", "source": "System" }
+					{ "employeeName": "Alice Smith", "skillName": "JavaScript", "proficiencyLevel": "Expert", "validationStatus": "Verified" },
+					{ "employeeName": "Alice Smith", "skillName": "Java", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
+					{ "employeeName": "Bob Johnson", "skillName": "JavaScript", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared" },
+					{ "employeeName": "Bob Johnson", "skillName": "AWS", "proficiencyLevel": "Beginner", "validationStatus": "Self Declared" },
+					{ "employeeName": "Charlie Brown", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed" },
+					{ "employeeName": "Diana Prince", "skillName": "AWS", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
+					{ "employeeName": "Diana Prince", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed" },
+					{ "employeeName": "Bob Johnson", "skillName": "Azure", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared" },
+					{ "employeeName": "Charlie Brown", "skillName": "JavaScript", "proficiencyLevel": "Beginner", "validationStatus": "Verified" }
 				]
 			},
 			"row": {
+				"actions": [
+					{
+						"type": "Navigation",
+						"parameters": {
+							"url": "#/employee-skills"
+						}
+					}
+				],
 				"columns": [
 					{
 						"title": "Employee",

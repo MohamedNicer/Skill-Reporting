@@ -20,25 +20,29 @@
 						"title": "Total Employees",
 						"value": "4",
 						"icon": "sap-icon://group",
-						"state": "Success"
+						"state": "Success",
+						"url": "#/employees"
 					},
 					{
 						"title": "Skill Catalog",
 						"value": "5",
 						"icon": "sap-icon://learning-assistant",
-						"state": "None"
+						"state": "None",
+						"url": "#/skills"
 					},
 					{
 						"title": "Employee Skills",
 						"value": "9",
 						"icon": "sap-icon://employee-approvals",
-						"state": "Information"
+						"state": "Information",
+						"url": "#/employee-skills"
 					},
 					{
 						"title": "Pending Requests",
 						"value": "5",
 						"icon": "sap-icon://message-warning",
-						"state": "Error"
+						"state": "Error",
+						"url": "#/configurations"
 					}
 				]
 			},
@@ -50,7 +54,15 @@
 				"info": {
 					"value": "{value}",
 					"state": "{state}"
-				}
+				},
+				"actions": [
+					{
+						"type": "Navigation",
+						"parameters": {
+							"url": "{url}"
+						}
+					}
+				]
 			}
 		}
 	}

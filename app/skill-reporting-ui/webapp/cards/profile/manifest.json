@@ -12,7 +12,15 @@
 				"shape": "Circle"
 			},
 			"title": "Demo Manager",
-			"subTitle": "System Administrator · IT Operations"
+			"subTitle": "System Administrator · IT Operations",
+			"actions": [
+				{
+					"type": "Navigation",
+					"parameters": {
+						"url": "#/employees"
+					}
+				}
+			]
 		},
 		"content": {
 			"groups": [
@@ -56,15 +64,18 @@
 					"items": [
 						{
 							"label": "JavaScript",
-							"value": "Expert"
+							"value": "Expert",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 						},
 						{
 							"label": "Java",
-							"value": "Advanced"
+							"value": "Advanced",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 						},
 						{
 							"label": "AWS",
-							"value": "Intermediate"
+							"value": "Intermediate",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 						}
 					]
 				}

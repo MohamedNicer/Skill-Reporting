@@ -14,7 +14,15 @@
 			},
 			"status": {
 				"text": "5 Pending"
-			}
+			},
+			"actions": [
+				{
+					"type": "Navigation",
+					"parameters": {
+						"url": "#/configurations"
+					}
+				}
+			]
 		},
 		"content": {
 			"data": {
@@ -35,7 +43,15 @@
 				"info": {
 					"value": "{requestedAt}",
 					"state": "Warning"
-				}
+				},
+				"actions": [
+					{
+						"type": "Navigation",
+						"parameters": {
+							"url": "#/configurations"
+						}
+					}
+				]
 			}
 		}
 	}
