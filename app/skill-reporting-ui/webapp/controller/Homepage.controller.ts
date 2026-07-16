@@ -96,7 +96,7 @@ export default class Homepage extends BaseController implements IPage {
 
         // Recent Assignments
         oDataModel.read("/VEmployeeSkills", {
-            urlParameters: { "$top": "5", "$orderby": "modifiedAt desc" },
+            urlParameters: { "$top": "5", "$orderby": "confirmedAt desc" },
             success: (data: any) => {
                 globalModel.setProperty("/cards/assignments", data.results || []);
             },
@@ -106,13 +106,13 @@ export default class Homepage extends BaseController implements IPage {
         // Pending Requests Data
         oDataModel.read("/SkillRequests", {
             filters: [new Filter("status", FilterOperator.EQ, "pendingReview")],
-            urlParameters: { "$top": "5", "$orderby": "createdAt desc", "$expand": "employee,skill" },
+            urlParameters: { "$top": "5", "$orderby": "requestedAt desc", "$expand": "toRequestedBy" },
             success: (data: any) => {
                 const results = data.results || [];
                 const formatted = results.map((r: any) => ({
-                    employeeName: r.employee ? `${r.employee.firstName} ${r.employee.lastName}` : r.employee_ID,
-                    skillName: r.skill ? r.skill.name : r.skill_ID,
-                    proficiencyLevel: r.proficiencyLevel
+                    employeeName: r.toRequestedBy ? `${r.toRequestedBy.firstName} ${r.toRequestedBy.lastName}` : r.requestedByID,
+                    skillName: r.requestedText,
+                    proficiencyLevel: "Pending"
                 }));
                 globalModel.setProperty("/cards/requests", formatted);
             },
