@@ -19,14 +19,6 @@
                     notificationsPressed="onOpenNotifications"
                     busyIndicatorDelay="1"
                 >
-                    <f:menu>
-                        <Menu>
-                            <core:Fragment
-                                fragmentName="com.ndbs.skillreportingui.fragments.common.MenuItems"
-                                type="XML"
-                            />
-                        </Menu>
-                    </f:menu>
                     <f:profile>
                         <Avatar
                             initials="{globalJSONModel>/user}"

@@ -11,37 +11,139 @@
     xmlns:grid="sap.ui.layout.cssgrid"
 >
     <Page id="Homepage" showHeader="false">
-        <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
+        <IconTabBar id="itbLaunchpad" class="sapUiNoContentPadding" headerBackgroundDesign="Solid" applyContentPadding="false">
+            <items>
+                <!-- Overview: Cards Dashboard -->
+                <IconTabFilter text="{i18n>overview}" key="overview">
+                    <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
+                        <grid:CSSGrid gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
+                            <grid:items>
+                                <w:Card manifest="./cards/profile/manifest.json" parameters="{globalJSONModel>/cards/profile}">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 1" />
+                                    </w:layoutData>
+                                </w:Card>
 
-            <grid:CSSGrid gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
-                <grid:items>
-                    <w:Card manifest="./cards/profile/manifest.json" parameters="{globalJSONModel>/cards/profile}">
-                        <w:layoutData>
-                            <grid:GridItemLayoutData gridColumn="span 1" />
-                        </w:layoutData>
-                    </w:Card>
+                                <w:Card manifest="./cards/kpi/manifest.json" parameters="{globalJSONModel>/kpi}">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 1" />
+                                    </w:layoutData>
+                                </w:Card>
 
-                    <w:Card manifest="./cards/kpi/manifest.json" parameters="{globalJSONModel>/kpi}">
-                        <w:layoutData>
-                            <grid:GridItemLayoutData gridColumn="span 1" />
-                        </w:layoutData>
-                    </w:Card>
+                                <w:Card manifest="./cards/assignments/manifest.json" parameters="{globalJSONModel>/cards}">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 2" />
+                                    </w:layoutData>
+                                </w:Card>
 
-                    <w:Card manifest="./cards/assignments/manifest.json" parameters="{globalJSONModel>/cards}">
-                        <w:layoutData>
-                            <grid:GridItemLayoutData gridColumn="span 2" />
-                        </w:layoutData>
-                    </w:Card>
+                                <w:Card manifest="./cards/requests/manifest.json" parameters="{globalJSONModel>/cards}">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 2" />
+                                    </w:layoutData>
+                                </w:Card>
+                            </grid:items>
+                        </grid:CSSGrid>
+                    </VBox>
+                </IconTabFilter>
 
-                    <w:Card manifest="./cards/requests/manifest.json" parameters="{globalJSONModel>/cards}">
-                        <w:layoutData>
-                            <grid:GridItemLayoutData gridColumn="span 2" />
-                        </w:layoutData>
-                    </w:Card>
-                </grid:items>
-            </grid:CSSGrid>
+                <!-- Personnel & Skills -->
+                <IconTabFilter text="{i18n>personnelSkills}" key="personnel_skills">
+                    <HBox class="sapUiMediumMargin" wrap="Wrap">
+                        <GenericTile
+                            header="{i18n>personnel}"
+                            subheader="{i18n>employeeDirectory}"
+                            press=".onNavToView('RoutePersonnel')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://company-view" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
 
-        </VBox>
+                        <GenericTile
+                            header="{i18n>skillCatalog}"
+                            subheader="{i18n>manageSkills}"
+                            press=".onNavToView('RouteSkills')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://education" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+                    </HBox>
+                </IconTabFilter>
+
+                <!-- Operations -->
+                <IconTabFilter text="{i18n>operations}" key="operations">
+                    <HBox class="sapUiMediumMargin" wrap="Wrap">
+                        <GenericTile
+                            header="{i18n>employeeSkills}"
+                            subheader="{i18n>skillAssignments}"
+                            press=".onNavToView('RouteEmployeeSkills')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://employee-approvals" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>cvCenter}"
+                            subheader="{i18n>uploadCV}"
+                            press=".onNavToView('RouteCVCenter')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://document" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+                    </HBox>
+                </IconTabFilter>
+
+                <!-- Management -->
+                <IconTabFilter text="{i18n>management}" key="management">
+                    <HBox class="sapUiMediumMargin" wrap="Wrap">
+                        <GenericTile
+                            header="{i18n>managerWorkspace}"
+                            subheader="{i18n>teamSkills}"
+                            press=".onNavToView('RouteManagerWorkspace')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://manager" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>reports}"
+                            subheader="{i18n>analytics}"
+                            press=".onNavToView('RouteReports')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://business-objects-experience" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+                    </HBox>
+                </IconTabFilter>
+
+                <!-- Administration -->
+                <IconTabFilter text="{i18n>administration}" key="administration">
+                    <HBox class="sapUiMediumMargin" wrap="Wrap">
+                        <GenericTile
+                            header="{i18n>configurations}"
+                            subheader="{i18n>systemSettings}"
+                            press=".onNavToView('RouteConfigurations')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent icon="sap-icon://settings" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+                    </HBox>
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
         <footer>
             <OverflowToolbar id="otbFooter">
                 <Button
