@@ -54,5 +54,11 @@ export default {
 
     convertToFloat: function (value: string): number {
         return parseFloat(value);
+    },
+
+    getImageUrl: function (imageUrl: string): string {
+        if (!imageUrl) return "";
+        // Resolves the path relative to the component namespace
+        return sap.ui.require.toUrl("com/ndbs/skillreportingui/" + imageUrl);
     }
 }; 

@@ -29,7 +29,6 @@
                     showRowCount="true"
                     editTogglable="false"
                     header="{i18n>skillCatalog}"
-                    initiallyVisibleFields="canonicalName,categoryName,statusText,description,isActive"
                 >
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
@@ -64,7 +63,74 @@
                         sticky="ColumnHeaders,HeaderToolbar"
                         selectionChange="onSkillSelectionChange"
                         mode="SingleSelectLeft"
-                    />
+                    >
+                        <columns>
+                            <Column width="4rem" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "imageUrl", "leadingProperty": "imageUrl"\}' />
+                                </customData>
+                                <Text text="Logo" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "canonicalName", "leadingProperty": "canonicalName", "sortProperty": "canonicalName", "filterProperty": "canonicalName"\}' />
+                                </customData>
+                                <Text text="{i18n>skillName}" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "categoryName", "leadingProperty": "categoryName", "sortProperty": "categoryName", "filterProperty": "categoryName"\}' />
+                                </customData>
+                                <Text text="Category" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "statusText", "leadingProperty": "statusText", "sortProperty": "statusText", "filterProperty": "statusText"\}' />
+                                </customData>
+                                <Text text="Status" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "description", "leadingProperty": "description"\}' />
+                                </customData>
+                                <Text text="Description" />
+                            </Column>
+                            <Column hAlign="Center" width="5rem">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "isActive", "leadingProperty": "isActive", "sortProperty": "isActive", "filterProperty": "isActive"\}' />
+                                </customData>
+                                <Text text="Active" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Avatar
+                                        src="{ path: 'imageUrl', formatter: '.formatter.getImageUrl' }"
+                                        displaySize="S"
+                                        displayShape="Square"
+                                        imageFitType="Contain"
+                                        backgroundColor="Transparent"
+                                        fallbackIcon="sap-icon://learning-assistant"
+                                    />
+                                    <ObjectIdentifier
+                                        title="{canonicalName}"
+                                        text="{normalizedName}"
+                                    />
+                                    <Text text="{categoryName}" />
+                                    <ObjectStatus
+                                        text="{statusText}"
+                                        state="{= ${status} === 'approved' ? 'Success' : ${status} === 'deprecated' ? 'Error' : 'Warning' }"
+                                    />
+                                    <Text text="{description}" wrapping="false" />
+                                    <core:Icon
+                                        src="{= ${isActive} ? 'sap-icon://accept' : 'sap-icon://decline'}"
+                                        color="{= ${isActive} ? '#107E3E' : '#BB0000'}"
+                                    />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
                 </smartTable:SmartTable>
             </VBox>
         </FlexBox>

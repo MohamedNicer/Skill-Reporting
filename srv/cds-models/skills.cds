@@ -38,6 +38,7 @@ extend service CatalogService with {
                 canonicalName,
                 normalizedName,
                 description,
+                imageUrl,
                 status,
                 toStatus.text   as statusText   : String(80),
                 isActive
@@ -130,6 +131,7 @@ extend service AdminService with {
                 canonicalName,
                 normalizedName,
                 description,
+                imageUrl,
                 status,
                 toStatus.text   as statusText   : String(80),
                 isActive

@@ -1,4 +1,4 @@
-﻿using {managed} from '@sap/cds/common';
+using {managed} from '@sap/cds/common';
 using {Employees} from './personnel';
 using {
     SkillStatuses,
@@ -46,6 +46,7 @@ entity Skills : managed {
         canonicalName      : String(160) not null;
         normalizedName     : String(160) not null;
         description        : String(1000);
+        imageUrl           : String(500);
         status             : SkillStatuses:code default 'proposed';
         isActive           : Boolean default false;
         toCategory         : Association to one SkillCategories
