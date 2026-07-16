@@ -8,10 +8,11 @@
 		"type": "Object",
 		"header": {
 			"icon": {
-				"src": "sap-icon://customer"
+				"src": "sap-icon://customer",
+				"shape": "Circle"
 			},
-			"title": "{parameters>/firstName} {parameters>/lastName}",
-			"subTitle": "{parameters>/roleDescription}"
+			"title": "Demo Manager",
+			"subTitle": "System Administrator · IT Operations"
 		},
 		"content": {
 			"groups": [
@@ -20,11 +21,12 @@
 					"items": [
 						{
 							"label": "Email",
-							"value": "{parameters>/email}"
+							"value": "admin@company.com",
+							"type": "Email"
 						},
 						{
 							"label": "SF ID",
-							"value": "{parameters>/successFactorsID}"
+							"value": "SF-90192"
 						}
 					]
 				},
@@ -33,15 +35,36 @@
 					"items": [
 						{
 							"label": "Personnel ID",
-							"value": "{parameters>/personnelID}"
+							"value": "P10001"
 						},
 						{
 							"label": "Team",
-							"value": "{parameters>/team}"
+							"value": "IT Operations"
 						},
 						{
-							"label": "Country",
-							"value": "{parameters>/country}"
+							"label": "Location",
+							"value": "New York, USA"
+						},
+						{
+							"label": "Department",
+							"value": "Engineering"
+						}
+					]
+				},
+				{
+					"title": "My Skills",
+					"items": [
+						{
+							"label": "JavaScript",
+							"value": "Expert"
+						},
+						{
+							"label": "Java",
+							"value": "Advanced"
+						},
+						{
+							"label": "AWS",
+							"value": "Intermediate"
 						}
 					]
 				}

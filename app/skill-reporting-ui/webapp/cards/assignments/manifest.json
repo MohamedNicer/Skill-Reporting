@@ -15,13 +15,24 @@
 		},
 		"content": {
 			"data": {
-				"json": "{parameters>/assignments}"
+				"json": [
+					{ "employeeName": "Alice Smith", "skillName": "JavaScript", "proficiencyLevel": "Expert", "validationStatus": "Verified", "source": "System" },
+					{ "employeeName": "Alice Smith", "skillName": "Java", "proficiencyLevel": "Advanced", "validationStatus": "Verified", "source": "System" },
+					{ "employeeName": "Bob Johnson", "skillName": "JavaScript", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared", "source": "System" },
+					{ "employeeName": "Bob Johnson", "skillName": "AWS", "proficiencyLevel": "Beginner", "validationStatus": "Self Declared", "source": "Manual" },
+					{ "employeeName": "Charlie Brown", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed", "source": "Manual" },
+					{ "employeeName": "Diana Prince", "skillName": "AWS", "proficiencyLevel": "Advanced", "validationStatus": "Verified", "source": "System" },
+					{ "employeeName": "Diana Prince", "skillName": "Communication", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed", "source": "Manual" },
+					{ "employeeName": "Bob Johnson", "skillName": "Azure", "proficiencyLevel": "Intermediate", "validationStatus": "Self Declared", "source": "Manual" },
+					{ "employeeName": "Charlie Brown", "skillName": "JavaScript", "proficiencyLevel": "Beginner", "validationStatus": "Verified", "source": "System" }
+				]
 			},
 			"row": {
 				"columns": [
 					{
 						"title": "Employee",
-						"value": "{employeeName}"
+						"value": "{employeeName}",
+						"identifier": true
 					},
 					{
 						"title": "Skill",
@@ -30,6 +41,11 @@
 					{
 						"title": "Proficiency",
 						"value": "{proficiencyLevel}"
+					},
+					{
+						"title": "Status",
+						"value": "{validationStatus}",
+						"state": "{= ${validationStatus} === 'Verified' ? 'Success' : ${validationStatus} === 'Manager Confirmed' ? 'Information' : 'Warning' }"
 					}
 				]
 			}

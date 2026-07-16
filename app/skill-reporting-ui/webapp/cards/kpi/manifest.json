@@ -18,25 +18,25 @@
 				"json": [
 					{
 						"title": "Total Employees",
-						"value": "{parameters>/employees}",
+						"value": "{/kpi/employees}",
 						"icon": "sap-icon://group",
 						"state": "Success"
 					},
 					{
 						"title": "Skill Catalog",
-						"value": "{parameters>/skills}",
+						"value": "{/kpi/skills}",
 						"icon": "sap-icon://learning-assistant",
 						"state": "None"
 					},
 					{
 						"title": "Employee Skills",
-						"value": "{parameters>/employeeSkills}",
+						"value": "{/kpi/employeeSkills}",
 						"icon": "sap-icon://employee-approvals",
-						"state": "None"
+						"state": "Information"
 					},
 					{
 						"title": "Pending Requests",
-						"value": "{parameters>/pendingRequests}",
+						"value": "5",
 						"icon": "sap-icon://message-warning",
 						"state": "Error"
 					}

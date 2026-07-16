@@ -18,25 +18,25 @@
                     <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
                         <grid:CSSGrid gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
                             <grid:items>
-                                <w:Card manifest="./cards/profile/manifest.json" parameters="{globalJSONModel>/cards/profile}">
+                                <w:Card manifest="./cards/profile/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/kpi/manifest.json" parameters="{globalJSONModel>/kpi}">
+                                <w:Card manifest="./cards/kpi/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/assignments/manifest.json" parameters="{globalJSONModel>/cards}">
+                                <w:Card manifest="./cards/assignments/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 2" />
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/requests/manifest.json" parameters="{globalJSONModel>/cards}">
+                                <w:Card manifest="./cards/requests/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 2" />
                                     </w:layoutData>
