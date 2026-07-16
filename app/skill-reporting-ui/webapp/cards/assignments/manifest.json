@@ -21,17 +21,21 @@
 				}
 			]
 		},
-		"data": {
-			"request": {
-				"url": "/odata/v2/admin/VEmployeeSkills",
-				"parameters": {
-					"$top": "10",
-					"$orderby": "confirmedAt desc"
-				}
-			},
-			"path": "/d/results"
-		},
 		"content": {
+			"data": {
+				"json": [
+					{ "employeeName": "Kevin Bacon", "skillName": "React", "proficiencyLevel": "Beginner", "validationStatus": "Self-Declared" },
+					{ "employeeName": "Kevin Bacon", "skillName": "JavaScript", "proficiencyLevel": "Beginner", "validationStatus": "Self-Declared" },
+					{ "employeeName": "Laura Palmer", "skillName": "Project Management", "proficiencyLevel": "Intermediate", "validationStatus": "Verified" },
+					{ "employeeName": "Ivan Drago", "skillName": "Java", "proficiencyLevel": "Intermediate", "validationStatus": "Self-Declared" },
+					{ "employeeName": "Ivan Drago", "skillName": "JavaScript", "proficiencyLevel": "Intermediate", "validationStatus": "Self-Declared" },
+					{ "employeeName": "Julia Roberts", "skillName": "Project Management", "proficiencyLevel": "Expert", "validationStatus": "Manager Confirmed" },
+					{ "employeeName": "George Miller", "skillName": "Kubernetes", "proficiencyLevel": "Intermediate", "validationStatus": "Self-Declared" },
+					{ "employeeName": "George Miller", "skillName": "Docker", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
+					{ "employeeName": "George Miller", "skillName": "Azure", "proficiencyLevel": "Advanced", "validationStatus": "Verified" },
+					{ "employeeName": "George Miller", "skillName": "AWS", "proficiencyLevel": "Advanced", "validationStatus": "Verified" }
+				]
+			},
 			"row": {
 				"actions": [
 					{
@@ -57,8 +61,8 @@
 					},
 					{
 						"title": "Status",
-						"value": "{validationStatusText}",
-						"state": "{= ${validationStatus} === 'verified' ? 'Success' : ${validationStatus} === 'managerConfirmed' ? 'Information' : 'Warning' }"
+						"value": "{validationStatus}",
+						"state": "{= ${validationStatus} === 'Verified' ? 'Success' : ${validationStatus} === 'Manager Confirmed' ? 'Information' : 'Warning' }"
 					}
 				]
 			}
