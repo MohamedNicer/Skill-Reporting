@@ -12,11 +12,16 @@ import Messaging from "sap/ui/core/Messaging";
 import { Button$PressEvent as ButtonPressEvent } from "sap/m/Button";
 import FragmentCL from "ui5/antares/ui/FragmentCL";
 import UI5Element from "sap/ui/core/Element";
+import History from "sap/ui/core/routing/History";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
  */
 export default class BaseController extends Controller {
+
+    public onNavBack(): void {
+        this.getRouter().navTo("RouteHomepage", {}, true);
+    }
 
     /* ======================================================================================================================= */
     /* Global Methods                                                                                                          */

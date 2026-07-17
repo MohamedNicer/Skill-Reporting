@@ -25,4 +25,26 @@ service DashboardService {
         employeeSkills : Integer;
         pendingRequests: Integer;
     };
+
+    type TopSkill {
+        skillName : String;
+        imageUrl : String;
+        count : Integer;
+    }
+
+    function topSkills() returns array of TopSkill;
+
+    type CategoryCount {
+        categoryName : String;
+        count : Integer;
+    }
+
+    function skillsByCategory() returns array of CategoryCount;
+
+    type RequestStatusCount {
+        status : String;
+        count : Integer;
+    }
+
+    function requestsStatus() returns array of RequestStatusCount;
 }

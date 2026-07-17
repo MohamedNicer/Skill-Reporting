@@ -7,3 +7,7 @@
 .sapMColorPalette .sapMColorPaletteContent {
     padding: 0 !important;
 }
+
+.gridAlignStart {
+    align-items: flex-start;
+}

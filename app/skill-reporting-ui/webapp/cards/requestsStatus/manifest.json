@@ -1,0 +1,61 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.requestsStatus",
+		"type": "card",
+		"title": "Skill Request Statuses"
+	},
+	"sap.card": {
+		"type": "Analytical",
+		"header": {
+			"type": "Numeric",
+			"title": "Request Status",
+			"subTitle": "Distribution of requests",
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-requests" } }]
+		},
+		"content": {
+			"chartType": "Donut",
+			"legend": {
+				"visible": true,
+				"position": "Bottom"
+			},
+			"plotArea": {
+				"dataLabel": {
+					"visible": true,
+					"showTotal": true
+				}
+			},
+			"actions": [
+				{
+					"type": "Navigation",
+					"parameters": {
+						"url": "#/skill-requests"
+					}
+				}
+			],
+			"title": {
+				"text": "Request Statuses",
+				"visible": false
+			},
+			"measureAxis": "size",
+			"dimensionAxis": "color",
+			"data": {
+				"request": {
+					"url": "/api/dashboard/requestsStatus()"
+				},
+				"path": "/value"
+			},
+			"dimensions": [
+				{
+					"label": "Status",
+					"value": "{status}"
+				}
+			],
+			"measures": [
+				{
+					"label": "Count",
+					"value": "{count}"
+				}
+			]
+		}
+	}
+}

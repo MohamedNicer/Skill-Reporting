@@ -14,3 +14,19 @@ cccccccc-cccc-cccc-cccc-111111111111;CAT3;Project Management;projectmanagement;A
 dddddddd-dddd-dddd-dddd-111111111111;CAT1;Node.js;nodejs;JavaScript runtime environment;img/skills/nodejs.svg;approved;true
 eeeeeeee-eeee-eeee-eeee-111111111111;CAT2;GCP;gcp;Google Cloud Platform;img/skills/gcp.svg;approved;true
 ffffffff-ffff-ffff-ffff-111111111111;CAT3;Presentation Skills;presentationskills;Public speaking and presentation design;img/skills/presentation-skills.png;approved;true
+00000001-0000-0000-0000-000000000000;CAT4;PostgreSQL;postgresql;Open source relational database;img/skills/postgresql.svg;approved;true
+00000002-0000-0000-0000-000000000000;CAT4;MongoDB;mongodb;NoSQL document database;img/skills/mongodb.svg;approved;true
+00000003-0000-0000-0000-000000000000;CAT4;Redis;redis;In-memory data structure store;img/skills/redis.svg;approved;true
+00000004-0000-0000-0000-000000000000;CAT4;MySQL;mysql;Relational database management system;img/skills/mysql.svg;approved;true
+00000005-0000-0000-0000-000000000000;CAT5;Jenkins;jenkins;Automation server for CI/CD;img/skills/jenkins.svg;approved;true
+00000006-0000-0000-0000-000000000000;CAT5;Terraform;terraform;Infrastructure as Code software tool;img/skills/terraform.svg;approved;true
+00000007-0000-0000-0000-000000000000;CAT5;Ansible;ansible;IT automation engine;img/skills/ansible.svg;approved;true
+00000008-0000-0000-0000-000000000000;CAT6;Pandas;pandas;Data manipulation and analysis library;img/skills/pandas.svg;approved;true
+00000009-0000-0000-0000-000000000000;CAT6;TensorFlow;tensorflow;Machine learning framework;img/skills/tensorflow.svg;approved;true
+0000000a-0000-0000-0000-000000000000;CAT6;PyTorch;pytorch;Open source machine learning library;img/skills/pytorch.svg;approved;true
+10000001-0000-0000-0000-000000000000;CAT7;SAP ABAP;sapabap;Advanced Business Application Programming;img/skills/sap.svg;approved;true
+10000002-0000-0000-0000-000000000000;CAT7;SAP UI5;sapui5;HTML5 UI development toolkit for SAP;img/skills/sap-ui5.svg;approved;true
+10000003-0000-0000-0000-000000000000;CAT7;SAP Fiori;sapfiori;Design system and apps for SAP;img/skills/sap.svg;approved;true
+10000004-0000-0000-0000-000000000000;CAT7;SAP HANA;saphana;High-performance in-memory database;img/skills/sap.svg;approved;true
+10000005-0000-0000-0000-000000000000;CAT7;SAP BTP;sapbtp;Business Technology Platform;img/skills/sap.svg;approved;true
+10000006-0000-0000-0000-000000000000;CAT7;SAP CAP;sapcap;Cloud Application Programming Model;img/skills/sap.svg;approved;true

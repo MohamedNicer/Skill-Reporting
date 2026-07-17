@@ -80,6 +80,56 @@ export class DashboardService extends cds.ApplicationService {
                 pendingRequests: parseInt(pendingRequests?.cnt ?? "0")
             };
         });
+
+        service.on("topSkills", async () => {
+            const db = await cds.connect.to("db");
+            const { EmployeeSkills } = db.entities;
+            const result = await db.run(
+                SELECT.from(EmployeeSkills)
+                    .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "count(employeeID) as count")
+                    .groupBy("toSkill.canonicalName", "toSkill.imageUrl")
+                    .orderBy("count desc")
+                    .limit(3)
+            );
+            return result.map((r: any) => {
+                let finalImageUrl = r.imageUrl || "sap-icon://education";
+                if (finalImageUrl && !finalImageUrl.startsWith("sap-icon://") && !finalImageUrl.startsWith("http") && !finalImageUrl.startsWith("/")) {
+                    finalImageUrl = "../../" + finalImageUrl;
+                }
+                return { skillName: r.skillName, imageUrl: finalImageUrl, count: parseInt(r.count) };
+            });
+        });
+
+        service.on("skillsByCategory", async () => {
+            const db = await cds.connect.to("db");
+            const { Skills } = db.entities;
+            const result = await db.run(
+                SELECT.from(Skills)
+                    .columns("toCategory.name as categoryName", "count(ID) as count")
+                    .where({ isActive: true })
+                    .groupBy("toCategory.name")
+                    .orderBy("count desc")
+            );
+            return result.map((r: any) => ({ categoryName: r.categoryName, count: parseInt(r.count) }));
+        });
+
+        service.on("requestsStatus", async () => {
+            const db = await cds.connect.to("db");
+            const { SkillRequests } = db.entities;
+            const result = await db.run(
+                SELECT.from(SkillRequests)
+                    .columns("status", "count(ID) as count")
+                    .groupBy("status")
+                    .orderBy("count desc")
+            );
+            // Capitalize status string for the chart (e.g. pendingReview -> Pending Review)
+            const formatStatus = (s: string) => {
+                if (!s) return "Unknown";
+                let str = s.replace(/([A-Z])/g, " $1");
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            };
+            return result.map((r: any) => ({ status: formatStatus(r.status), count: parseInt(r.count) }));
+        });
         return super.init();
     }
 }

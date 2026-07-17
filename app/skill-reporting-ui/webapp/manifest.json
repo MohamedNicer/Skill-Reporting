@@ -194,13 +194,6 @@
           ]
         },
         {
-          "name": "RouteConfigurations",
-          "pattern": "configurations",
-          "target": [
-            "TargetConfigurations"
-          ]
-        },
-        {
           "name": "RouteNoAuthorization",
           "pattern": "no-auth",
           "target": [
@@ -208,24 +201,59 @@
           ]
         },
         {
-          "name": "RouteCVCenter",
-          "pattern": "cv-center",
+          "name": "RouteSkillCategories",
+          "pattern": "skill-categories",
           "target": [
-            "TargetCVCenter"
+            "TargetSkillCategories"
           ]
         },
         {
-          "name": "RouteManagerWorkspace",
-          "pattern": "manager",
+          "name": "RouteProficiencyLevels",
+          "pattern": "proficiency-levels",
           "target": [
-            "TargetManagerWorkspace"
+            "TargetProficiencyLevels"
           ]
         },
         {
-          "name": "RouteReports",
-          "pattern": "reports",
+          "name": "RouteSkillRequests",
+          "pattern": "skill-requests",
           "target": [
-            "TargetReports"
+            "TargetSkillRequests"
+          ]
+        },
+        {
+          "name": "RouteUploadedCVs",
+          "pattern": "uploaded-cvs",
+          "target": [
+            "TargetUploadedCVs"
+          ]
+        },
+        {
+          "name": "RouteGeneratedCVs",
+          "pattern": "generated-cvs",
+          "target": [
+            "TargetGeneratedCVs"
+          ]
+        },
+        {
+          "name": "RouteTeamSkills",
+          "pattern": "team-skills",
+          "target": [
+            "TargetTeamSkills"
+          ]
+        },
+        {
+          "name": "RouteDepartmentHeatmap",
+          "pattern": "department-heatmap",
+          "target": [
+            "TargetDepartmentHeatmap"
+          ]
+        },
+        {
+          "name": "RouteCVActivity",
+          "pattern": "cv-activity",
+          "target": [
+            "TargetCVActivity"
           ]
         }
       ],
@@ -258,13 +286,6 @@
           "viewId": "EmployeeSkills",
           "viewName": "EmployeeSkills"
         },
-        "TargetConfigurations": {
-          "viewType": "XML",
-          "transition": "slide",
-          "controlAggregation": "beginColumnPages",
-          "viewId": "Configurations",
-          "viewName": "Configurations"
-        },
         "TargetNoAuthorization": {
           "viewType": "XML",
           "transition": "show",
@@ -272,26 +293,61 @@
           "viewId": "NoAuthorization",
           "viewName": "NoAuthorization"
         },
-        "TargetCVCenter": {
+        "TargetSkillCategories": {
           "viewType": "XML",
           "transition": "slide",
           "controlAggregation": "beginColumnPages",
-          "viewId": "CVCenter",
-          "viewName": "CVCenter"
+          "viewId": "SkillCategories",
+          "viewName": "SkillCategories"
         },
-        "TargetManagerWorkspace": {
+        "TargetProficiencyLevels": {
           "viewType": "XML",
           "transition": "slide",
           "controlAggregation": "beginColumnPages",
-          "viewId": "ManagerWorkspace",
-          "viewName": "ManagerWorkspace"
+          "viewId": "ProficiencyLevels",
+          "viewName": "ProficiencyLevels"
         },
-        "TargetReports": {
+        "TargetSkillRequests": {
           "viewType": "XML",
           "transition": "slide",
           "controlAggregation": "beginColumnPages",
-          "viewId": "Reports",
-          "viewName": "Reports"
+          "viewId": "SkillRequests",
+          "viewName": "SkillRequests"
+        },
+        "TargetUploadedCVs": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "UploadedCVs",
+          "viewName": "UploadedCVs"
+        },
+        "TargetGeneratedCVs": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "GeneratedCVs",
+          "viewName": "GeneratedCVs"
+        },
+        "TargetTeamSkills": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "TeamSkills",
+          "viewName": "TeamSkills"
+        },
+        "TargetDepartmentHeatmap": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "DepartmentHeatmap",
+          "viewName": "DepartmentHeatmap"
+        },
+        "TargetCVActivity": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "CVActivity",
+          "viewName": "CVActivity"
         }
       }
     },

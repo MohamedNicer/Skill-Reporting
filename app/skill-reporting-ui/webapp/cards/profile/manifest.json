@@ -11,16 +11,8 @@
 				"src": "sap-icon://customer",
 				"shape": "Circle"
 			},
-			"title": "Demo Manager",
-			"subTitle": "System Administrator · IT Operations",
-			"actions": [
-				{
-					"type": "Navigation",
-					"parameters": {
-						"url": "#/employees"
-					}
-				}
-			]
+			"title": "Object Card",
+			"subTitle": "Sales Executive"
 		},
 		"content": {
 			"groups": [
@@ -28,13 +20,29 @@
 					"title": "Contact Details",
 					"items": [
 						{
-							"label": "Email",
-							"value": "admin@company.com",
-							"type": "Email"
+							"label": "First Name",
+							"value": "Donna"
 						},
 						{
-							"label": "SF ID",
-							"value": "SF-90192"
+							"label": "Last Name",
+							"value": "Moore"
+						},
+						{
+							"label": "Phone",
+							"value": "+1 202 555 5555"
+						}
+					]
+				},
+				{
+					"title": "Organizational Details",
+					"items": [
+						{
+							"label": "Direct manager",
+							"value": "John Miller",
+							"icon": {
+								"src": "sap-icon://person-placeholder",
+								"shape": "Circle"
+							}
 						}
 					]
 				},
@@ -42,40 +50,17 @@
 					"title": "Company Details",
 					"items": [
 						{
-							"label": "Personnel ID",
-							"value": "P10001"
+							"label": "Company Name",
+							"value": "Company A"
 						},
 						{
-							"label": "Team",
-							"value": "IT Operations"
+							"label": "Address",
+							"value": "481 West Street, Anytown OH 45066, USA"
 						},
 						{
-							"label": "Location",
-							"value": "New York, USA"
-						},
-						{
-							"label": "Department",
-							"value": "Engineering"
-						}
-					]
-				},
-				{
-					"title": "My Skills",
-					"items": [
-						{
-							"label": "JavaScript",
-							"value": "Expert",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
-						},
-						{
-							"label": "Java",
-							"value": "Advanced",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
-						},
-						{
-							"label": "AWS",
-							"value": "Intermediate",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+							"label": "Website",
+							"value": "www.company_a.example.com",
+							"type": "Link"
 						}
 					]
 				}

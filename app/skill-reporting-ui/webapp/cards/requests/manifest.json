@@ -10,7 +10,7 @@
 			"title": "Pending Skill Requests",
 			"subTitle": "Awaiting admin approval",
 			"icon": { "src": "sap-icon://message-warning" },
-			"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-requests" } }]
 		},
 		"data": {
 			"request": {
@@ -30,7 +30,7 @@
 				"description": "{requestedText}",
 				"icon": { "src": "sap-icon://person-placeholder" },
 				"info": { "value": "Pending Review", "state": "Warning" },
-				"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+				"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-requests" } }]
 			}
 		}
 	}

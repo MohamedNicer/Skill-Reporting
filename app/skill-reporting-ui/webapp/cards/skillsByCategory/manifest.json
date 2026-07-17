@@ -1,0 +1,61 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.skillsByCategory",
+		"type": "card",
+		"title": "Skills by Category"
+	},
+	"sap.card": {
+		"type": "Analytical",
+		"header": {
+			"type": "Numeric",
+			"title": "Skills by Category",
+			"subTitle": "Distribution of skills",
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-categories" } }]
+		},
+		"content": {
+			"chartType": "Donut",
+			"legend": {
+				"visible": true,
+				"position": "Bottom"
+			},
+			"plotArea": {
+				"dataLabel": {
+					"visible": true,
+					"showTotal": true
+				}
+			},
+			"actions": [
+				{
+					"type": "Navigation",
+					"parameters": {
+						"url": "#/skill-categories"
+					}
+				}
+			],
+			"title": {
+				"text": "Skills by Category",
+				"visible": false
+			},
+			"measureAxis": "size",
+			"dimensionAxis": "color",
+			"data": {
+				"request": {
+					"url": "/api/dashboard/skillsByCategory()"
+				},
+				"path": "/value"
+			},
+			"dimensions": [
+				{
+					"label": "Category",
+					"value": "{categoryName}"
+				}
+			],
+			"measures": [
+				{
+					"label": "Count",
+					"value": "{count}"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,72 @@
+<mvc:View
+    controllerName="com.ndbs.skillreportingui.controller.SkillRequests"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+>
+    <Page id="SkillRequests" showHeader="true" title="{i18n>skillRequests}" showNavButton="true" navButtonPress=".onNavBack">
+        <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
+            <smartFilterBar:SmartFilterBar
+                id="sfbSkillRequests"
+                entitySet="SkillRequests"
+            />
+            <smartTable:SmartTable
+                id="stSkillRequests"
+                entitySet="SkillRequests"
+                smartFilterId="sfbSkillRequests"
+                tableType="ResponsiveTable"
+                enableAutoBinding="true"
+                useVariantManagement="false"
+                useTablePersonalisation="true"
+                showFullScreenButton="true"
+                showRowCount="true"
+                editTogglable="false"
+                initiallyVisibleFields="requestedByID,requestedText,requestType,status,decision,requestedAt"
+            >
+                <smartTable:customToolbar>
+                    <OverflowToolbar design="Transparent">
+                        <ToolbarSpacer />
+                        <Button
+                            id="btnApproveRequest"
+                            text="{i18n>approve}"
+                            icon="sap-icon://accept"
+                            press="onApproveRequest"
+                            enabled="false"
+                        />
+                        <Button
+                            id="btnRejectRequest"
+                            text="{i18n>reject}"
+                            icon="sap-icon://decline"
+                            press="onRejectRequest"
+                            enabled="false"
+                        />
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+                <Table
+                    id="tblSkillRequests"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    selectionChange="onSkillRequestSelectionChange"
+                    mode="SingleSelectLeft"
+                    growing="true"
+                    growingThreshold="10"
+                    growingScrollToLoad="false"
+                />
+            </smartTable:SmartTable>
+        </VBox>
+        <footer>
+            <OverflowToolbar id="otbFooter">
+                <Button
+                    id="btnMessages"
+                    icon="sap-icon://alert"
+                    text="{=${message>/}.length}"
+                    type="Emphasized"
+                    press="onMessagePopoverPress"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

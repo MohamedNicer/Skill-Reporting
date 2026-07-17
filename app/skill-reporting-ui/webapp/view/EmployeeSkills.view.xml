@@ -8,7 +8,7 @@
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
 >
-    <Page id="EmployeeSkills" showHeader="false">
+    <Page id="EmployeeSkills" showHeader="true" title="{i18n>employeeSkills}" showNavButton="true" navButtonPress=".onNavBack">
         <FlexBox justifyContent="Center" alignItems="Center">
             <VBox width="95%">
                 <smartFilterBar:SmartFilterBar
@@ -30,8 +30,6 @@
                     showRowCount="true"
                     editTogglable="false"
                     header="{i18n>employeeSkills}"
-                    initiallyVisibleFields="employeeName,skillName,categoryName,proficiencyLevel,yearsExperience,validationStatusText"
-
                 >
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
@@ -72,7 +70,82 @@
                         sticky="ColumnHeaders,HeaderToolbar"
                         selectionChange="onEmployeeSkillSelectionChange"
                         mode="SingleSelectLeft"
-                    />
+                        growing="true"
+                        growingThreshold="10"
+                        growingScrollToLoad="false"
+                    >
+                        <columns>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "employeeName", "leadingProperty": "employeeName", "sortProperty": "employeeName", "filterProperty": "employeeName"\}' />
+                                </customData>
+                                <Text text="Employee" />
+                            </Column>
+                            <Column width="4rem" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "skillImageUrl", "leadingProperty": "skillImageUrl"\}' />
+                                </customData>
+                                <Text text="" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "skillName", "leadingProperty": "skillName", "sortProperty": "skillName", "filterProperty": "skillName"\}' />
+                                </customData>
+                                <Text text="Skill" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "proficiencyLevel", "leadingProperty": "proficiencyLevel", "sortProperty": "proficiencyLevel", "filterProperty": "proficiencyLevel"\}' />
+                                </customData>
+                                <Text text="Proficiency" />
+                            </Column>
+                            <Column hAlign="End">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "yearsExperience", "leadingProperty": "yearsExperience", "sortProperty": "yearsExperience"\}' />
+                                </customData>
+                                <Text text="Years Exp" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "validationStatusText", "leadingProperty": "validationStatusText", "sortProperty": "validationStatusText", "filterProperty": "validationStatusText"\}' />
+                                </customData>
+                                <Text text="Validation" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "categoryName", "leadingProperty": "categoryName", "sortProperty": "categoryName", "filterProperty": "categoryName"\}' />
+                                </customData>
+                                <Text text="Category" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{employeeName}" />
+                                    <Avatar
+                                        src="{ path: 'skillImageUrl', formatter: '.formatter.getImageUrl' }"
+                                        displaySize="S"
+                                        displayShape="Square"
+                                        imageFitType="Contain"
+                                        backgroundColor="Transparent"
+                                        fallbackIcon="sap-icon://learning-assistant"
+                                    />
+                                    <Text text="{skillName}" />
+                                    <Text text="{proficiencyLevel}" />
+                                    <Text text="{
+                                        parts: [{path: 'yearsExperience'}],
+                                        type: 'sap.ui.model.type.Float',
+                                        formatOptions: {
+                                            minFractionDigits: 2,
+                                            maxFractionDigits: 2
+                                        }
+                                    }" />
+                                    <Text text="{validationStatusText}" />
+                                    <Text text="{categoryName}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
                 </smartTable:SmartTable>
             </VBox>
         </FlexBox>

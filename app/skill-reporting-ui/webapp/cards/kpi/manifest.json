@@ -49,7 +49,7 @@
 						{
 							"label": "Pending Reviews",
 							"value": "{pendingRequests}",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/configurations" } }]
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-requests" } }]
 						}
 					]
 				}

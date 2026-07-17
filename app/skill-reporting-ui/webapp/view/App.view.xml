@@ -13,6 +13,7 @@
                 <f:ShellBar
                     id="sbApplication"
                     title="{i18n>title}"
+                    secondTitle="{globalJSONModel>/currentSection}"
                     homeIcon="./img/app_logo.png"
                     homeIconPressed="onNavToView('RouteHomepage')"
                     showNotifications="true"

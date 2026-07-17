@@ -12,7 +12,10 @@
 >
     <Page
         id="Personnel"
-        showHeader="false"
+        showHeader="true"
+        title="{i18n>personnel}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
     >
         <FlexBox
             justifyContent="Center"
@@ -31,7 +34,7 @@
                     id="stPersonnel"
                     entitySet="VEmployees"
                     smartFilterId="sfbPersonnel"
-                    tableType="Table"
+                    tableType="ResponsiveTable"
                     enableExport="true"
                     useVariantManagement="false"
                     useTablePersonalisation="true"
@@ -73,14 +76,14 @@
                             />
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                    <table:Table
+                    <Table
                         id="uiTblPersonnel"
-                        selectionMode="Single"
-                    >
-                        <table:rowMode>
-                            <rowmodes:Interactive rowCount="18" />
-                        </table:rowMode>
-                    </table:Table>
+                        sticky="ColumnHeaders,HeaderToolbar"
+                        mode="SingleSelectLeft"
+                        growing="true"
+                        growingThreshold="10"
+                        growingScrollToLoad="false"
+                    />
                 </smartTable:SmartTable>
             </VBox>
         </FlexBox>

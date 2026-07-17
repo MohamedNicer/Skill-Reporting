@@ -135,10 +135,24 @@ export default class App extends Controller {
 
     private changePageLabel(_event: Router$RouteMatchedEvent) {
         const routeName = _event.getParameter("name") as string;
-        const mappings = (this.getUIComponent().getModel("routeMappingsModel") as JSONModel).getData() as Array<{ route: string; pageLabelKey: string; }>;
-        const routeMapping = mappings.find(map => map.route === routeName) as { route: string; pageLabelKey: string; };
+        const model = this.getUIComponent().getModel("routeMappingsModel") as JSONModel;
 
-        ((this.getView() as View).byId("sbApplication") as ShellBar).setSecondTitle(this.getResourceBundleText(routeMapping.pageLabelKey));
+        const updateTitle = () => {
+            const mappings = model.getData() as Array<{ route: string; pageLabelKey: string; }>;
+            if (!mappings) return;
+            const routeMapping = mappings.find(map => map.route === routeName);
+            
+            if (routeMapping) {
+                const globalModel = this.getUIComponent().getModel("globalJSONModel") as JSONModel;
+                globalModel.setProperty("/currentSection", this.getResourceBundleText(routeMapping.pageLabelKey));
+            }
+        };
+
+        if (model.getData()) {
+            updateTitle();
+        } else {
+            model.attachRequestCompleted(updateTitle);
+        }
     }
 
     private getResourceBundle(): ResourceBundle {

@@ -14,8 +14,15 @@ export enum Routes {
     PERSONNEL      = "RoutePersonnel",
     SKILLS         = "RouteSkills",
     EMPLOYEE_SKILLS = "RouteEmployeeSkills",
-    CONFIGURATIONS = "RouteConfigurations",
-    NO_AUTH        = "RouteNoAuthorization"
+    NO_AUTH        = "RouteNoAuthorization",
+    SKILL_CATEGORIES = "RouteSkillCategories",
+    PROFICIENCY_LEVELS = "RouteProficiencyLevels",
+    SKILL_REQUESTS = "RouteSkillRequests",
+    UPLOADED_CVS   = "RouteUploadedCVs",
+    GENERATED_CVS  = "RouteGeneratedCVs",
+    TEAM_SKILLS    = "RouteTeamSkills",
+    DEPARTMENT_HEATMAP = "RouteDepartmentHeatmap",
+    CV_ACTIVITY    = "RouteCVActivity"
 }
 
 export enum FioriThemes {

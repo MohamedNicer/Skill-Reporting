@@ -16,23 +16,39 @@
     "pageLabelKey": "employeeSkills"
   },
   {
-    "route": "RouteConfigurations",
-    "pageLabelKey": "configurations"
-  },
-  {
     "route": "RouteNoAuthorization",
     "pageLabelKey": "noAuthorization"
   },
   {
-    "route": "RouteCVCenter",
-    "pageLabelKey": "cvCenter"
+    "route": "RouteSkillCategories",
+    "pageLabelKey": "skillCategories"
   },
   {
-    "route": "RouteManagerWorkspace",
-    "pageLabelKey": "managerWorkspace"
+    "route": "RouteProficiencyLevels",
+    "pageLabelKey": "proficiencyLevels"
   },
   {
-    "route": "RouteReports",
-    "pageLabelKey": "reports"
+    "route": "RouteSkillRequests",
+    "pageLabelKey": "skillRequests"
+  },
+  {
+    "route": "RouteUploadedCVs",
+    "pageLabelKey": "uploadedCVs"
+  },
+  {
+    "route": "RouteGeneratedCVs",
+    "pageLabelKey": "generatedCVs"
+  },
+  {
+    "route": "RouteTeamSkills",
+    "pageLabelKey": "teamSkills"
+  },
+  {
+    "route": "RouteDepartmentHeatmap",
+    "pageLabelKey": "departmentHeatmap"
+  },
+  {
+    "route": "RouteCVActivity",
+    "pageLabelKey": "cvActivity"
   }
 ]

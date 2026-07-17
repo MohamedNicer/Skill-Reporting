@@ -1,0 +1,37 @@
+<mvc:View
+    controllerName="com.ndbs.skillreportingui.controller.TeamSkills"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+>
+    <Page id="TeamSkills" showHeader="true" title="{i18n>teamSkills}" showNavButton="true" navButtonPress=".onNavBack">
+        <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
+            <!-- Placeholders for Phase 2 Backend Implementation -->
+            <MessageStrip 
+                text="The Team Skills backend view is not yet implemented. This SmartTable will be bound to VTeamSkills in Phase 2."
+                type="Information"
+                showIcon="true"
+                class="sapUiSmallMarginBottom" />
+                
+            <!-- 
+            <smartFilterBar:SmartFilterBar id="sfbTeamSkills" entitySet="VTeamSkills" />
+            <smartTable:SmartTable id="stTeamSkills" entitySet="VTeamSkills" smartFilterId="sfbTeamSkills" ... />
+            -->
+        </VBox>
+        <footer>
+            <OverflowToolbar id="otbFooter">
+                <Button
+                    id="btnMessages"
+                    icon="sap-icon://alert"
+                    text="{=${message>/}.length}"
+                    type="Emphasized"
+                    press="onMessagePopoverPress"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

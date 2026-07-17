@@ -8,3 +8,15 @@ PL6;CAT2;ADV;Advanced;1to3;3;true
 PL7;CAT3;BEG;Beginner;1to3;1;true
 PL8;CAT3;INT;Intermediate;1to3;2;true
 PL9;CAT3;ADV;Advanced;1to3;3;true
+PL10;CAT4;BEG;Beginner;1to3;1;true
+PL11;CAT4;INT;Intermediate;1to3;2;true
+PL12;CAT4;ADV;Advanced;1to3;3;true
+PL13;CAT5;BEG;Beginner;1to3;1;true
+PL14;CAT5;INT;Intermediate;1to3;2;true
+PL15;CAT5;ADV;Advanced;1to3;3;true
+PL16;CAT6;BEG;Beginner;1to3;1;true
+PL17;CAT6;INT;Intermediate;1to3;2;true
+PL18;CAT6;ADV;Advanced;1to3;3;true
+PL19;CAT7;BEG;Beginner;1to3;1;true
+PL20;CAT7;INT;Intermediate;1to3;2;true
+PL21;CAT7;ADV;Advanced;1to3;3;true

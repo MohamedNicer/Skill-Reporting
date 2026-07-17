@@ -8,7 +8,7 @@
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
 >
-    <Page id="Skills" showHeader="false">
+    <Page id="Skills" showHeader="true" title="{i18n>skillCatalog}" showNavButton="true" navButtonPress=".onNavBack">
         <FlexBox justifyContent="Center" alignItems="Center">
             <VBox width="95%">
                 <smartFilterBar:SmartFilterBar
@@ -63,13 +63,16 @@
                         sticky="ColumnHeaders,HeaderToolbar"
                         selectionChange="onSkillSelectionChange"
                         mode="SingleSelectLeft"
+                        growing="true"
+                        growingThreshold="10"
+                        growingScrollToLoad="false"
                     >
                         <columns>
                             <Column width="4rem" hAlign="Center">
                                 <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "imageUrl", "leadingProperty": "imageUrl"\}' />
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "imageUrl", "leadingProperty": "imageUrl", "columnIndex": 0\}' />
                                 </customData>
-                                <Text text="Logo" />
+                                <Text text="" />
                             </Column>
                             <Column>
                                 <customData>

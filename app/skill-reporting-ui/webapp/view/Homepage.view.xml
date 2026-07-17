@@ -11,12 +11,12 @@
     xmlns:grid="sap.ui.layout.cssgrid"
 >
     <Page id="Homepage" showHeader="false">
-        <IconTabBar id="itbLaunchpad" class="sapUiNoContentPadding" headerBackgroundDesign="Solid" applyContentPadding="false">
+        <IconTabBar id="itbLaunchpad" class="sapUiNoContentPadding" headerBackgroundDesign="Solid" applyContentPadding="false" select=".onTabSelect">
             <items>
                 <!-- Overview: Cards Dashboard -->
                 <IconTabFilter text="{i18n>overview}" key="overview">
                     <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
-                        <grid:CSSGrid gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
+                        <grid:CSSGrid class="gridAlignStart" gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
                             <grid:items>
                                 <w:Card manifest="./cards/profile/manifest.json">
                                     <w:layoutData>
@@ -41,6 +41,24 @@
                                         <grid:GridItemLayoutData gridColumn="span 2" />
                                     </w:layoutData>
                                 </w:Card>
+
+                                <w:Card manifest="./cards/topSkills/manifest.json">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 1" />
+                                    </w:layoutData>
+                                </w:Card>
+
+                                <w:Card manifest="./cards/skillsByCategory/manifest.json">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 2" gridRow="span 2" />
+                                    </w:layoutData>
+                                </w:Card>
+
+                                <w:Card manifest="./cards/requestsStatus/manifest.json">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 1" />
+                                    </w:layoutData>
+                                </w:Card>
                             </grid:items>
                         </grid:CSSGrid>
                     </VBox>
@@ -56,7 +74,7 @@
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://company-view" valueColor="Neutral" />
+                                <NumericContent value="{dashboardModel>/employees}" icon="sap-icon://company-view" valueColor="Good" />
                             </TileContent>
                         </GenericTile>
 
@@ -67,7 +85,7 @@
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://education" valueColor="Neutral" />
+                                <NumericContent value="{dashboardModel>/skills}" icon="sap-icon://education" valueColor="Neutral" />
                             </TileContent>
                         </GenericTile>
                     </HBox>
@@ -83,18 +101,29 @@
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://employee-approvals" valueColor="Neutral" />
+                                <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
                             </TileContent>
                         </GenericTile>
 
                         <GenericTile
-                            header="{i18n>cvCenter}"
-                            subheader="{i18n>uploadCV}"
-                            press=".onNavToView('RouteCVCenter')"
+                            header="{i18n>uploadedCVs}"
+                            subheader="{i18n>manageUploadedCVs}"
+                            press=".onNavToView('RouteUploadedCVs')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://document" valueColor="Neutral" />
+                                <ImageContent src="sap-icon://upload-to-cloud" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>generatedCVs}"
+                            subheader="{i18n>manageGeneratedCVs}"
+                            press=".onNavToView('RouteGeneratedCVs')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <ImageContent src="sap-icon://pdf-attachment" />
                             </TileContent>
                         </GenericTile>
                     </HBox>
@@ -104,24 +133,35 @@
                 <IconTabFilter text="{i18n>management}" key="management">
                     <HBox class="sapUiMediumMargin" wrap="Wrap">
                         <GenericTile
-                            header="{i18n>managerWorkspace}"
-                            subheader="{i18n>teamSkills}"
-                            press=".onNavToView('RouteManagerWorkspace')"
+                            header="{i18n>teamSkills}"
+                            subheader="{i18n>managerWorkspace}"
+                            press=".onNavToView('RouteTeamSkills')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://manager" valueColor="Neutral" />
+                                <ImageContent src="sap-icon://manager" />
                             </TileContent>
                         </GenericTile>
 
                         <GenericTile
-                            header="{i18n>reports}"
+                            header="{i18n>departmentHeatmap}"
                             subheader="{i18n>analytics}"
-                            press=".onNavToView('RouteReports')"
+                            press=".onNavToView('RouteDepartmentHeatmap')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://business-objects-experience" valueColor="Neutral" />
+                                <ImageContent src="sap-icon://business-objects-experience" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>cvActivity}"
+                            subheader="{i18n>analytics}"
+                            press=".onNavToView('RouteCVActivity')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <ImageContent src="sap-icon://activity-2" />
                             </TileContent>
                         </GenericTile>
                     </HBox>
@@ -131,13 +171,35 @@
                 <IconTabFilter text="{i18n>administration}" key="administration">
                     <HBox class="sapUiMediumMargin" wrap="Wrap">
                         <GenericTile
-                            header="{i18n>configurations}"
+                            header="{i18n>skillCategories}"
                             subheader="{i18n>systemSettings}"
-                            press=".onNavToView('RouteConfigurations')"
+                            press=".onNavToView('RouteSkillCategories')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
                             <TileContent>
-                                <NumericContent icon="sap-icon://settings" valueColor="Neutral" />
+                                <ImageContent src="sap-icon://list" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>proficiencyLevels}"
+                            subheader="{i18n>systemSettings}"
+                            press=".onNavToView('RouteProficiencyLevels')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <ImageContent src="sap-icon://measure" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="{i18n>skillRequests}"
+                            subheader="{i18n>systemSettings}"
+                            press=".onNavToView('RouteSkillRequests')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent value="{dashboardModel>/pendingRequests}" indicator="{= ${dashboardModel>/pendingRequests} > 0 ? 'Up' : 'None' }" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
                             </TileContent>
                         </GenericTile>
                     </HBox>
