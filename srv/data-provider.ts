@@ -239,24 +239,26 @@ export class DashboardService extends cds.ApplicationService {
             const isAuditor = req.user.is("Auditor");
             const isManager = req.user.is("Manager");
 
+            let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
+            if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
+
             let employeeFilter: any = { isActive: true };
             let skillAssignmentFilter: any = {};
             let requestFilter: any = { status: "pendingReview" };
 
-            if (!isAdmin && !isAuditor && isManager) {
-                const db = await cds.connect.to("db");
-                const { Employees } = db.entities;
-                let manager = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
-                if (!manager) manager = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
-                if (manager) {
-                    employeeFilter = { managerID: manager.ID, isActive: true };
-
-                    const teamMembers = await db.run(SELECT.from(Employees).columns("ID").where({ managerID: manager.ID, isActive: true }));
+            if (!isAdmin && !isAuditor) {
+                if (isManager && currentEmp) {
+                    employeeFilter = { managerID: currentEmp.ID, isActive: true };
+                    const teamMembers = await db.run(SELECT.from(Employees).columns("ID").where({ managerID: currentEmp.ID, isActive: true }));
                     const ids = teamMembers.map((e: any) => e.ID);
-                    ids.push(manager.ID); // Include manager's own skills in skill assignments & requests
-
+                    ids.push(currentEmp.ID);
                     skillAssignmentFilter = { employeeID: { in: ids } };
                     requestFilter = { status: "pendingReview", requestedByID: { in: ids } };
+                } else if (currentEmp) {
+                    // Regular Employee: Strictly personal scope
+                    employeeFilter = { ID: currentEmp.ID };
+                    skillAssignmentFilter = { employeeID: currentEmp.ID };
+                    requestFilter = { requestedByID: currentEmp.ID, status: "pendingReview" };
                 }
             }
 
@@ -276,19 +278,27 @@ export class DashboardService extends cds.ApplicationService {
 
         service.on("topSkills", async (req: Request) => {
             const db = await cds.connect.to("db");
-            const { EmployeeSkills } = db.entities;
+            const { Employees, EmployeeSkills } = db.entities;
 
             const isAdmin = req.user.is("HRAdmin") || req.user.is("SkillsAdmin");
             const isAuditor = req.user.is("Auditor");
             const isManager = req.user.is("Manager");
 
+            let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
+            if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
+
             let query = SELECT.from(EmployeeSkills)
                 .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "count(employeeID) as count");
 
-            if (!isAdmin && !isAuditor && isManager) {
-                const teamIds = await getTeamEmployeeIds(db, req.user.id);
-                if (teamIds.length > 0) {
-                    query.where({ employeeID: { in: teamIds } });
+            if (!isAdmin && !isAuditor) {
+                if (isManager && currentEmp) {
+                    const teamIds = await getTeamEmployeeIds(db, req.user.id);
+                    if (teamIds.length > 0) {
+                        query.where({ employeeID: { in: teamIds } });
+                    }
+                } else if (currentEmp) {
+                    // Regular Employee: Personal top skills
+                    query.where({ employeeID: currentEmp.ID });
                 }
             }
 
@@ -306,9 +316,37 @@ export class DashboardService extends cds.ApplicationService {
             });
         });
 
-        service.on("skillsByCategory", async () => {
+        service.on("skillsByCategory", async (req: Request) => {
             const db = await cds.connect.to("db");
-            const { Skills } = db.entities;
+            const { Employees, EmployeeSkills, Skills } = db.entities;
+
+            const isAdmin = req.user.is("HRAdmin") || req.user.is("SkillsAdmin");
+            const isAuditor = req.user.is("Auditor");
+            const isManager = req.user.is("Manager");
+
+            let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
+            if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
+
+            if (!isAdmin && !isAuditor) {
+                let filter: any = {};
+                if (isManager && currentEmp) {
+                    const teamIds = await getTeamEmployeeIds(db, req.user.id);
+                    if (teamIds.length > 0) {
+                        filter = { employeeID: { in: teamIds } };
+                    }
+                } else if (currentEmp) {
+                    filter = { employeeID: currentEmp.ID };
+                }
+                const result = await db.run(
+                    SELECT.from(EmployeeSkills)
+                        .columns("toSkill.toCategory.name as categoryName", "count(ID) as count")
+                        .where(filter)
+                        .groupBy("toSkill.toCategory.name")
+                        .orderBy("count desc")
+                );
+                return result.map((r: any) => ({ categoryName: r.categoryName || "Uncategorized", count: parseInt(r.count) }));
+            }
+
             const result = await db.run(
                 SELECT.from(Skills)
                     .columns("toCategory.name as categoryName", "count(ID) as count")
@@ -316,23 +354,30 @@ export class DashboardService extends cds.ApplicationService {
                     .groupBy("toCategory.name")
                     .orderBy("count desc")
             );
-            return result.map((r: any) => ({ categoryName: r.categoryName, count: parseInt(r.count) }));
+            return result.map((r: any) => ({ categoryName: r.categoryName || "Uncategorized", count: parseInt(r.count) }));
         });
 
         service.on("requestsStatus", async (req: Request) => {
             const db = await cds.connect.to("db");
-            const { SkillRequests } = db.entities;
+            const { Employees, SkillRequests } = db.entities;
 
             const isAdmin = req.user.is("HRAdmin") || req.user.is("SkillsAdmin");
             const isAuditor = req.user.is("Auditor");
             const isManager = req.user.is("Manager");
 
+            let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
+            if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
+
             let query = SELECT.from(SkillRequests).columns("status", "count(ID) as count");
 
-            if (!isAdmin && !isAuditor && isManager) {
-                const teamIds = await getTeamEmployeeIds(db, req.user.id);
-                if (teamIds.length > 0) {
-                    query.where({ requestedByID: { in: teamIds } });
+            if (!isAdmin && !isAuditor) {
+                if (isManager && currentEmp) {
+                    const teamIds = await getTeamEmployeeIds(db, req.user.id);
+                    if (teamIds.length > 0) {
+                        query.where({ requestedByID: { in: teamIds } });
+                    }
+                } else if (currentEmp) {
+                    query.where({ requestedByID: currentEmp.ID });
                 }
             }
 
