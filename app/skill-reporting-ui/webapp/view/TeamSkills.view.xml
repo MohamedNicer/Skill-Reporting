@@ -42,7 +42,7 @@
                     >
                         <headerToolbar>
                             <OverflowToolbar design="Transparent" class="custom-category-header">
-                                <Avatar icon="{groupedSkillsModel>icon}" displaySize="XS" class="category-icon-avatar sapUiTinyMarginEnd" />
+                                <Avatar src="{groupedSkillsModel>icon}" displaySize="XS" class="category-icon-avatar sapUiTinyMarginEnd" />
                                 <Title text="{groupedSkillsModel>categoryName}" level="H4" style="H4" />
                                 <ToolbarSpacer />
                                 <ObjectStatus text="{groupedSkillsModel>count} Skills" state="None" class="badge-count sapUiTinyMarginEnd" />
