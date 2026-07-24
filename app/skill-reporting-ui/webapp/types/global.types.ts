@@ -22,7 +22,8 @@ export enum Routes {
     GENERATED_CVS  = "RouteGeneratedCVs",
     TEAM_SKILLS    = "RouteTeamSkills",
     DEPARTMENT_HEATMAP = "RouteDepartmentHeatmap",
-    CV_ACTIVITY    = "RouteCVActivity"
+    CV_ACTIVITY    = "RouteCVActivity",
+    AUDIT_LOG      = "RouteAuditLog"
 }
 
 export enum FioriThemes {

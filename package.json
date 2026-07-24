@@ -33,21 +33,35 @@
                     "users": {
                         "employee": {
                             "password": "employee",
+                            "id": "bob.johnson@nttdata.com",
                             "roles": [
                                 "Employee"
                             ]
                         },
                         "manager": {
                             "password": "manager",
+                            "id": "alice.smith@nttdata.com",
                             "roles": [
+                                "Employee",
                                 "Manager"
                             ]
                         },
                         "admin": {
                             "password": "admin",
+                            "id": "charlie.brown@nttdata.com",
                             "roles": [
+                                "Employee",
+                                "Manager",
                                 "HRAdmin",
                                 "SkillsAdmin"
+                            ]
+                        },
+                        "auditor": {
+                            "password": "auditor",
+                            "id": "julia.roberts@nttdata.com",
+                            "roles": [
+                                "Employee",
+                                "Auditor"
                             ]
                         }
                     }

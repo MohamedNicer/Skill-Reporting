@@ -35,6 +35,10 @@ export default class Personnel extends BaseController implements IPage {
     ];
 
     public onInit(): void {
+        const oModel = this.getOwnerComponent()?.getModel("analytics");
+        if (oModel) {
+            this.getView()?.setModel(oModel);
+        }
         const page = new PageCL<Personnel>(this, Routes.PERSONNEL);
         page.initialize();
     }
@@ -101,16 +105,22 @@ export default class Personnel extends BaseController implements IPage {
         table.attachSelectionChange((_event: any) => {
             this.setPersonnelButtonsState(!!table.getSelectedItem());
         });
+        const sfb = this.byId("sfbPersonnel") as any;
+        if (sfb && sfb.search) {
+            sfb.search();
+        }
     }
 
     public onObjectMatched(): void {
         const oDataModel = this.getComponentModel();
         oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
         
-        // MVP: Assuming all are admins for demo
-        (this.byId("btnCreateNewPersonnel") as Button).setVisible(true);
-        (this.byId("btnUpdatePersonnel") as Button).setVisible(true);
-        (this.byId("btnDeletePersonnel") as Button).setVisible(true);
+        // Toggle CRUD button visibility based on admin role
+        const rolesModel = this.getOwnerComponent()?.getModel("userRolesModel") as JSONModel;
+        const isAdmin = !!rolesModel?.getProperty("/isAdmin");
+        (this.byId("btnCreateNewPersonnel") as Button).setVisible(isAdmin);
+        (this.byId("btnUpdatePersonnel") as Button).setVisible(isAdmin);
+        (this.byId("btnDeletePersonnel") as Button).setVisible(isAdmin);
     }
 
     public onODataRequestFail(_event: Model$RequestFailedEvent): void {

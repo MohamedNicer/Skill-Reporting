@@ -255,6 +255,13 @@
           "target": [
             "TargetCVActivity"
           ]
+        },
+        {
+          "name": "RouteAuditLog",
+          "pattern": "audit-log",
+          "target": [
+            "TargetAuditLog"
+          ]
         }
       ],
       "targets": {
@@ -348,6 +355,13 @@
           "controlAggregation": "beginColumnPages",
           "viewId": "CVActivity",
           "viewName": "CVActivity"
+        },
+        "TargetAuditLog": {
+          "viewType": "XML",
+          "transition": "slide",
+          "controlAggregation": "beginColumnPages",
+          "viewId": "AuditLog",
+          "viewName": "AuditLog"
         }
       }
     },

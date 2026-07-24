@@ -18,11 +18,13 @@
                     <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
                         <grid:CSSGrid class="gridAlignStart" gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
                             <grid:items>
+                                <!-- Profile card commented out — use 'Who am I?' in the ShellBar personal menu instead
                                 <w:Card manifest="./cards/profile/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>
                                 </w:Card>
+                                -->
 
                                 <w:Card id="cardKpi" manifest="./cards/kpi/manifest.json">
                                     <w:layoutData>
@@ -36,7 +38,7 @@
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/requests/manifest.json">
+                                <w:Card manifest="./cards/requests/manifest.json" visible="{= ${userRolesModel>/isAdmin}}">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 2" />
                                     </w:layoutData>
@@ -54,7 +56,7 @@
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/requestsStatus/manifest.json">
+                                <w:Card manifest="./cards/requestsStatus/manifest.json" visible="{= ${userRolesModel>/isAdmin}}">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>
@@ -130,7 +132,7 @@
                 </IconTabFilter>
 
                 <!-- Management -->
-                <IconTabFilter text="{i18n>management}" key="management">
+                <IconTabFilter text="{i18n>management}" key="management" visible="{= ${userRolesModel>/isManagerOrAbove}}">
                     <HBox class="sapUiMediumMargin" wrap="Wrap">
                         <GenericTile
                             header="{i18n>teamSkills}"
@@ -168,7 +170,7 @@
                 </IconTabFilter>
 
                 <!-- Administration -->
-                <IconTabFilter text="{i18n>administration}" key="administration">
+                <IconTabFilter text="{i18n>administration}" key="administration" visible="{= ${userRolesModel>/isAdmin} || ${userRolesModel>/Auditor}}">
                     <HBox class="sapUiMediumMargin" wrap="Wrap">
                         <GenericTile
                             header="{i18n>skillCategories}"
@@ -200,6 +202,17 @@
                         >
                             <TileContent>
                                 <NumericContent value="{dashboardModel>/pendingRequests}" indicator="{= ${dashboardModel>/pendingRequests} > 0 ? 'Up' : 'None' }" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="Audit Events"
+                            subheader="Security &amp; Audit Trail"
+                            press=".onNavToView('RouteAuditLog')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <ImageContent src="sap-icon://audit" />
                             </TileContent>
                         </GenericTile>
                     </HBox>

@@ -26,13 +26,22 @@ const findSkillSuggestions = async (input: string): Promise<SkillSuggestion[]> =
 
 const addSkillToProfile = async (req: TypedRequest<any>): Promise<any> => {
     const db: Service = await connect.to("db");
-    const { EmployeeSkills } = db.entities;
-    const employee = req.data.employeeID ? { ID: req.data.employeeID } : await getCurrentEmployee(req.user.id);
-    const existing = await db.run(SELECT.one.from(EmployeeSkills).where({ employeeID: employee.ID, skillID: req.data.skillID }));
+    const { EmployeeSkills, Skills } = db.entities;
+    const currentEmp = await getCurrentEmployee(req.user.id);
+    const targetEmpID = (req.data.employeeID && (req.user.is("HRAdmin") || req.user.is("SkillsAdmin"))) ? req.data.employeeID : currentEmp.ID;
+
+    // Business Rule: Deprecated or inactive skills cannot be newly selected
+    const skill = await db.run(SELECT.one.from(Skills).where({ ID: req.data.skillID }));
+    if (!skill) return req.reject(404, "Skill not found.");
+    if (!skill.isActive || skill.status === "deprecated" || skill.status === "inactive") {
+        return req.reject(422, `Skill '${skill.canonicalName}' is deprecated or inactive and cannot be newly selected.`);
+    }
+
+    const existing = await db.run(SELECT.one.from(EmployeeSkills).where({ employeeID: targetEmpID, skillID: req.data.skillID }));
     if (existing) return req.reject(409, "This skill is already assigned to the profile.");
     const ID = utils.uuid();
-    await db.run(INSERT.into(EmployeeSkills).entries({ ID, employeeID: employee.ID, skillID: req.data.skillID, proficiencyLevelID: req.data.proficiencyLevelID, yearsExperience: req.data.yearsExperience, lastUsedOn: req.data.lastUsedOn, source: "manual", validationStatus: "selfDeclared", confirmedAt: new Date().toISOString() }));
-    await recordAudit(employee.ID, "EmployeeSkillChanged", "EmployeeSkills", ID);
+    await db.run(INSERT.into(EmployeeSkills).entries({ ID, employeeID: targetEmpID, skillID: req.data.skillID, proficiencyLevelID: req.data.proficiencyLevelID, yearsExperience: req.data.yearsExperience, lastUsedOn: req.data.lastUsedOn, source: "manual", validationStatus: "selfDeclared", confirmedAt: new Date().toISOString() }));
+    await recordAudit(currentEmp.ID, "EmployeeSkillChanged", "EmployeeSkills", ID);
     return db.run(SELECT.one.from(EmployeeSkills).where({ ID }));
 };
 
@@ -59,19 +68,77 @@ const dbDeleteEmployeeSkill = async (employeeSkillID: string): Promise<number> =
 const requestSkill = async (req: TypedRequest<any>): Promise<any> => {
     const db: Service = await connect.to("db");
     const { SkillRequests } = db.entities;
-    const employee = req.data.requestedByID ? { ID: req.data.requestedByID } : await getCurrentEmployee(req.user.id);
+    const currentEmp = await getCurrentEmployee(req.user.id);
+    const targetEmpID = (req.data.requestedByID && (req.user.is("HRAdmin") || req.user.is("SkillsAdmin"))) ? req.data.requestedByID : currentEmp.ID;
     const ID = utils.uuid();
-    await db.run(INSERT.into(SkillRequests).entries({ ID, requestedByID: employee.ID, requestType: req.data.requestType || "newSkill", requestedText: req.data.requestedText, normalizedText: normalizeText(req.data.requestedText), status: "pendingReview", requestedAt: new Date().toISOString() }));
-    await recordAudit(employee.ID, "SkillRequested", "SkillRequests", ID);
+    await db.run(INSERT.into(SkillRequests).entries({ ID, requestedByID: targetEmpID, requestType: req.data.requestType || "newSkill", requestedText: req.data.requestedText, normalizedText: normalizeText(req.data.requestedText), status: "draft", requestedAt: new Date().toISOString() }));
+    await recordAudit(currentEmp.ID, "SkillRequested", "SkillRequests", ID);
     return db.run(SELECT.one.from(SkillRequests).where({ ID }));
 };
 
+const submitSkillRequest = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { SkillRequests } = db.entities;
+    const currentEmp = await getCurrentEmployee(req.user.id);
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
+    if (request.status !== "draft") return req.reject(400, "Only draft skill requests can be submitted.");
+    await db.run(UPDATE(SkillRequests).with({ status: "pendingReview" }).where({ ID: request.ID }));
+    await recordAudit(currentEmp.ID, "SkillRequestSubmitted", "SkillRequests", request.ID);
+    return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
+};
+
+const updateSkillRequest = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { SkillRequests } = db.entities;
+    const currentEmp = await getCurrentEmployee(req.user.id);
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
+    if (request.status !== "needsClarification" && request.status !== "draft") {
+        return req.reject(400, "Only requests in draft or needsClarification status can be updated.");
+    }
+    const requestedText = req.data.requestedText || request.requestedText;
+    await db.run(UPDATE(SkillRequests).with({
+        requestedText,
+        normalizedText: normalizeText(requestedText),
+        status: "pendingReview"
+    }).where({ ID: request.ID }));
+    await recordAudit(currentEmp.ID, "SkillRequestUpdated", "SkillRequests", request.ID);
+    return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
+};
+
+const cancelSkillRequest = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { SkillRequests } = db.entities;
+    const currentEmp = await getCurrentEmployee(req.user.id);
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
+    await db.run(UPDATE(SkillRequests).with({ status: "cancelled" }).where({ ID: request.ID }));
+    await recordAudit(currentEmp.ID, "SkillRequestCancelled", "SkillRequests", request.ID);
+    return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
+};
+
 const setNormalizedSkillFields = async (req: Request): Promise<void> => {
-    if (req.data.canonicalName && !req.data.normalizedName) req.data.normalizedName = normalizeText(req.data.canonicalName);
+    if (req.data.canonicalName && !req.data.normalizedName) {
+        req.data.normalizedName = normalizeText(req.data.canonicalName);
+    }
 };
 
 const setNormalizedAliasFields = async (req: Request): Promise<void> => {
-    if (req.data.aliasText && !req.data.normalizedAlias) req.data.normalizedAlias = normalizeText(req.data.aliasText);
+    if (req.data.aliasText && !req.data.normalizedAlias) {
+        req.data.normalizedAlias = normalizeText(req.data.aliasText);
+    }
 };
 
-export { addSkillToProfile, findSkillSuggestions, removeSkill, requestSkill, setNormalizedAliasFields, setNormalizedSkillFields, updateSkillDetails };
+export {
+    addSkillToProfile,
+    cancelSkillRequest,
+    findSkillSuggestions,
+    removeSkill,
+    requestSkill,
+    setNormalizedAliasFields,
+    setNormalizedSkillFields,
+    submitSkillRequest,
+    updateSkillDetails,
+    updateSkillRequest
+};

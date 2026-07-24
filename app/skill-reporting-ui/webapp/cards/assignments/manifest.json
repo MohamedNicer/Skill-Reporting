@@ -16,9 +16,10 @@
 		},
 		"data": {
 			"request": {
-				"url": "/odata/v2/admin/VEmployeeSkills",
+				"url": "/odata/v2/employee-profile/VEmployeeSkills",
 				"parameters": {
 					"$top": "10",
+					"$select": "employeeName,skillName,proficiencyLevel,validationStatusText,validationStatus",
 					"$orderby": "employeeName asc"
 				}
 			},
@@ -34,7 +35,7 @@
 					{
 						"title": "Status",
 						"value": "{validationStatusText}",
-						"state": "{= ${validationStatus} === 'verified' ? 'Success' : ${validationStatus} === 'managerConfirmed' ? 'Information' : 'Warning' }"
+						"state": "{= ${validationStatus} === 'verified' || ${validationStatus} === 'managerConfirmed' ? 'Success' : ${validationStatus} === 'rejected' ? 'Error' : 'Warning' }"
 					}
 				]
 			}

@@ -5,25 +5,98 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
 >
-    <Page id="TeamSkills" showHeader="true" title="{i18n>teamSkills}" showNavButton="true" navButtonPress=".onNavBack">
+    <Page id="TeamSkillsPage" showHeader="true" title="{i18n>teamSkills}" showNavButton="true" navButtonPress=".onNavBack">
+        <subHeader>
+            <OverflowToolbar>
+                <SearchField id="sfTeamSkills" width="100%" placeholder="Search skills, employees, or categories..." search=".onSearch" liveChange=".onSearch" />
+            </OverflowToolbar>
+        </subHeader>
+
         <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
-            <!-- Placeholders for Phase 2 Backend Implementation -->
-            <MessageStrip 
-                text="The Team Skills backend view is not yet implemented. This SmartTable will be bound to VTeamSkills in Phase 2."
-                type="Information"
-                showIcon="true"
-                class="sapUiSmallMarginBottom" />
-                
-            <!-- 
-            <smartFilterBar:SmartFilterBar id="sfbTeamSkills" entitySet="VTeamSkills" />
-            <smartTable:SmartTable id="stTeamSkills" entitySet="VTeamSkills" smartFilterId="sfbTeamSkills" ... />
-            -->
+            <!-- Top KPI Summary Bar -->
+            <HBox class="kpi-container sapUiMediumMarginBottom" justifyContent="SpaceAround" alignItems="Center">
+                <VBox alignItems="Center">
+                    <Label text="Total Team Skills" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/totalCount}" state="None" />
+                </VBox>
+                <VBox alignItems="Center">
+                    <Label text="Verified &amp; Endorsed" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/validatedCount}" state="Success" />
+                </VBox>
+                <VBox alignItems="Center">
+                    <Label text="Needs Endorsement" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/pendingCount}" state="Warning" />
+                </VBox>
+            </HBox>
+
+            <Title text="Skill Categories" level="H3" class="section-title" />
+
+            <!-- Collapsible Category Panels -->
+            <VBox items="{groupedSkillsModel>/categories}">
+                <items>
+                    <Panel
+                        expandable="true"
+                        expanded="false"
+                        class="custom-category-panel sapUiSmallMarginBottom"
+                    >
+                        <headerToolbar>
+                            <OverflowToolbar design="Transparent" class="custom-category-header">
+                                <Avatar icon="{groupedSkillsModel>icon}" displaySize="XS" class="category-icon-avatar sapUiTinyMarginEnd" />
+                                <Title text="{groupedSkillsModel>categoryName}" level="H4" style="H4" />
+                                <ToolbarSpacer />
+                                <ObjectStatus text="{groupedSkillsModel>count} Skills" state="None" class="badge-count sapUiTinyMarginEnd" />
+                                <ObjectStatus
+                                    text="{groupedSkillsModel>pendingCount} Need Endorsement"
+                                    state="Warning"
+                                    visible="{= ${groupedSkillsModel>pendingCount} > 0}"
+                                    class="badge-review-needed"
+                                />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{groupedSkillsModel>skills}" mode="None">
+                            <columns>
+                                <Column><Text text="Employee" /></Column>
+                                <Column><Text text="Department" /></Column>
+                                <Column><Text text="Skill" /></Column>
+                                <Column><Text text="Proficiency Level" /></Column>
+                                <Column><Text text="Validation Status" /></Column>
+                                <Column hAlign="End"><Text text="Action" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <ObjectIdentifier title="{groupedSkillsModel>employeeName}" text="{groupedSkillsModel>employeeID}" />
+                                        <Text text="{groupedSkillsModel>departmentName}" />
+                                        <HBox alignItems="Center">
+                                            <Avatar src="{groupedSkillsModel>skillImageUrl}" displaySize="XS" fallbackIcon="sap-icon://education" class="sapUiTinyMarginEnd" />
+                                            <Text text="{groupedSkillsModel>skillName}" />
+                                        </HBox>
+                                        <ObjectStatus text="{groupedSkillsModel>proficiencyLevel}" state="Success" />
+                                        <ObjectStatus
+                                            text="{groupedSkillsModel>validationStatusText}"
+                                            state="{= ${groupedSkillsModel>validationStatus} === 'verified' || ${groupedSkillsModel>validationStatus} === 'managerConfirmed' || ${groupedSkillsModel>validationStatus} === 'managerValidated' ? 'Success' : ${groupedSkillsModel>validationStatus} === 'rejected' ? 'Error' : 'Warning'}"
+                                        />
+                                        <Button
+                                            text="Endorse"
+                                            type="Accept"
+                                            icon="sap-icon://accept"
+                                            visible="{= ${groupedSkillsModel>validationStatus} === 'selfDeclared' || ${groupedSkillsModel>validationStatus} === 'draft'}"
+                                            press=".onRowEndorse"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </items>
+            </VBox>
         </VBox>
+
         <footer>
             <OverflowToolbar id="otbFooter">
+                <ToolbarSpacer />
                 <Button
                     id="btnMessages"
                     icon="sap-icon://alert"

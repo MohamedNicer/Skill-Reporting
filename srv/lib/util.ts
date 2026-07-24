@@ -15,15 +15,33 @@ const toBuffer = (content: unknown): Buffer => {
 
 const checksum = (content: Buffer): string => crypto.createHash("sha256").update(content).digest("hex");
 
+const MOCK_MAP: Record<string, string> = {
+    employee: "EMP2",
+    manager: "EMP1",
+    admin: "EMP3",
+    auditor: "EMP10"
+};
+
 const getCurrentEmployee = async (userId: string): Promise<any> => {
     const db: Service = await connect.to("db");
     const { Employees } = db.entities;
-    let employee = await db.run(SELECT.one.from(Employees).where({ email: userId }));
-    if (!employee) employee = await db.run(SELECT.one.from(Employees).where({ ID: userId }));
+    const mappedID = MOCK_MAP[userId];
+    let employee = null;
+
+    if (mappedID) {
+        employee = await db.run(SELECT.one.from(Employees).where({ ID: mappedID }));
+    }
     if (!employee) {
-        const ID = userId.includes("@") ? userId : utils.uuid();
+        employee = await db.run(SELECT.one.from(Employees).where({ email: userId }));
+    }
+    if (!employee) {
+        employee = await db.run(SELECT.one.from(Employees).where({ ID: userId }));
+    }
+    if (!employee) {
+        const ID = userId.includes("@") ? userId : (mappedID || utils.uuid());
         const email = userId.includes("@") ? userId : `${userId}@local.user`;
-        await db.run(INSERT.into(Employees).entries({ ID, firstName: userId, lastName: "User", email, isActive: true }));
+        const firstName = userId.charAt(0).toUpperCase() + userId.slice(1);
+        await db.run(INSERT.into(Employees).entries({ ID, firstName, lastName: "User", email, isActive: true }));
         employee = await db.run(SELECT.one.from(Employees).where({ ID }));
     }
     return employee;

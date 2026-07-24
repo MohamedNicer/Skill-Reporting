@@ -12,11 +12,14 @@
         <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
             <smartFilterBar:SmartFilterBar
                 id="sfbSkillRequests"
-                entitySet="SkillRequests"
+                entitySet="VSkillRequests"
+                model="profile"
+                enableBasicSearch="true"
             />
             <smartTable:SmartTable
                 id="stSkillRequests"
-                entitySet="SkillRequests"
+                entitySet="VSkillRequests"
+                model="profile"
                 smartFilterId="sfbSkillRequests"
                 tableType="ResponsiveTable"
                 enableAutoBinding="true"
@@ -25,7 +28,8 @@
                 showFullScreenButton="true"
                 showRowCount="true"
                 editTogglable="false"
-                initiallyVisibleFields="requestedByID,requestedText,requestType,status,decision,requestedAt"
+                header="{i18n>skillRequests}"
+                requestAtLeastFields="status,statusText,requestedByID,requestedByName,requestedText,requestType,requestTypeText,decision,decisionText,requestedAt"
             >
                 <smartTable:customToolbar>
                     <OverflowToolbar design="Transparent">
@@ -54,7 +58,65 @@
                     growing="true"
                     growingThreshold="10"
                     growingScrollToLoad="false"
-                />
+                >
+                    <columns>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "requestedByName", "leadingProperty": "requestedByName", "sortProperty": "requestedByName", "filterProperty": "requestedByName"\}' />
+                            </customData>
+                            <Text text="Requested By" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "requestTypeText", "leadingProperty": "requestTypeText", "sortProperty": "requestTypeText", "filterProperty": "requestTypeText"\}' />
+                            </customData>
+                            <Text text="Request Type" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "requestedText", "leadingProperty": "requestedText", "sortProperty": "requestedText", "filterProperty": "requestedText"\}' />
+                            </customData>
+                            <Text text="Requested Skill / Details" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "statusText", "leadingProperty": "statusText", "sortProperty": "statusText", "filterProperty": "statusText"\}' />
+                            </customData>
+                            <Text text="Status" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "decisionText", "leadingProperty": "decisionText", "sortProperty": "decisionText", "filterProperty": "decisionText"\}' />
+                            </customData>
+                            <Text text="Decision / Notes" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData" value='\{"columnKey": "requestedAt", "leadingProperty": "requestedAt", "sortProperty": "requestedAt", "filterProperty": "requestedAt"\}' />
+                            </customData>
+                            <Text text="Date" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier title="{requestedByName}" text="{requestedByID}" />
+                                <Text text="{requestTypeText}" />
+                                <Text text="{requestedText}" />
+                                <ObjectStatus
+                                    text="{statusText}"
+                                    state="{= ${status} === 'approved' || ${status} === 'Approved' || ${status} === 'decided' || ${status} === 'Decided' ? 'Success' : ${status} === 'rejected' || ${status} === 'Rejected' ? 'Error' : 'Warning' }"
+                                />
+                                <Text text="{decisionText}" />
+                                <Text text="{
+                                    path: 'requestedAt',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { style: 'medium' }
+                                }" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
             </smartTable:SmartTable>
         </VBox>
         <footer>

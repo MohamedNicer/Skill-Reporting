@@ -1,0 +1,81 @@
+{
+    "xsappname": "employee-skills-cv-app",
+    "tenant-mode": "dedicated",
+    "scopes": [
+        { "name": "$XSAPPNAME.Employee",       "description": "Employee role" },
+        { "name": "$XSAPPNAME.Manager",        "description": "Manager role" },
+        { "name": "$XSAPPNAME.HRAdmin",        "description": "HR Admin role" },
+        { "name": "$XSAPPNAME.SkillsAdmin",    "description": "Skills Admin role" },
+        { "name": "$XSAPPNAME.Auditor",        "description": "Auditor role" },
+        { "name": "$XSAPPNAME.IntegrationClient", "description": "Integration client role" }
+    ],
+    "attributes": [
+        { "name": "employeeID", "description": "Employee ID", "valueType": "string" }
+    ],
+    "role-templates": [
+        {
+            "name": "Employee",
+            "description": "Employee — own profile, skills, CVs",
+            "scope-references": ["$XSAPPNAME.Employee"],
+            "attribute-references": ["employeeID"]
+        },
+        {
+            "name": "Manager",
+            "description": "Manager — team skills, endorsements, reports",
+            "scope-references": ["$XSAPPNAME.Manager"],
+            "attribute-references": ["employeeID"]
+        },
+        {
+            "name": "HRAdmin",
+            "description": "HR Admin — employees, departments, templates, governance",
+            "scope-references": ["$XSAPPNAME.HRAdmin"]
+        },
+        {
+            "name": "SkillsAdmin",
+            "description": "Skills Admin — catalog, aliases, governance, merge",
+            "scope-references": ["$XSAPPNAME.SkillsAdmin"]
+        },
+        {
+            "name": "Auditor",
+            "description": "Auditor — read-only audit events, document metadata, all skill data",
+            "scope-references": ["$XSAPPNAME.Auditor"]
+        },
+        {
+            "name": "IntegrationClient",
+            "description": "Technical integration client for DMS, Adobe, extraction",
+            "scope-references": ["$XSAPPNAME.IntegrationClient"]
+        }
+    ],
+    "role-collections": [
+        {
+            "name": "SkillApp_Employee",
+            "description": "Employee role collection",
+            "role-template-references": ["$XSAPPNAME.Employee"]
+        },
+        {
+            "name": "SkillApp_Manager",
+            "description": "Manager role collection",
+            "role-template-references": ["$XSAPPNAME.Manager"]
+        },
+        {
+            "name": "SkillApp_HRAdmin",
+            "description": "HR Admin role collection",
+            "role-template-references": ["$XSAPPNAME.HRAdmin"]
+        },
+        {
+            "name": "SkillApp_SkillsAdmin",
+            "description": "Skills Admin role collection",
+            "role-template-references": ["$XSAPPNAME.SkillsAdmin"]
+        },
+        {
+            "name": "SkillApp_Auditor",
+            "description": "Auditor role collection",
+            "role-template-references": ["$XSAPPNAME.Auditor"]
+        },
+        {
+            "name": "SkillApp_IntegrationClient",
+            "description": "Integration client role collection",
+            "role-template-references": ["$XSAPPNAME.IntegrationClient"]
+        }
+    ]
+}

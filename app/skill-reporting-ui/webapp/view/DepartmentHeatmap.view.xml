@@ -5,17 +5,58 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:micro="sap.suite.ui.microchart"
+    xmlns:grid="sap.ui.layout.cssgrid"
 >
-    <Page id="DepartmentHeatmap" showHeader="true" title="{i18n>departmentHeatmap}" showNavButton="true" navButtonPress=".onNavBack">
+    <Page id="DepartmentHeatmapPage" showHeader="true" title="{i18n>departmentHeatmap}" showNavButton="true" navButtonPress=".onNavBack">
         <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
-            <!-- Placeholders for Phase 2 Backend Implementation -->
-            <MessageStrip 
-                text="The Department Heatmap backend view is not yet implemented. This UI will be bound to VDepartmentHeatmap in Phase 2."
-                type="Information"
-                showIcon="true"
-                class="sapUiSmallMarginBottom" />
+            <!-- Heatmap Summary Header -->
+            <Panel headerText="Department Skill Coverage Overview" expandable="false" class="sapUiSmallMarginBottom">
+                <HBox wrap="Wrap" justifyContent="SpaceAround" class="sapUiMediumMarginTopBottom">
+                    <VBox alignItems="Center" class="sapUiSmallMargin">
+                        <Label text="Total Departments" class="sapUiTinyMarginBottom" />
+                        <ObjectNumber number="{heatmapSummary>/totalDepartments}" state="Information" />
+                    </VBox>
+                    <VBox alignItems="Center" class="sapUiSmallMargin">
+                        <Label text="Total Active Employees" class="sapUiTinyMarginBottom" />
+                        <ObjectNumber number="{heatmapSummary>/totalEmployees}" state="Success" />
+                    </VBox>
+                    <VBox alignItems="Center" class="sapUiSmallMargin">
+                        <Label text="Total Tracked Skills" class="sapUiTinyMarginBottom" />
+                        <ObjectNumber number="{heatmapSummary>/totalSkills}" state="Warning" />
+                    </VBox>
+                </HBox>
+            </Panel>
+
+            <!-- Interactive Department Skill Distribution -->
+            <Panel headerText="Department Skill Breakdown &amp; Proficiency Heatmap" expandable="false" class="sapUiSmallMarginBottom">
+                <List items="{heatmapModel>/rows}">
+                    <CustomListItem class="sapUiSmallMargin">
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <VBox>
+                                    <Title text="{heatmapModel>departmentName}" level="H3" />
+                                    <Text text="{heatmapModel>totalEmployees} Employees | {heatmapModel>totalSkills} Total Skills Assigned" class="sapUiTinyMarginTop" />
+                                </VBox>
+                                <ObjectStatus text="{= ${heatmapModel>totalSkills} > 5 ? 'High Coverage' : ${heatmapModel>totalSkills} > 0 ? 'Medium Coverage' : 'Low Coverage' }" state="{= ${heatmapModel>totalSkills} > 5 ? 'Success' : ${heatmapModel>totalSkills} > 0 ? 'Warning' : 'Error' }" />
+                            </HBox>
+
+                            <!-- Micro Stacked Bar Chart for Proficiency Levels -->
+                            <VBox class="sapUiSmallMarginTop">
+                                <Label text="Proficiency Distribution (Beginner, Intermediate, Advanced, Expert):" />
+                                <micro:InteractiveStackedBarChart size="Responsive" selectionChanged=".onSegmentSelect">
+                                    <micro:segments>
+                                        <micro:InteractiveStackedBarChartSegment label="Beginner" value="{heatmapModel>beginnerCount}" color="Neutral" />
+                                        <micro:InteractiveStackedBarChartSegment label="Intermediate" value="{heatmapModel>intermediateCount}" color="Good" />
+                                        <micro:InteractiveStackedBarChartSegment label="Advanced" value="{heatmapModel>advancedCount}" color="Critical" />
+                                        <micro:InteractiveStackedBarChartSegment label="Expert" value="{heatmapModel>expertCount}" color="Error" />
+                                    </micro:segments>
+                                </micro:InteractiveStackedBarChart>
+                            </VBox>
+                        </VBox>
+                    </CustomListItem>
+                </List>
+            </Panel>
         </VBox>
         <footer>
             <OverflowToolbar id="otbFooter">

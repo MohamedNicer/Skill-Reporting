@@ -5,12 +5,23 @@ const approveSkillRequest = async (req: TypedRequest<any>): Promise<any> => {
     const db: Service = await connect.to("db");
     const { SkillRequests, Skills } = db.entities;
     const actor = await getCurrentEmployee(req.user.id);
-    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID, status: "pendingReview" }));
-    if (!request) return req.reject(404, "Pending skill request not found.");
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
     const skillID = utils.uuid();
-    await db.run(INSERT.into(Skills).entries({ ID: skillID, canonicalName: request.requestedText, normalizedName: request.normalizedText, categoryID: req.data.categoryID, description: req.data.description, status: "active", isActive: true }));
+    await db.run(INSERT.into(Skills).entries({ ID: skillID, canonicalName: request.requestedText, normalizedName: request.normalizedText || normalizeText(request.requestedText), categoryID: req.data.categoryID, description: req.data.description, status: "active", isActive: true }));
     await db.run(UPDATE(SkillRequests).with({ resolvedSkillID: skillID, status: "decided", decision: "approvedAsNewSkill", decidedAt: new Date().toISOString() }).where({ ID: request.ID }));
     await recordAudit(actor.ID, "SkillApproved", "SkillRequests", request.ID);
+    return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
+};
+
+const requestClarification = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { SkillRequests } = db.entities;
+    const actor = await getCurrentEmployee(req.user.id);
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
+    await db.run(UPDATE(SkillRequests).with({ status: "needsClarification", adminComment: req.data.adminComment }).where({ ID: request.ID }));
+    await recordAudit(actor.ID, "SkillRequestClarificationRequested", "SkillRequests", request.ID);
     return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
 };
 
@@ -18,9 +29,9 @@ const mergeSkillRequestAsAlias = async (req: TypedRequest<any>): Promise<any> =>
     const db: Service = await connect.to("db");
     const { SkillRequests, SkillAliases } = db.entities;
     const actor = await getCurrentEmployee(req.user.id);
-    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID, status: "pendingReview" }));
-    if (!request) return req.reject(404, "Pending skill request not found.");
-    await db.run(INSERT.into(SkillAliases).entries({ ID: utils.uuid(), skillID: req.data.skillID, aliasText: request.requestedText, normalizedAlias: request.normalizedText, aliasType: "synonym", isActive: true }));
+    const request = await db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
+    if (!request) return req.reject(404, "Skill request not found.");
+    await db.run(INSERT.into(SkillAliases).entries({ ID: utils.uuid(), skillID: req.data.skillID, aliasText: request.requestedText, normalizedAlias: request.normalizedText || normalizeText(request.requestedText), aliasType: "synonym", isActive: true }));
     await db.run(UPDATE(SkillRequests).with({ resolvedSkillID: req.data.skillID, status: "decided", decision: "mergedAsAlias", decidedAt: new Date().toISOString() }).where({ ID: request.ID }));
     await recordAudit(actor.ID, "SkillMergedAsAlias", "SkillRequests", request.ID);
     return db.run(SELECT.one.from(SkillRequests).where({ ID: request.ID }));
@@ -30,7 +41,7 @@ const rejectSkillRequest = async (req: TypedRequest<any>): Promise<any> => {
     const db: Service = await connect.to("db");
     const { SkillRequests } = db.entities;
     const actor = await getCurrentEmployee(req.user.id);
-    await db.run(UPDATE(SkillRequests).with({ status: "decided", decision: "rejected", adminComment: req.data.reason, decidedAt: new Date().toISOString() }).where({ ID: req.data.requestID, status: "pendingReview" }));
+    await db.run(UPDATE(SkillRequests).with({ status: "decided", decision: "rejected", adminComment: req.data.reason, decidedAt: new Date().toISOString() }).where({ ID: req.data.requestID }));
     await recordAudit(actor.ID, "SkillRequestRejected", "SkillRequests", req.data.requestID);
     return db.run(SELECT.one.from(SkillRequests).where({ ID: req.data.requestID }));
 };
@@ -46,4 +57,40 @@ const mergeDuplicateSkills = async (req: TypedRequest<any>): Promise<boolean> =>
     return true;
 };
 
-export { approveSkillRequest, mergeDuplicateSkills, mergeSkillRequestAsAlias, rejectSkillRequest };
+const deprecateSkill = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { Skills } = db.entities;
+    const actor = await getCurrentEmployee(req.user.id);
+    await db.run(UPDATE(Skills).with({ status: "deprecated", isActive: false }).where({ ID: req.data.skillID }));
+    await recordAudit(actor.ID, "SkillDeprecated", "Skills", req.data.skillID);
+    return db.run(SELECT.one.from(Skills).where({ ID: req.data.skillID }));
+};
+
+const reactivateSkill = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { Skills } = db.entities;
+    const actor = await getCurrentEmployee(req.user.id);
+    await db.run(UPDATE(Skills).with({ status: "active", isActive: true }).where({ ID: req.data.skillID }));
+    await recordAudit(actor.ID, "SkillReactivated", "Skills", req.data.skillID);
+    return db.run(SELECT.one.from(Skills).where({ ID: req.data.skillID }));
+};
+
+const deactivateSkill = async (req: TypedRequest<any>): Promise<any> => {
+    const db: Service = await connect.to("db");
+    const { Skills } = db.entities;
+    const actor = await getCurrentEmployee(req.user.id);
+    await db.run(UPDATE(Skills).with({ status: "inactive", isActive: false }).where({ ID: req.data.skillID }));
+    await recordAudit(actor.ID, "SkillDeactivated", "Skills", req.data.skillID);
+    return db.run(SELECT.one.from(Skills).where({ ID: req.data.skillID }));
+};
+
+export {
+    approveSkillRequest,
+    deactivateSkill,
+    deprecateSkill,
+    mergeDuplicateSkills,
+    mergeSkillRequestAsAlias,
+    reactivateSkill,
+    rejectSkillRequest,
+    requestClarification
+};

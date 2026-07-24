@@ -5,16 +5,60 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:micro="sap.suite.ui.microchart"
+    xmlns:grid="sap.ui.layout.cssgrid"
 >
-    <Page id="CVActivity" showHeader="true" title="{i18n>cvActivity}" showNavButton="true" navButtonPress=".onNavBack">
+    <Page id="CVActivityPage" showHeader="true" title="Skill Activity &amp; Governance Analytics" showNavButton="true" navButtonPress=".onNavBack">
         <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
-            <MessageStrip 
-                text="The CV Activity backend view is not yet implemented. This UI will be bound to VCVActivity in Phase 2."
-                type="Information"
-                showIcon="true"
-                class="sapUiSmallMarginBottom" />
+            
+            <grid:CSSGrid class="gridAlignStart" gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
+                <grid:items>
+                    
+                    <!-- Skill Sources Chart -->
+                    <Panel headerText="Skill Assignment Sources" expandable="false">
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="Origins of Employee Skills in DB:" class="sapUiTinyMarginBottom" />
+                            <micro:InteractiveDonutChart segments="{activityModel>/sources}">
+                                <micro:segments>
+                                    <micro:InteractiveDonutChartSegment label="{activityModel>sourceText}" value="{activityModel>count}" displayedValue="{activityModel>count}" />
+                                </micro:segments>
+                            </micro:InteractiveDonutChart>
+                        </VBox>
+                    </Panel>
+
+                    <!-- Skill Request Status Governance -->
+                    <Panel headerText="Skill Request Lifecycle Statuses" expandable="false">
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="Current Governance Breakdown:" class="sapUiTinyMarginBottom" />
+                            <micro:InteractiveBarChart barSelectable="false" bars="{activityModel>/requests}">
+                                <micro:bars>
+                                    <micro:InteractiveBarChartBar label="{activityModel>status}" value="{activityModel>count}" displayValue="{activityModel>count}" />
+                                </micro:bars>
+                            </micro:InteractiveBarChart>
+                        </VBox>
+                    </Panel>
+
+                </grid:items>
+            </grid:CSSGrid>
+
+            <!-- Detailed Table of Requests Governance -->
+            <Panel headerText="Active Skill Governance Requests" expandable="false" class="sapUiSmallMarginTop">
+                <Table id="tblRequests" items="{activityModel>/requestsDetail}" growing="true" growingThreshold="10">
+                    <columns>
+                        <Column><Text text="Status" /></Column>
+                        <Column><Text text="Request Count" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectStatus text="{activityModel>status}" state="{= ${activityModel>status} === 'Approved' ? 'Success' : ${activityModel>status} === 'Rejected' || ${activityModel>status} === 'Deprecated' ? 'Error' : 'Warning' }" />
+                                <ObjectNumber number="{activityModel>count}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+
         </VBox>
         <footer>
             <OverflowToolbar id="otbFooter">

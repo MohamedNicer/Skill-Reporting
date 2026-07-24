@@ -1,126 +1,139 @@
 import BaseController from "com/ndbs/skillreportingui/controller/BaseController";
 import { IPage } from "../util/common/common.types";
-import { Model$RequestFailedEvent } from "sap/ui/model/Model";
-import formatter from "com/ndbs/skillreportingui/model/formatter";
 import PageCL from "com/ndbs/skillreportingui/util/common/PageCL";
 import { Routes } from "../types/global.types";
-import Table from "sap/m/Table";
-import MessageBox from "sap/m/MessageBox";
-import Context from "sap/ui/model/Context";
-import SmartTable from "sap/ui/comp/smarttable/SmartTable";
-import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
-import Button from "sap/m/Button";
-import ODataModel from "sap/ui/model/odata/v2/ODataModel";
+import { Model$RequestFailedEvent } from "sap/ui/model/Model";
+import EntryCreateCL from "ui5/antares/entry/v2/EntryCreateCL";
+import { IVEmployeeSkills } from "../types/skill.types";
+import JSONModel from "sap/ui/model/json/JSONModel";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
  */
 export default class EmployeeSkills extends BaseController implements IPage {
 
-    /* ======================================================================================================================= */
-    /* Properties - Getters - Setters                                                                                          */
-    /* ======================================================================================================================= */
-
-    public formatter = formatter;
-
-    /* ======================================================================================================================= */
-    /* Lifecycle methods                                                                                                       */
-    /* ======================================================================================================================= */
+    private manualEntryCreate: EntryCreateCL<IVEmployeeSkills>;
 
     public onInit(): void {
-        const oModel = this.getOwnerComponent()?.getModel("profile");
-        if (oModel) {
-            this.getView()?.setModel(oModel);
-        }
         const page = new PageCL<EmployeeSkills>(this, Routes.EMPLOYEE_SKILLS);
         page.initialize();
     }
 
-    /* ======================================================================================================================= */
-    /* Event Handlers                                                                                                          */
-    /* ======================================================================================================================= */
+    public async onObjectMatched(): Promise<void> {
+        this.getComponentModel()?.attachRequestFailed({}, this.onODataRequestFail, this);
+        await this.loadGroupedEmployeeSkills();
+    }
+
+    public onSearch(event: any): void {
+        const query = event.getParameter("query") ?? event.getSource()?.getValue() ?? "";
+        this.loadGroupedEmployeeSkills(query);
+    }
+
+    private getCategoryIcon(catName: string): string {
+        const lower = (catName || "").toLowerCase();
+        if (lower.includes("cloud")) return "sap-icon://cloud";
+        if (lower.includes("program") || lower.includes("lang")) return "sap-icon://coding-model";
+        if (lower.includes("data science") || lower.includes("ai") || lower.includes("machine")) return "sap-icon://machine-learning";
+        if (lower.includes("data") || lower.includes("db")) return "sap-icon://database";
+        if (lower.includes("devops") || lower.includes("tool") || lower.includes("ci/cd")) return "sap-icon://process";
+        if (lower.includes("soft") || lower.includes("manage") || lower.includes("lead")) return "sap-icon://group";
+        if (lower.includes("sap")) return "sap-icon://sys-enter-2";
+        return "sap-icon://education";
+    }
+
+    public async loadGroupedEmployeeSkills(searchQuery?: string): Promise<void> {
+        const view = this.getView();
+        if (!view) return;
+
+        view.setBusy(true);
+        try {
+            const response = await fetch("/odata/v2/employee-profile/VEmployeeSkills?$format=json&$orderby=categoryName asc,skillName asc");
+            if (response.ok) {
+                const data = await response.json();
+                const results: any[] = data.d?.results || data.value || [];
+
+                let filtered = results;
+                if (searchQuery && searchQuery.trim() !== "") {
+                    const q = searchQuery.toLowerCase().trim();
+                    filtered = results.filter((r: any) =>
+                        (r.skillName && r.skillName.toLowerCase().includes(q)) ||
+                        (r.categoryName && r.categoryName.toLowerCase().includes(q)) ||
+                        (r.proficiencyLevel && r.proficiencyLevel.toLowerCase().includes(q)) ||
+                        (r.employeeName && r.employeeName.toLowerCase().includes(q))
+                    );
+                }
+
+                let validatedCount = 0;
+                let pendingCount = 0;
+                filtered.forEach((r: any) => {
+                    if (r.validationStatus === "verified" || r.validationStatus === "managerConfirmed" || r.validationStatus === "managerValidated") {
+                        validatedCount++;
+                    } else {
+                        pendingCount++;
+                    }
+                });
+
+                // Group items by categoryName
+                const groupsMap: { [key: string]: any[] } = {};
+                filtered.forEach((item: any) => {
+                    const cat = item.categoryName || "Uncategorized";
+                    if (!groupsMap[cat]) {
+                        groupsMap[cat] = [];
+                    }
+                    groupsMap[cat].push(item);
+                });
+
+                const categories = Object.keys(groupsMap).map((catName: string) => {
+                    const skillsInGroup = groupsMap[catName];
+                    return {
+                        categoryName: catName,
+                        icon: this.getCategoryIcon(catName),
+                        count: skillsInGroup.length,
+                        skills: skillsInGroup
+                    };
+                });
+
+                let groupedModel = view.getModel("groupedSkillsModel") as JSONModel;
+                if (!groupedModel) {
+                    groupedModel = new JSONModel();
+                    view.setModel(groupedModel, "groupedSkillsModel");
+                }
+                groupedModel.setData({
+                    categories,
+                    totalCount: filtered.length,
+                    validatedCount,
+                    pendingCount
+                });
+            }
+        } catch (error) {
+            console.error("Failed to load employee skills", error);
+        } finally {
+            view.setBusy(false);
+        }
+    }
+
+    public async onAddSkill(): Promise<void> {
+        const entry = new EntryCreateCL<IVEmployeeSkills>(this, "EmployeeSkills");
+        entry.setUseMetadataLabels(true);
+        entry.setPropertyOrder(["skillID", "proficiencyLevelID", "yearsExperience", "lastUsedOn"]);
+        entry.setExcludedProperties(["createdAt", "createdBy", "modifiedAt", "modifiedBy", "ID", "employeeID", "confirmedBy", "confirmedAt"]);
+        entry.setDisableAutoClose(true);
+        entry.setFormTitle(this.getResourceBundleText("addSkill"));
+
+        entry.attachSubmitCompleted(async () => {
+            await this.loadGroupedEmployeeSkills();
+            entry.closeAndDestroyEntryDialog();
+        });
+
+        this.manualEntryCreate = entry;
+        await this.manualEntryCreate.createNewEntry();
+    }
 
     public onRequestNewSkill(): void {
-        // MVP: Show dialog to request a new skill
-        MessageBox.information("This will open a dialog to request a new skill/alias to be approved by admins.");
-    }
-
-    public onAddSkill(): void {
-        // MVP: Show dialog to select an existing skill from catalog and add it
-        MessageBox.information("This will open a dialog to search the Skill Catalog and add a skill to your profile.");
-    }
-
-    public onUpdateSkillDetails(): void {
-        const table = this.byId("tblEmployeeSkills") as Table;
-        const selectedItem = table.getSelectedItem();
-
-        if (!selectedItem) {
-            return;
-        }
-
-        MessageBox.information("This will open a dialog to update your proficiency level or years of experience.");
-        table.removeSelections(true);
-        this.setEmployeeSkillButtonsState(false);
-    }
-
-    public onRemoveSkill(): void {
-        const table = this.byId("tblEmployeeSkills") as Table;
-        const selectedItem = table.getSelectedItem();
-
-        if (!selectedItem) {
-            return;
-        }
-
-        const context = selectedItem.getBindingContext() as Context;
-        const employeeSkillID = context.getProperty("ID");
-
-        MessageBox.confirm(this.getResourceBundleText("removeSkillConfirmMsg") || "Are you sure you want to remove this skill from your profile?", {
-            onClose: (action: string) => {
-                if (action === MessageBox.Action.OK) {
-                    const oDataModel = this.getComponentModel() as ODataModel;
-                    oDataModel.callFunction("/removeSkill", {
-                        method: "POST",
-                        urlParameters: { employeeSkillID },
-                        success: () => {
-                            (this.byId("stEmployeeSkills") as SmartTable).rebindTable(true);
-                            this.setEmployeeSkillButtonsState(false);
-                            table.removeSelections(true);
-                        },
-                        error: () => {
-                            this.openMessagePopover();
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    public onEmployeeSkillSelectionChange(event: ListItemBase$PressEvent): void {
-        const table = event.getSource() as unknown as Table;
-        const selectedItem = table.getSelectedItem();
-        this.setEmployeeSkillButtonsState(!!selectedItem);
-    }
-
-    /* ======================================================================================================================= */
-    /* IPage Implementation                                                                                                     */
-    /* ======================================================================================================================= */
-
-    public onObjectMatched(): void {
-        const oDataModel = this.getComponentModel();
-        oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
+        this.getRouter().navTo(Routes.SKILL_REQUESTS);
     }
 
     public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
-
-    /* ======================================================================================================================= */
-    /* Private Methods                                                                                                          */
-    /* ======================================================================================================================= */
-
-    private setEmployeeSkillButtonsState(enabled: boolean): void {
-        (this.byId("btnUpdateSkillDetails") as Button).setEnabled(enabled);
-        (this.byId("btnRemoveSkill") as Button).setEnabled(enabled);
-    }
-
 }

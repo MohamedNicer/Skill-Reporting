@@ -25,14 +25,15 @@
                 <smartFilterBar:SmartFilterBar
                     id="sfbPersonnel"
                     entitySet="VEmployees"
+                    model="analytics"
                     useProvidedNavigationProperties="true"
                     initialise="onPersonnelInitialized"
                     enableBasicSearch="true"
-
                 />
                 <smartTable:SmartTable
                     id="stPersonnel"
                     entitySet="VEmployees"
+                    model="analytics"
                     smartFilterId="sfbPersonnel"
                     tableType="ResponsiveTable"
                     enableExport="true"
@@ -42,35 +43,30 @@
                     header="{i18n>personnel}"
                     enableAutoBinding="true"
                     showRowCount="true"
-                    requestAtLeastFields="createdAt,createdBy,modifiedAt,modifiedBy"
+                    requestAtLeastFields="fullName,employeeNumber,email,jobTitle,departmentName,managerName,isActive"
                     enableAutoColumnWidth="true"
                     editTogglable="false"
-
                 >
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer />
                             <OverflowToolbarButton
                                 id="btnCreateNewPersonnel"
-
                                 icon="sap-icon://add"
                                 press="onCreateNewPersonnel"
                             />
                             <OverflowToolbarButton
                                 id="btnUpdatePersonnel"
-
                                 icon="sap-icon://edit"
                                 press="onUpdatePersonnel"
                             />
                             <OverflowToolbarButton
                                 id="btnDeletePersonnel"
-
                                 icon="sap-icon://delete"
                                 press="onDeletePersonnel"
                             />
                             <Button
                                 id="btnPersonnelUsers"
-
                                 text="{i18n>personnelUsers}"
                                 press="onDisplayPersonnelUsers"
                             />
@@ -83,7 +79,68 @@
                         growing="true"
                         growingThreshold="10"
                         growingScrollToLoad="false"
-                    />
+                    >
+                        <columns>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "fullName", "leadingProperty": "fullName", "sortProperty": "fullName", "filterProperty": "fullName"\}' />
+                                </customData>
+                                <Text text="{i18n>employeeName}" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "employeeNumber", "leadingProperty": "employeeNumber", "sortProperty": "employeeNumber", "filterProperty": "employeeNumber"\}' />
+                                </customData>
+                                <Text text="Employee #" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "email", "leadingProperty": "email", "sortProperty": "email", "filterProperty": "email"\}' />
+                                </customData>
+                                <Text text="Email" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "jobTitle", "leadingProperty": "jobTitle", "sortProperty": "jobTitle", "filterProperty": "jobTitle"\}' />
+                                </customData>
+                                <Text text="Job Title" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "departmentName", "leadingProperty": "departmentName", "sortProperty": "departmentName", "filterProperty": "departmentName"\}' />
+                                </customData>
+                                <Text text="Department" />
+                            </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "managerName", "leadingProperty": "managerName", "sortProperty": "managerName", "filterProperty": "managerName"\}' />
+                                </customData>
+                                <Text text="Manager" />
+                            </Column>
+                            <Column hAlign="Center" width="5rem">
+                                <customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "isActive", "leadingProperty": "isActive", "sortProperty": "isActive", "filterProperty": "isActive"\}' />
+                                </customData>
+                                <Text text="{i18n>isActive}" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="{fullName}" text="{jobTitle}" />
+                                    <Text text="{employeeNumber}" />
+                                    <Text text="{email}" />
+                                    <Text text="{jobTitle}" />
+                                    <Text text="{departmentName}" />
+                                    <Text text="{managerName}" />
+                                    <core:Icon
+                                        src="{= ${isActive} ? 'sap-icon://accept' : 'sap-icon://decline'}"
+                                        color="{= ${isActive} ? '#107E3E' : '#BB0000'}"
+                                    />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
                 </smartTable:SmartTable>
             </VBox>
         </FlexBox>

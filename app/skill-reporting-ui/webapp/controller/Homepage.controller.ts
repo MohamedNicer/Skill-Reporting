@@ -35,6 +35,9 @@ export default class Homepage extends BaseController implements IPage {
 
         // Load dashboard KPIs
         this.loadDashboardData();
+
+        // Load user roles for UI visibility
+        this.loadUserRoles();
     }
 
     private async loadDashboardData(): Promise<void> {
@@ -57,6 +60,37 @@ export default class Homepage extends BaseController implements IPage {
             }
         } catch (error) {
             console.error("Failed to load dashboard KPI data", error);
+        }
+    }
+
+    private async loadUserRoles(): Promise<void> {
+        let rolesModel = this.getOwnerComponent()?.getModel("userRolesModel") as JSONModel;
+        if (!rolesModel) {
+            rolesModel = new JSONModel({
+                Employee: false,
+                Manager: false,
+                HRAdmin: false,
+                SkillsAdmin: false,
+                Auditor: false,
+                isAdmin: false,
+                isManagerOrAbove: false
+            });
+            this.getOwnerComponent()?.setModel(rolesModel, "userRolesModel");
+        }
+
+        try {
+            const response = await fetch("/api/dashboard/userInfo()");
+            if (response.ok) {
+                const data = await response.json();
+                const roles = data.value || data;
+                rolesModel.setData({
+                    ...roles,
+                    isAdmin: roles.HRAdmin || roles.SkillsAdmin,
+                    isManagerOrAbove: roles.Manager || roles.HRAdmin || roles.SkillsAdmin || roles.Auditor
+                });
+            }
+        } catch (error) {
+            console.error("Failed to load user roles", error);
         }
     }
 

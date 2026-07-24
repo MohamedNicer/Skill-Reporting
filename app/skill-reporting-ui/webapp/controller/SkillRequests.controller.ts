@@ -22,6 +22,10 @@ export default class SkillRequests extends BaseController implements IPage {
     public formatter = formatter;
 
     public onInit(): void {
+        const oModel = this.getOwnerComponent()?.getModel("profile");
+        if (oModel) {
+            this.getView()?.setModel(oModel);
+        }
         const page = new PageCL<SkillRequests>(this, Routes.SKILL_REQUESTS);
         page.initialize();
     }
@@ -110,6 +114,12 @@ export default class SkillRequests extends BaseController implements IPage {
     public onObjectMatched(): void {
         const oDataModel = this.getComponentModel();
         oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
+
+        // Hide approve/reject buttons for non-admins
+        const rolesModel = this.getOwnerComponent()?.getModel("userRolesModel") as JSONModel;
+        const isAdmin = !!rolesModel?.getProperty("/isAdmin");
+        (this.byId("btnApproveRequest") as Button).setVisible(isAdmin);
+        (this.byId("btnRejectRequest") as Button).setVisible(isAdmin);
     }
 
     public onODataRequestFail(_event: Model$RequestFailedEvent): void {

@@ -5,140 +5,87 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
 >
     <Page id="Skills" showHeader="true" title="{i18n>skillCatalog}" showNavButton="true" navButtonPress=".onNavBack">
-        <FlexBox justifyContent="Center" alignItems="Center">
-            <VBox width="95%">
-                <smartFilterBar:SmartFilterBar
-                    id="sfbSkills"
-                    entitySet="VSkills"
-                    enableBasicSearch="true"
-                />
-                <smartTable:SmartTable
-                    id="stSkills"
-                    entitySet="VSkills"
-                    smartFilterId="sfbSkills"
-                    tableType="ResponsiveTable"
-                    enableAutoBinding="true"
-                    enableExport="true"
-                    useVariantManagement="false"
-                    useTablePersonalisation="true"
-                    showFullScreenButton="true"
-                    showRowCount="true"
-                    editTogglable="false"
-                    header="{i18n>skillCatalog}"
-                >
-                    <smartTable:customToolbar>
-                        <OverflowToolbar design="Transparent">
-                            <ToolbarSpacer />
-                            <OverflowToolbarButton
-                                id="btnCreateSkill"
-                                icon="sap-icon://add"
-                                tooltip="{i18n>createSkill}"
-                                press="onCreateSkill"
+        <subHeader>
+            <OverflowToolbar>
+                <SearchField id="sfSkills" width="100%" placeholder="Search skills by name, category, or description..." search=".onSearch" liveChange=".onSearch" />
+            </OverflowToolbar>
+        </subHeader>
 
-                            />
-                            <OverflowToolbarButton
-                                id="btnUpdateSkill"
-                                icon="sap-icon://edit"
-                                tooltip="{i18n>editSkill}"
-                                press="onUpdateSkill"
-                                enabled="false"
+        <VBox fitContainer="true" class="sapUiResponsiveContentPadding">
+            <!-- Top KPI Summary Bar -->
+            <HBox class="kpi-container sapUiMediumMarginBottom" justifyContent="SpaceAround" alignItems="Center">
+                <VBox alignItems="Center">
+                    <Label text="Total Catalog Skills" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/totalCount}" state="None" />
+                </VBox>
+                <VBox alignItems="Center">
+                    <Label text="Approved Skills" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/approvedCount}" state="Success" />
+                </VBox>
+                <VBox alignItems="Center">
+                    <Label text="Skill Categories" class="sapUiTinyMarginBottom" />
+                    <ObjectNumber number="{groupedSkillsModel>/categoriesCount}" state="Information" />
+                </VBox>
+            </HBox>
 
-                            />
-                            <OverflowToolbarButton
-                                id="btnDeprecateSkill"
-                                icon="sap-icon://decline"
-                                tooltip="{i18n>deprecateSkill}"
-                                press="onDeprecateSkill"
-                                enabled="false"
+            <Title text="Skill Categories" level="H3" class="section-title" />
 
-                            />
-                        </OverflowToolbar>
-                    </smartTable:customToolbar>
-                    <Table
-                        id="tblSkills"
-                        sticky="ColumnHeaders,HeaderToolbar"
-                        selectionChange="onSkillSelectionChange"
-                        mode="SingleSelectLeft"
-                        growing="true"
-                        growingThreshold="10"
-                        growingScrollToLoad="false"
+            <!-- Collapsible Category Panels -->
+            <VBox items="{groupedSkillsModel>/categories}">
+                <items>
+                    <Panel
+                        expandable="true"
+                        expanded="false"
+                        class="custom-category-panel sapUiSmallMarginBottom"
                     >
-                        <columns>
-                            <Column width="4rem" hAlign="Center">
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "imageUrl", "leadingProperty": "imageUrl", "columnIndex": 0\}' />
-                                </customData>
-                                <Text text="" />
-                            </Column>
-                            <Column>
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "canonicalName", "leadingProperty": "canonicalName", "sortProperty": "canonicalName", "filterProperty": "canonicalName"\}' />
-                                </customData>
-                                <Text text="{i18n>skillName}" />
-                            </Column>
-                            <Column>
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "categoryName", "leadingProperty": "categoryName", "sortProperty": "categoryName", "filterProperty": "categoryName"\}' />
-                                </customData>
-                                <Text text="Category" />
-                            </Column>
-                            <Column>
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "statusText", "leadingProperty": "statusText", "sortProperty": "statusText", "filterProperty": "statusText"\}' />
-                                </customData>
-                                <Text text="Status" />
-                            </Column>
-                            <Column>
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "description", "leadingProperty": "description"\}' />
-                                </customData>
-                                <Text text="Description" />
-                            </Column>
-                            <Column hAlign="Center" width="5rem">
-                                <customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "isActive", "leadingProperty": "isActive", "sortProperty": "isActive", "filterProperty": "isActive"\}' />
-                                </customData>
-                                <Text text="Active" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Avatar
-                                        src="{ path: 'imageUrl', formatter: '.formatter.getImageUrl' }"
-                                        displaySize="S"
-                                        displayShape="Square"
-                                        imageFitType="Contain"
-                                        backgroundColor="Transparent"
-                                        fallbackIcon="sap-icon://learning-assistant"
-                                    />
-                                    <ObjectIdentifier
-                                        title="{canonicalName}"
-                                        text="{normalizedName}"
-                                    />
-                                    <Text text="{categoryName}" />
-                                    <ObjectStatus
-                                        text="{statusText}"
-                                        state="{= ${status} === 'approved' ? 'Success' : ${status} === 'deprecated' ? 'Error' : 'Warning' }"
-                                    />
-                                    <Text text="{description}" wrapping="false" />
-                                    <core:Icon
-                                        src="{= ${isActive} ? 'sap-icon://accept' : 'sap-icon://decline'}"
-                                        color="{= ${isActive} ? '#107E3E' : '#BB0000'}"
-                                    />
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </smartTable:SmartTable>
+                        <headerToolbar>
+                            <OverflowToolbar design="Transparent" class="custom-category-header">
+                                <Avatar icon="{groupedSkillsModel>icon}" displaySize="XS" class="category-icon-avatar sapUiTinyMarginEnd" />
+                                <Title text="{groupedSkillsModel>categoryName}" level="H4" style="H4" />
+                                <ToolbarSpacer />
+                                <ObjectStatus text="{groupedSkillsModel>count} Skills" state="None" class="badge-count sapUiTinyMarginEnd" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{groupedSkillsModel>skills}" mode="None">
+                            <columns>
+                                <Column><Text text="Skill" /></Column>
+                                <Column><Text text="Category" /></Column>
+                                <Column><Text text="Description" /></Column>
+                                <Column><Text text="Status" /></Column>
+                                <Column hAlign="Center"><Text text="Active" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <HBox alignItems="Center">
+                                            <Avatar src="{groupedSkillsModel>imageUrl}" displaySize="XS" fallbackIcon="sap-icon://education" class="sapUiTinyMarginEnd" />
+                                            <Text text="{groupedSkillsModel>canonicalName}" />
+                                        </HBox>
+                                        <Text text="{groupedSkillsModel>categoryName}" />
+                                        <Text text="{groupedSkillsModel>description}" />
+                                        <ObjectStatus
+                                            text="{groupedSkillsModel>statusText}"
+                                            state="{= ${groupedSkillsModel>status} === 'approved' || ${groupedSkillsModel>status} === 'Approved' ? 'Success' : ${groupedSkillsModel>status} === 'deprecated' ? 'Error' : 'Warning'}"
+                                        />
+                                        <core:Icon
+                                            src="{= ${groupedSkillsModel>isActive} ? 'sap-icon://accept' : 'sap-icon://decline'}"
+                                            color="{= ${groupedSkillsModel>isActive} ? '#2e7d32' : '#c62828'}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </items>
             </VBox>
-        </FlexBox>
+        </VBox>
+
         <footer>
             <OverflowToolbar id="otbFooter">
+                <ToolbarSpacer />
                 <Button
                     id="btnMessages"
                     icon="sap-icon://alert"

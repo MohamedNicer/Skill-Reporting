@@ -85,22 +85,50 @@ export default class UserAPI {
     }
 
     public async whoami(): Promise<IWhoami> {
-        await this.getLoggedOnUser();
+        try {
+            // Get user info + employee details from backend (single call)
+            const userInfoResponse = await fetch("/api/dashboard/userInfo()");
+            if (userInfoResponse.ok) {
+                const userInfoData = await userInfoResponse.json();
+                const info = userInfoData.value || userInfoData;
 
-        // Bypass OData call for demo purposes to avoid UI5 MessageManager errors
-        // since the Whoami entity does not exist in the current mock backend.
-            // Fallback for demo purposes when Whoami entity is unavailable
-            return {
-                personnelID: null,
-                successFactorsID: this.ID || "demo_admin",
-                firstName: this.firstName || "Demo",
-                lastName: this.lastName || "User",
-                country: null,
-                team: null,
-                role: "A",
-                roleDescription: "Administrator",
-                createRequired: true,
-                email: this.email || "demo.user@example.com"
-            };
+                // Build role description from role flags
+                const roles: string[] = [];
+                if (info.HRAdmin) roles.push("HR Admin");
+                if (info.SkillsAdmin) roles.push("Skills Admin");
+                if (info.Manager) roles.push("Manager");
+                if (info.Employee) roles.push("Employee");
+                if (info.Auditor) roles.push("Auditor");
+
+                return {
+                    personnelID: info.employeeNumber || null,
+                    successFactorsID: info.id || "unknown",
+                    firstName: info.firstName || info.id || "Unknown",
+                    lastName: info.lastName || "",
+                    country: info.location || null,
+                    team: info.departmentName || null,
+                    role: roles[0] || "Employee",
+                    roleDescription: roles.length > 0 ? roles.join(", ") : "Employee",
+                    createRequired: !info.employeeID,
+                    email: info.email || `${info.id}@nttdata.com`
+                };
+            }
+        } catch {
+            // Fall through to fallback
+        }
+
+        // Ultimate fallback
+        return {
+            personnelID: null,
+            successFactorsID: "unknown",
+            firstName: "Unknown",
+            lastName: "User",
+            country: null,
+            team: null,
+            role: "Employee",
+            roleDescription: "Employee",
+            createRequired: true,
+            email: "unknown@nttdata.com"
+        };
     }
 }

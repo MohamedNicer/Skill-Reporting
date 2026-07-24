@@ -1,156 +1,110 @@
 import BaseController from "com/ndbs/skillreportingui/controller/BaseController";
 import { IPage } from "../util/common/common.types";
-import { Model$RequestFailedEvent } from "sap/ui/model/Model";
-import formatter from "com/ndbs/skillreportingui/model/formatter";
 import PageCL from "com/ndbs/skillreportingui/util/common/PageCL";
 import { Routes } from "../types/global.types";
-import Table from "sap/m/Table";
-import EntryCreateCL from "ui5/antares/entry/v2/EntryCreateCL";
-import { IVSkills, IVSkillsKeys } from "../types/skill.types";
-import MessageBox from "sap/m/MessageBox";
-import ODataUpdateCL from "ui5/antares/odata/v2/ODataUpdateCL";
-import EntryUpdateCL from "ui5/antares/entry/v2/EntryUpdateCL";
-import Context from "sap/ui/model/Context";
-import SmartTable from "sap/ui/comp/smarttable/SmartTable";
-import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
-import Button from "sap/m/Button";
+import { Model$RequestFailedEvent } from "sap/ui/model/Model";
+import JSONModel from "sap/ui/model/json/JSONModel";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
  */
 export default class Skills extends BaseController implements IPage {
 
-    /* ======================================================================================================================= */
-    /* Properties - Getters - Setters                                                                                          */
-    /* ======================================================================================================================= */
-
-    public formatter = formatter;
-    private manualEntryCreate: EntryCreateCL<IVSkills>;
-    private manualEntryUpdate: EntryUpdateCL<IVSkills>;
-    private readonly skillPropOrder = [
-        "canonicalName", "categoryID", "description", "status", "isActive"
-    ];
-
-    /* ======================================================================================================================= */
-    /* Lifecycle methods                                                                                                       */
-    /* ======================================================================================================================= */
-
     public onInit(): void {
-        const oModel = this.getOwnerComponent()?.getModel("catalog");
-        if (oModel) {
-            this.getView()?.setModel(oModel);
-        }
         const page = new PageCL<Skills>(this, Routes.SKILLS);
         page.initialize();
     }
 
-    /* ======================================================================================================================= */
-    /* Event Handlers                                                                                                          */
-    /* ======================================================================================================================= */
-
-    public async onCreateSkill() {
-        const entry = new EntryCreateCL<IVSkills>(this, "Skills");
-
-        entry.setUseMetadataLabels(true);
-        entry.setPropertyOrder(this.skillPropOrder);
-        entry.setExcludedProperties(["createdAt", "createdBy", "modifiedAt", "modifiedBy", "ID", "normalizedName"]);
-        entry.setDisableAutoClose(true);
-        entry.setFormTitle(this.getResourceBundleText("createSkill"));
-        
-        entry.attachSubmitCompleted(async () => {
-            (this.byId("stSkills") as SmartTable).rebindTable(true);
-            entry.closeAndDestroyEntryDialog();
-        });
-
-        this.manualEntryCreate = entry;
-        await this.manualEntryCreate.createNewEntry();
+    public async onObjectMatched(): Promise<void> {
+        this.getComponentModel()?.attachRequestFailed({}, this.onODataRequestFail, this);
+        await this.loadGroupedSkills();
     }
 
-    public async onUpdateSkill() {
-        const table = this.byId("tblSkills") as Table;
-        const selectedItem = table.getSelectedItem();
-
-        if (!selectedItem) {
-            return;
-        }
-
-        const context = selectedItem.getBindingContext() as Context;
-        const entry = new EntryUpdateCL<IVSkills, IVSkillsKeys>(this, { entityPath: "Skills", initializer: context });
-
-        entry.setUseMetadataLabels(true);
-        entry.setPropertyOrder(this.skillPropOrder);
-        entry.setExcludedProperties(["createdAt", "createdBy", "modifiedAt", "modifiedBy", "ID", "normalizedName"]);
-        entry.setDisableAutoClose(true);
-        entry.setFormTitle(this.getResourceBundleText("editSkill"));
-
-        entry.attachSubmitCompleted(async () => {
-            (this.byId("stSkills") as SmartTable).rebindTable(true);
-            this.setSkillButtonsState(false);
-            table.removeSelections(true);
-            entry.closeAndDestroyEntryDialog();
-        });
-
-        this.manualEntryUpdate = entry;
-        await this.manualEntryUpdate.updateEntry();
+    public onSearch(event: any): void {
+        const query = event.getParameter("query") ?? event.getSource()?.getValue() ?? "";
+        this.loadGroupedSkills(query);
     }
 
-    public onDeprecateSkill(): void {
-        const table = this.byId("tblSkills") as Table;
-        const selectedItem = table.getSelectedItem();
+    private getCategoryIcon(catName: string): string {
+        const lower = (catName || "").toLowerCase();
+        if (lower.includes("cloud")) return "sap-icon://cloud";
+        if (lower.includes("program") || lower.includes("lang")) return "sap-icon://coding-model";
+        if (lower.includes("data science") || lower.includes("ai") || lower.includes("machine")) return "sap-icon://machine-learning";
+        if (lower.includes("data") || lower.includes("db")) return "sap-icon://database";
+        if (lower.includes("devops") || lower.includes("tool") || lower.includes("ci/cd")) return "sap-icon://process";
+        if (lower.includes("soft") || lower.includes("manage") || lower.includes("lead")) return "sap-icon://group";
+        if (lower.includes("sap")) return "sap-icon://sys-enter-2";
+        return "sap-icon://education";
+    }
 
-        if (!selectedItem) {
-            return;
-        }
+    public async loadGroupedSkills(searchQuery?: string): Promise<void> {
+        const view = this.getView();
+        if (!view) return;
 
-        const context = selectedItem.getBindingContext() as Context;
-        const skillID = context.getProperty("ID");
+        view.setBusy(true);
+        try {
+            const response = await fetch("/odata/v2/catalog/VSkills?$format=json&$orderby=categoryName asc,canonicalName asc");
+            if (response.ok) {
+                const data = await response.json();
+                const results: any[] = data.d?.results || data.value || [];
 
-        MessageBox.confirm(this.getResourceBundleText("deprecateSkillConfirmMsg"), {
-            onClose: async (action: string) => {
-                if (action === MessageBox.Action.OK) {
-                    const updateOperation = new ODataUpdateCL<IVSkills, IVSkillsKeys>(this, "Skills");
-                    updateOperation.setData({ status: "deprecated" } as Partial<IVSkills> as IVSkills);
-                    await updateOperation.update({ ID: skillID } as IVSkillsKeys);
-                    (this.byId("stSkills") as SmartTable).rebindTable(true);
-                    this.setSkillButtonsState(false);
-                    table.removeSelections(true);
+                let filtered = results;
+                if (searchQuery && searchQuery.trim() !== "") {
+                    const q = searchQuery.toLowerCase().trim();
+                    filtered = results.filter((r: any) =>
+                        (r.canonicalName && r.canonicalName.toLowerCase().includes(q)) ||
+                        (r.categoryName && r.categoryName.toLowerCase().includes(q)) ||
+                        (r.description && r.description.toLowerCase().includes(q))
+                    );
                 }
+
+                let approvedCount = 0;
+                filtered.forEach((r: any) => {
+                    if (r.status === "approved" || r.status === "Approved") {
+                        approvedCount++;
+                    }
+                });
+
+                // Group items by categoryName
+                const groupsMap: { [key: string]: any[] } = {};
+                filtered.forEach((item: any) => {
+                    const cat = item.categoryName || "Uncategorized";
+                    if (!groupsMap[cat]) {
+                        groupsMap[cat] = [];
+                    }
+                    groupsMap[cat].push(item);
+                });
+
+                const categories = Object.keys(groupsMap).map((catName: string) => {
+                    const skillsInGroup = groupsMap[catName];
+                    return {
+                        categoryName: catName,
+                        icon: this.getCategoryIcon(catName),
+                        count: skillsInGroup.length,
+                        skills: skillsInGroup
+                    };
+                });
+
+                let groupedModel = view.getModel("groupedSkillsModel") as JSONModel;
+                if (!groupedModel) {
+                    groupedModel = new JSONModel();
+                    view.setModel(groupedModel, "groupedSkillsModel");
+                }
+                groupedModel.setData({
+                    categories,
+                    totalCount: filtered.length,
+                    approvedCount,
+                    categoriesCount: categories.length
+                });
             }
-        });
-    }
-
-    public onSkillSelectionChange(event: ListItemBase$PressEvent): void {
-        const table = event.getSource() as unknown as Table;
-        const selectedItem = table.getSelectedItem();
-        this.setSkillButtonsState(!!selectedItem);
-    }
-
-    /* ======================================================================================================================= */
-    /* IPage Implementation                                                                                                     */
-    /* ======================================================================================================================= */
-
-    public onObjectMatched(): void {
-        const oDataModel = this.getComponentModel();
-        oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
-        
-        // Show/hide admin buttons based on user role (assuming from global model or just hardcoded to true for MVP if admin)
-        // MVP: Assuming all are admins or buttons are visible for demo
-        (this.byId("btnCreateSkill") as Button).setVisible(true);
-        (this.byId("btnUpdateSkill") as Button).setVisible(true);
-        (this.byId("btnDeprecateSkill") as Button).setVisible(true);
+        } catch (error) {
+            console.error("Failed to load skill catalog", error);
+        } finally {
+            view.setBusy(false);
+        }
     }
 
     public onODataRequestFail(_event: Model$RequestFailedEvent): void {
         this.openMessagePopover();
     }
-
-    /* ======================================================================================================================= */
-    /* Private Methods                                                                                                          */
-    /* ======================================================================================================================= */
-
-    private setSkillButtonsState(enabled: boolean): void {
-        (this.byId("btnUpdateSkill") as Button).setEnabled(enabled);
-        (this.byId("btnDeprecateSkill") as Button).setEnabled(enabled);
-    }
-
 }

@@ -14,7 +14,7 @@ using {
 } from '../../db/cds-models/documents';
 
 // -------------------------------------------------------------------------
-// CV Service
+// CV Service (Own records only — row-level filtered in handlers)
 // -------------------------------------------------------------------------
 extend service CVService with {
     action uploadCV(
@@ -29,12 +29,20 @@ extend service CVService with {
     function downloadDocument(documentAssetID : UUID) returns String(1000);
 
     entity DocumentAssets           as projection on DBDocumentAssets;
+
     @cds.redirection.target: true
     entity UploadedCVs              as projection on DBUploadedCVs;
     entity CVExtractionRuns         as projection on DBCVExtractionRuns;
     entity ExtractedSkillCandidates as projection on DBExtractedSkillCandidates;
+
+    @readonly
+    @restrict: [{ grant: 'READ', to: 'authenticated-user' }]
     entity CVTemplates              as projection on DBCVTemplates;
+
+    @readonly
+    @restrict: [{ grant: 'READ', to: 'authenticated-user' }]
     entity CVTemplateVersions       as projection on DBCVTemplateVersions;
+
     @cds.redirection.target: true
     entity GeneratedCVs             as projection on DBGeneratedCVs;
 
@@ -69,9 +77,12 @@ extend service CVService with {
 }
 
 // -------------------------------------------------------------------------
-// Admin Service
+// Admin Service (CV Templates — HRAdmin full CRUD, others read)
 // -------------------------------------------------------------------------
 extend service AdminService with {
+    @restrict: [{ grant: '*', to: 'HRAdmin' }, { grant: 'READ', to: ['SkillsAdmin', 'Auditor'] }]
     entity CVTemplates              as projection on DBCVTemplates;
+
+    @restrict: [{ grant: '*', to: 'HRAdmin' }, { grant: 'READ', to: ['SkillsAdmin', 'Auditor'] }]
     entity CVTemplateVersions       as projection on DBCVTemplateVersions;
 }

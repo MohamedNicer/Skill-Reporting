@@ -5,18 +5,25 @@ using from './cds-models/documents';
 using from './cds-models/common';
 
 
+@requires: 'authenticated-user'
 service CatalogService {}
 
+@requires: 'authenticated-user'
 service EmployeeProfileService {}
 
+@requires: 'authenticated-user'
 service CVService {}
 
+@requires: ['HRAdmin', 'SkillsAdmin', 'Auditor']
 service AdminService {}
 
+@requires: ['Manager', 'HRAdmin', 'SkillsAdmin', 'Auditor']
 service AnalyticsService {}
 
+@requires: 'system-user'
 service IntegrationService {}
 
+@requires: 'authenticated-user'
 @path: '/api/dashboard'
 service DashboardService {
     function kpi() returns {
@@ -47,4 +54,15 @@ service DashboardService {
     }
 
     function requestsStatus() returns array of RequestStatusCount;
+
+    type UserRole {
+        id        : String;
+        Employee  : Boolean;
+        Manager   : Boolean;
+        HRAdmin   : Boolean;
+        SkillsAdmin : Boolean;
+        Auditor   : Boolean;
+    }
+
+    function userInfo() returns UserRole;
 }
