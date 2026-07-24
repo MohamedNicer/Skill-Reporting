@@ -290,7 +290,9 @@ export class DashboardService extends cds.ApplicationService {
             if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
 
             if (isEmployeeOnly && currentEmp) {
-                // Personal My Skills Overview for Employee
+                const cardTitle = "My Skills";
+                const cardSubtitle = "Overview of your recorded skills";
+
                 const empSkills = await db.run(
                     SELECT.from(EmployeeSkills)
                         .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "toProficiencyLevel.label as proficiencyLevel", "yearsExperience")
@@ -299,7 +301,17 @@ export class DashboardService extends cds.ApplicationService {
                         .limit(3)
                 );
 
-                const items = empSkills.map((r: any) => {
+                if (!empSkills || empSkills.length === 0) {
+                    return [{
+                        skillName: "No Skills Recorded",
+                        imageUrl: "sap-icon://add",
+                        description: "Add skills to your profile",
+                        cardTitle,
+                        cardSubtitle
+                    }];
+                }
+
+                return empSkills.map((r: any) => {
                     let finalImageUrl = r.imageUrl || "sap-icon://education";
                     if (finalImageUrl && !finalImageUrl.startsWith("sap-icon://") && !finalImageUrl.startsWith("http") && !finalImageUrl.startsWith("/")) {
                         finalImageUrl = "../../" + finalImageUrl;
@@ -309,18 +321,16 @@ export class DashboardService extends cds.ApplicationService {
                     return {
                         skillName: r.skillName,
                         imageUrl: finalImageUrl,
-                        description: `${prof}${exp}`
+                        description: `${prof}${exp}`,
+                        cardTitle,
+                        cardSubtitle
                     };
                 });
-
-                return {
-                    cardTitle: "My Skills",
-                    cardSubtitle: "Overview of your recorded skills",
-                    items
-                };
             }
 
-            // Organization / Team Top Skills for Manager, Admin, Auditor
+            const cardTitle = "Top Skills";
+            const cardSubtitle = isManager ? "Most common skills in your team" : "Most common skills in the organization";
+
             let query = SELECT.from(EmployeeSkills)
                 .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "count(employeeID) as count");
 
@@ -337,7 +347,17 @@ export class DashboardService extends cds.ApplicationService {
                     .limit(3)
             );
 
-            const items = result.map((r: any) => {
+            if (!result || result.length === 0) {
+                return [{
+                    skillName: "No Skills Recorded",
+                    imageUrl: "sap-icon://education",
+                    description: "No team skills recorded yet",
+                    cardTitle,
+                    cardSubtitle
+                }];
+            }
+
+            return result.map((r: any) => {
                 let finalImageUrl = r.imageUrl || "sap-icon://education";
                 if (finalImageUrl && !finalImageUrl.startsWith("sap-icon://") && !finalImageUrl.startsWith("http") && !finalImageUrl.startsWith("/")) {
                     finalImageUrl = "../../" + finalImageUrl;
@@ -346,15 +366,11 @@ export class DashboardService extends cds.ApplicationService {
                 return {
                     skillName: r.skillName,
                     imageUrl: finalImageUrl,
-                    description: `${cnt} Employee${cnt === 1 ? "" : "s"}`
+                    description: `${cnt} Employee${cnt === 1 ? "" : "s"}`,
+                    cardTitle,
+                    cardSubtitle
                 };
             });
-
-            return {
-                cardTitle: "Top Skills",
-                cardSubtitle: isManager ? "Most common skills in your team" : "Most common skills in the organization",
-                items
-            };
         });
 
         service.on("skillsByCategory", async (req: Request) => {
