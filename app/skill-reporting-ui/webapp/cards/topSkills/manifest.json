@@ -7,8 +7,14 @@
 	"sap.card": {
 		"type": "List",
 		"header": {
-			"title": "{0/cardTitle}",
-			"subTitle": "{0/cardSubtitle}",
+			"data": {
+				"request": {
+					"url": "/api/dashboard/topSkills()"
+				},
+				"path": "/value/0"
+			},
+			"title": "{cardTitle}",
+			"subTitle": "{cardSubtitle}",
 			"icon": { "src": "sap-icon://competitor" },
 			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
 		},

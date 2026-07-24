@@ -401,7 +401,14 @@ export class DashboardService extends cds.ApplicationService {
                         .groupBy("toSkill.toCategory.name")
                         .orderBy("count desc")
                 );
-                return result.map((r: any) => ({ categoryName: r.categoryName || "Uncategorized", count: parseInt(r.count) }));
+                return result.map((r: any) => {
+                    const cnt = parseInt(r.count);
+                    const name = r.categoryName || "Uncategorized";
+                    return {
+                        categoryName: `${name} (${cnt} skill${cnt === 1 ? "" : "s"})`,
+                        count: cnt
+                    };
+                });
             }
 
             const result = await db.run(
@@ -411,7 +418,14 @@ export class DashboardService extends cds.ApplicationService {
                     .groupBy("toCategory.name")
                     .orderBy("count desc")
             );
-            return result.map((r: any) => ({ categoryName: r.categoryName || "Uncategorized", count: parseInt(r.count) }));
+            return result.map((r: any) => {
+                const cnt = parseInt(r.count);
+                const name = r.categoryName || "Uncategorized";
+                return {
+                    categoryName: `${name} (${cnt} skill${cnt === 1 ? "" : "s"})`,
+                    count: cnt
+                };
+            });
         });
 
         service.on("requestsStatus", async (req: Request) => {
