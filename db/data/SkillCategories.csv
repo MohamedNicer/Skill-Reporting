@@ -1,8 +1,8 @@
-ID;name;description;sortOrder;isActive
-CAT1;Programming Languages;Languages used to write code;1;true
-CAT2;Cloud Providers;Cloud computing platforms;2;true
-CAT3;Soft Skills;Interpersonal skills;3;true
-CAT4;Databases;Data storage and management;4;true
-CAT5;DevOps & CI/CD;Development operations and continuous integration;5;true
-CAT6;Data Science & AI;Machine learning, deep learning, and data analysis;6;true
-CAT7;SAP Technologies;Enterprise software and cloud solutions;7;true
+ID;name;description;sortOrder;isActive;icon
+CAT1;Programming Languages;Languages used to write code;1;true;sap-icon://source-code
+CAT2;Cloud Providers;Cloud computing platforms;2;true;sap-icon://cloud
+CAT3;Soft Skills;Interpersonal skills;3;true;sap-icon://group
+CAT4;Databases;Data storage and management;4;true;sap-icon://database
+CAT5;DevOps & CI/CD;Development operations and continuous integration;5;true;sap-icon://process
+CAT6;Data Science & AI;Machine learning, deep learning, and data analysis;6;true;sap-icon://area-chart
+CAT7;SAP Technologies;Enterprise software and cloud solutions;7;true;sap-icon://sys-enter-2

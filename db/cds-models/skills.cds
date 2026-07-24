@@ -17,6 +17,7 @@ entity SkillCategories : managed {
         name                : String(120) not null;
         description         : String(500);
         sortOrder           : Integer;
+        icon                : String(80);
         isActive            : Boolean default true;
         toSkills            : Association to many Skills
                                   on toSkills.categoryID = $self.ID;

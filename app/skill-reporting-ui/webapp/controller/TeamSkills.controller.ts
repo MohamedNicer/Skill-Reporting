@@ -31,9 +31,10 @@ export default class TeamSkills extends BaseController implements IPage {
     private getCategoryIcon(catName: string): string {
         const lower = (catName || "").toLowerCase();
         if (lower.includes("cloud")) return "sap-icon://cloud";
-        if (lower.includes("program") || lower.includes("lang")) return "sap-icon://coding-model";
+        if (lower.includes("program") || lower.includes("lang") || lower.includes("code")) return "sap-icon://source-code";
+        if (lower.includes("ai") || lower.includes("science") || lower.includes("machine") || lower.includes("learning")) return "sap-icon://area-chart";
         if (lower.includes("data") || lower.includes("db")) return "sap-icon://database";
-        if (lower.includes("devops") || lower.includes("tool")) return "sap-icon://process";
+        if (lower.includes("devops") || lower.includes("ci") || lower.includes("cd") || lower.includes("tool")) return "sap-icon://process";
         if (lower.includes("soft") || lower.includes("manage") || lower.includes("lead")) return "sap-icon://group";
         if (lower.includes("sap")) return "sap-icon://sys-enter-2";
         return "sap-icon://education";
