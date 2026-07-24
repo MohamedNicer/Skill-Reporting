@@ -2,28 +2,28 @@
 	"sap.app": {
 		"id": "com.ndbs.skillreportingui.cards.topSkills",
 		"type": "card",
-		"title": "Top Skills"
+		"title": "Skills"
 	},
 	"sap.card": {
 		"type": "List",
 		"header": {
-			"title": "Top Skills",
-			"subTitle": "Most common skills in the organization",
+			"title": "{/cardTitle}",
+			"subTitle": "{/cardSubtitle}",
 			"icon": { "src": "sap-icon://competitor" },
 			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
 		},
 		"data": {
 			"request": {
 				"url": "/api/dashboard/topSkills()"
-			},
-			"path": "/value"
+			}
 		},
 		"content": {
+			"path": "/items",
 			"item": {
 				"title": "{skillName}",
-				"description": "{count} Employees",
+				"description": "{description}",
 				"icon": { "src": "{imageUrl}" },
-				"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
+				"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 			}
 		}
 	}

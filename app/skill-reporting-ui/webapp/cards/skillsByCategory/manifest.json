@@ -21,7 +21,8 @@
 			"plotArea": {
 				"dataLabel": {
 					"visible": true,
-					"showTotal": true
+					"showTotal": true,
+					"type": "value_percentage"
 				}
 			},
 			"actions": [

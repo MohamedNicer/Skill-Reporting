@@ -272,7 +272,8 @@ export class DashboardService extends cds.ApplicationService {
                 employees: parseInt(employees?.cnt ?? "0"),
                 skills: parseInt(skills?.cnt ?? "0"),
                 employeeSkills: parseInt(employeeSkills?.cnt ?? "0"),
-                pendingRequests: parseInt(pendingRequests?.cnt ?? "0")
+                pendingRequests: parseInt(pendingRequests?.cnt ?? "0"),
+                showHeadcount: isAdmin || isAuditor || isManager
             };
         });
 
@@ -283,22 +284,50 @@ export class DashboardService extends cds.ApplicationService {
             const isAdmin = req.user.is("HRAdmin") || req.user.is("SkillsAdmin");
             const isAuditor = req.user.is("Auditor");
             const isManager = req.user.is("Manager");
+            const isEmployeeOnly = !isAdmin && !isAuditor && !isManager;
 
             let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
             if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
 
+            if (isEmployeeOnly && currentEmp) {
+                // Personal My Skills Overview for Employee
+                const empSkills = await db.run(
+                    SELECT.from(EmployeeSkills)
+                        .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "toProficiencyLevel.label as proficiencyLevel", "yearsExperience")
+                        .where({ employeeID: currentEmp.ID })
+                        .orderBy("yearsExperience desc")
+                        .limit(3)
+                );
+
+                const items = empSkills.map((r: any) => {
+                    let finalImageUrl = r.imageUrl || "sap-icon://education";
+                    if (finalImageUrl && !finalImageUrl.startsWith("sap-icon://") && !finalImageUrl.startsWith("http") && !finalImageUrl.startsWith("/")) {
+                        finalImageUrl = "../../" + finalImageUrl;
+                    }
+                    const exp = r.yearsExperience ? ` (${r.yearsExperience} yrs)` : "";
+                    const prof = r.proficiencyLevel || "Recorded Skill";
+                    return {
+                        skillName: r.skillName,
+                        imageUrl: finalImageUrl,
+                        description: `${prof}${exp}`
+                    };
+                });
+
+                return {
+                    cardTitle: "My Skills",
+                    cardSubtitle: "Overview of your recorded skills",
+                    items
+                };
+            }
+
+            // Organization / Team Top Skills for Manager, Admin, Auditor
             let query = SELECT.from(EmployeeSkills)
                 .columns("toSkill.canonicalName as skillName", "toSkill.imageUrl as imageUrl", "count(employeeID) as count");
 
-            if (!isAdmin && !isAuditor) {
-                if (isManager && currentEmp) {
-                    const teamIds = await getTeamEmployeeIds(db, req.user.id);
-                    if (teamIds.length > 0) {
-                        query.where({ employeeID: { in: teamIds } });
-                    }
-                } else if (currentEmp) {
-                    // Regular Employee: Personal top skills
-                    query.where({ employeeID: currentEmp.ID });
+            if (isManager && currentEmp) {
+                const teamIds = await getTeamEmployeeIds(db, req.user.id);
+                if (teamIds.length > 0) {
+                    query.where({ employeeID: { in: teamIds } });
                 }
             }
 
@@ -307,13 +336,25 @@ export class DashboardService extends cds.ApplicationService {
                     .orderBy("count desc")
                     .limit(3)
             );
-            return result.map((r: any) => {
+
+            const items = result.map((r: any) => {
                 let finalImageUrl = r.imageUrl || "sap-icon://education";
                 if (finalImageUrl && !finalImageUrl.startsWith("sap-icon://") && !finalImageUrl.startsWith("http") && !finalImageUrl.startsWith("/")) {
                     finalImageUrl = "../../" + finalImageUrl;
                 }
-                return { skillName: r.skillName, imageUrl: finalImageUrl, count: parseInt(r.count) };
+                const cnt = parseInt(r.count);
+                return {
+                    skillName: r.skillName,
+                    imageUrl: finalImageUrl,
+                    description: `${cnt} Employee${cnt === 1 ? "" : "s"}`
+                };
             });
+
+            return {
+                cardTitle: "Top Skills",
+                cardSubtitle: isManager ? "Most common skills in your team" : "Most common skills in the organization",
+                items
+            };
         });
 
         service.on("skillsByCategory", async (req: Request) => {

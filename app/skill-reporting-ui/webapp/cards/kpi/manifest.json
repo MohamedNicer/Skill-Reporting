@@ -20,6 +20,7 @@
 			"groups": [
 				{
 					"title": "Headcount",
+					"visible": "{showHeadcount}",
 					"items": [
 						{
 							"label": "Total Employees",
