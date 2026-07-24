@@ -32,7 +32,7 @@
 
             <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                 <Title text="Skill Categories" level="H3" class="section-title" />
-                <HBox>
+                <HBox class="sapUiTinyMarginEnd">
                     <Button id="btnRequestNewSkill" text="{i18n>requestNewSkill}" icon="sap-icon://request" press=".onRequestNewSkill" class="sapUiTinyMarginEnd" />
                     <Button id="btnAddSkill" text="{i18n>addSkill}" type="Emphasized" icon="sap-icon://add" press=".onAddSkill" />
                 </HBox>
