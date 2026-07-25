@@ -23,6 +23,7 @@ import Avatar from "sap/m/Avatar";
 import MessageToast from "sap/m/MessageToast";
 import MessageBox from "sap/m/MessageBox";
 import ObjectStatus from "sap/m/ObjectStatus";
+import MessageStrip from "sap/m/MessageStrip";
 import SimpleForm from "sap/ui/layout/form/SimpleForm";
 
 /**
@@ -169,9 +170,12 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
         let selectedSkill: any = null;
 
-        const subTitleText = new Text({
+        const infoBanner = new MessageStrip({
             text: `Select a catalog skill (${availableSkills.length} available) to add it to your profile and submit for admin validation.`,
-            class: "sapUiTinyMarginBottom"
+            type: "Information",
+            showIcon: true,
+            showCloseButton: false,
+            class: "sapUiSmallMarginBottom"
         });
 
         const searchField = new SearchField({
@@ -219,7 +223,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
         const step1Box = new VBox({
             class: "sapUiSmallMargin",
-            items: [subTitleText, searchField, skillList]
+            items: [infoBanner, searchField, skillList]
         });
 
         const step2SkillTitle = new Title({ level: "H3" });
@@ -237,11 +241,11 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const profSelect = new Select({
             width: "100%",
             items: [
-                new Item({ key: "PL1", text: "Beginner" }),
-                new Item({ key: "PL2", text: "Intermediate" }),
-                new Item({ key: "PL3", text: "Advanced" }),
-                new Item({ key: "PL4", text: "Expert" }),
-                new Item({ key: "PL5", text: "Master" })
+                new Item({ key: "PL1", text: "Beginner (Basic understanding & assistance required)" }),
+                new Item({ key: "PL2", text: "Intermediate (Practical application & independent execution)" }),
+                new Item({ key: "PL3", text: "Advanced (Deep knowledge & capability to guide others)" }),
+                new Item({ key: "PL4", text: "Expert (Advanced expertise & strategic domain leadership)" }),
+                new Item({ key: "PL5", text: "Master (Subject matter authority & innovation leader)" })
             ]
         });
         profSelect.setSelectedKey("PL2");
@@ -362,8 +366,8 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const dialog = new Dialog({
             title: `Add Skill to Profile (${availableSkills.length} Available)`,
             icon: "sap-icon://add",
-            contentWidth: "600px",
-            contentHeight: "500px",
+            contentWidth: "640px",
+            contentHeight: "520px",
             content: [containerBox],
             buttons: [btnBack, btnAdd, btnCancel]
         });
@@ -396,8 +400,11 @@ export default class EmployeeSkills extends BaseController implements IPage {
             view.setBusy(false);
         }
 
-        const subTitleText = new Text({
+        const infoBanner = new MessageStrip({
             text: "Propose a new skill not currently listed in the catalog. An automatic request will be submitted to Admin for approval.",
+            type: "Information",
+            showIcon: true,
+            showCloseButton: false,
             class: "sapUiSmallMarginBottom"
         });
 
@@ -417,11 +424,11 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const profSelect = new Select({
             width: "100%",
             items: [
-                new Item({ key: "PL1", text: "Beginner" }),
-                new Item({ key: "PL2", text: "Intermediate" }),
-                new Item({ key: "PL3", text: "Advanced" }),
-                new Item({ key: "PL4", text: "Expert" }),
-                new Item({ key: "PL5", text: "Master" })
+                new Item({ key: "PL1", text: "Beginner (Basic understanding & assistance required)" }),
+                new Item({ key: "PL2", text: "Intermediate (Practical application & independent execution)" }),
+                new Item({ key: "PL3", text: "Advanced (Deep knowledge & capability to guide others)" }),
+                new Item({ key: "PL4", text: "Expert (Advanced expertise & strategic domain leadership)" }),
+                new Item({ key: "PL5", text: "Master (Subject matter authority & innovation leader)" })
             ]
         });
         profSelect.setSelectedKey("PL2");
@@ -464,7 +471,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
         const formBox = new VBox({
             class: "sapUiSmallMargin",
-            items: [subTitleText, simpleForm]
+            items: [infoBanner, simpleForm]
         });
 
         const btnSubmit = new Button({
@@ -525,7 +532,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const dialog = new Dialog({
             title: "Request New Skill to Catalog",
             icon: "sap-icon://request",
-            contentWidth: "600px",
+            contentWidth: "640px",
             content: [formBox],
             buttons: [btnSubmit, btnCancel]
         });
