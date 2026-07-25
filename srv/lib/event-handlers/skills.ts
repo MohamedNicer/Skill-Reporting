@@ -26,7 +26,7 @@ const findSkillSuggestions = async (input: string): Promise<SkillSuggestion[]> =
 
 const addSkillToProfile = async (req: TypedRequest<any>): Promise<any> => {
     const db: Service = await connect.to("db");
-    const { EmployeeSkills, Skills } = db.entities;
+    const { EmployeeSkills, Skills, SkillRequests } = db.entities;
     const currentEmp = await getCurrentEmployee(req.user.id);
     const targetEmpID = (req.data.employeeID && (req.user.is("HRAdmin") || req.user.is("SkillsAdmin"))) ? req.data.employeeID : currentEmp.ID;
 
@@ -40,7 +40,33 @@ const addSkillToProfile = async (req: TypedRequest<any>): Promise<any> => {
     const existing = await db.run(SELECT.one.from(EmployeeSkills).where({ employeeID: targetEmpID, skillID: req.data.skillID }));
     if (existing) return req.reject(409, "This skill is already assigned to the profile.");
     const ID = utils.uuid();
-    await db.run(INSERT.into(EmployeeSkills).entries({ ID, employeeID: targetEmpID, skillID: req.data.skillID, proficiencyLevelID: req.data.proficiencyLevelID, yearsExperience: req.data.yearsExperience, lastUsedOn: req.data.lastUsedOn, source: "manual", validationStatus: "selfDeclared", confirmedAt: new Date().toISOString() }));
+    await db.run(INSERT.into(EmployeeSkills).entries({
+        ID,
+        employeeID: targetEmpID,
+        skillID: req.data.skillID,
+        proficiencyLevelID: req.data.proficiencyLevelID,
+        yearsExperience: req.data.yearsExperience,
+        lastUsedOn: req.data.lastUsedOn,
+        source: "manual",
+        validationStatus: "selfDeclared",
+        confirmedAt: new Date().toISOString()
+    }));
+
+    // Automatically trigger a SkillRequest to notify Admin
+    const reqID = utils.uuid();
+    await db.run(INSERT.into(SkillRequests).entries({
+        ID: reqID,
+        requestedByID: targetEmpID,
+        resolvedSkillID: req.data.skillID,
+        requestType: "addSkill",
+        requestedText: skill.canonicalName,
+        normalizedText: normalizeText(skill.canonicalName),
+        status: "pendingReview",
+        decision: "pending",
+        adminComment: "Self-declared skill addition submitted for admin review",
+        requestedAt: new Date().toISOString()
+    }));
+
     await recordAudit(currentEmp.ID, "EmployeeSkillChanged", "EmployeeSkills", ID);
     return db.run(SELECT.one.from(EmployeeSkills).where({ ID }));
 };
@@ -71,7 +97,17 @@ const requestSkill = async (req: TypedRequest<any>): Promise<any> => {
     const currentEmp = await getCurrentEmployee(req.user.id);
     const targetEmpID = (req.data.requestedByID && (req.user.is("HRAdmin") || req.user.is("SkillsAdmin"))) ? req.data.requestedByID : currentEmp.ID;
     const ID = utils.uuid();
-    await db.run(INSERT.into(SkillRequests).entries({ ID, requestedByID: targetEmpID, requestType: req.data.requestType || "newSkill", requestedText: req.data.requestedText, normalizedText: normalizeText(req.data.requestedText), status: "draft", requestedAt: new Date().toISOString() }));
+    await db.run(INSERT.into(SkillRequests).entries({
+        ID,
+        requestedByID: targetEmpID,
+        requestType: req.data.requestType || "newSkill",
+        requestedText: req.data.requestedText,
+        normalizedText: normalizeText(req.data.requestedText),
+        status: req.data.status || "pendingReview",
+        decision: "pending",
+        adminComment: req.data.adminComment || "",
+        requestedAt: new Date().toISOString()
+    }));
     await recordAudit(currentEmp.ID, "SkillRequested", "SkillRequests", ID);
     return db.run(SELECT.one.from(SkillRequests).where({ ID }));
 };
