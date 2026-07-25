@@ -20,11 +20,11 @@
 			"groups": [
 				{
 					"title": "Headcount",
-					"visible": "{showHeadcount}",
 					"items": [
 						{
 							"label": "Total Employees",
-							"value": "{employees}"
+							"value": "{employees}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/personnel" } }]
 						}
 					]
 				},
@@ -33,7 +33,8 @@
 					"items": [
 						{
 							"label": "Approved Skills",
-							"value": "{skills}"
+							"value": "{skills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
 						},
 						{
 							"label": "Skill Assignments",

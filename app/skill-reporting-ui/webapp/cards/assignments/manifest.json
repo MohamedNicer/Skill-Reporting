@@ -8,10 +8,11 @@
 		"type": "Table",
 		"header": {
 			"title": "Recent Skill Assignments",
-			"subTitle": "Latest recorded skills",
+			"subTitle": "Latest recorded skills across the team",
 			"icon": {
 				"src": "sap-icon://employee-approvals"
-			}
+			},
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/team-skills" } }]
 		},
 		"data": {
 			"request": {
@@ -35,7 +36,8 @@
 						"value": "{validationStatusText}",
 						"state": "{= ${validationStatus} === 'verified' || ${validationStatus} === 'managerConfirmed' ? 'Success' : ${validationStatus} === 'rejected' ? 'Error' : 'Warning' }"
 					}
-				]
+				],
+				"actions": [{ "type": "Navigation", "parameters": { "url": "#/team-skills" } }]
 			}
 		}
 	}

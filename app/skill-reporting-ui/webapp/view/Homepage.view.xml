@@ -18,14 +18,6 @@
                     <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
                         <grid:CSSGrid class="gridAlignStart" gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
                             <grid:items>
-                                <!-- Profile card commented out — use 'Who am I?' in the ShellBar personal menu instead
-                                <w:Card manifest="./cards/profile/manifest.json">
-                                    <w:layoutData>
-                                        <grid:GridItemLayoutData gridColumn="span 1" />
-                                    </w:layoutData>
-                                </w:Card>
-                                -->
-
                                 <w:Card id="cardKpi" manifest="./cards/kpi/manifest.json">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
@@ -66,120 +58,213 @@
                     </VBox>
                 </IconTabFilter>
 
-                <!-- Personnel & Skills -->
-                <IconTabFilter text="{i18n>personnelSkills}" key="personnel_skills">
-                    <HBox class="sapUiMediumMargin" wrap="Wrap">
-                        <GenericTile
-                            header="{i18n>personnel}"
-                            subheader="{i18n>employeeDirectory}"
-                            press=".onNavToView('RoutePersonnel')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                            visible="{= ${userRolesModel>/isManagerOrAbove}}"
-                        >
-                            <TileContent>
-                                <NumericContent value="{dashboardModel>/employees}" icon="sap-icon://company-view" valueColor="Good" />
-                            </TileContent>
-                        </GenericTile>
+                <!-- My Workspace (Employee) -->
+                <IconTabFilter text="My Workspace" key="my_workspace">
+                    <VBox class="sapUiMediumMargin">
 
-                        <GenericTile
-                            header="{i18n>skillCatalog}"
-                            subheader="{i18n>manageSkills}"
-                            press=".onNavToView('RouteSkills')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                            visible="{= ${userRolesModel>/isManagerOrAbove}}"
-                        >
-                            <TileContent>
-                                <NumericContent value="{dashboardModel>/skills}" icon="sap-icon://education" valueColor="Neutral" />
-                            </TileContent>
-                        </GenericTile>
+                        <!-- Section: My Skills -->
+                        <Title text="My Skills" level="H4" class="section-title sapUiSmallMarginBottom" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- My Skills tile — CLICKABLE -->
+                            <GenericTile
+                                id="tileMySkills"
+                                header="My Skills"
+                                subheader="View &amp; update my profile skills"
+                                press=".onNavToView('RouteEmployeeSkills')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
+                                </TileContent>
+                            </GenericTile>
 
-                        <GenericTile
-                            header="Skill Requests"
-                            subheader="Track submitted requests"
-                            press=".onNavToView('RouteSkillRequests')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <NumericContent value="{dashboardModel>/pendingRequests}" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
-                            </TileContent>
-                        </GenericTile>
-                    </HBox>
+                            <!-- Skills by Category tile — CLICKABLE (redirects to My Skills) -->
+                            <GenericTile
+                                id="tileMySkillsByCategory"
+                                header="Skills by Category"
+                                subheader="My skills grouped by category"
+                                press=".onNavToView('RouteEmployeeSkills')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://pie-chart" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+
+                        <!-- Section: My Requests -->
+                        <Title text="My Requests" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- Skill Requests tile — CLICKABLE (redirects to my requests) -->
+                            <GenericTile
+                                id="tileMyRequests"
+                                header="My Skill Requests"
+                                subheader="Track my submitted skill requests"
+                                press=".onNavToView('RouteSkillRequests')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/pendingRequests}" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+
+                        <!-- Section: My CVs -->
+                        <Title text="My CVs" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- Uploaded CVs tile — NOT clickable for employee -->
+                            <GenericTile
+                                id="tileUploadedCVs"
+                                header="{i18n>uploadedCVs}"
+                                subheader="{i18n>manageUploadedCVs}"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                state="Disabled"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://upload-to-cloud" />
+                                </TileContent>
+                            </GenericTile>
+
+                            <!-- Generated CVs tile — NOT clickable for employee -->
+                            <GenericTile
+                                id="tileGeneratedCVs"
+                                header="{i18n>generatedCVs}"
+                                subheader="{i18n>manageGeneratedCVs}"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                state="Disabled"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://pdf-attachment" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+                    </VBox>
                 </IconTabFilter>
 
-                <!-- Operations -->
-                <IconTabFilter text="{i18n>operations}" key="operations">
-                    <HBox class="sapUiMediumMargin" wrap="Wrap">
-                        <GenericTile
-                            header="My Skills"
-                            subheader="{i18n>mySkillsSubheader}"
-                            press=".onNavToView('RouteEmployeeSkills')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
-                            </TileContent>
-                        </GenericTile>
+                <!-- Manager Workspace — only visible to managers and above -->
+                <IconTabFilter text="Manager Workspace" key="manager_workspace" visible="{= ${userRolesModel>/isManagerOrAbove}}">
+                    <VBox class="sapUiMediumMargin">
 
-                        <GenericTile
-                            header="{i18n>uploadedCVs}"
-                            subheader="{i18n>manageUploadedCVs}"
-                            press=".onNavToView('RouteUploadedCVs')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <ImageContent src="sap-icon://upload-to-cloud" />
-                            </TileContent>
-                        </GenericTile>
+                        <!-- Section: My Team -->
+                        <Title text="My Team" level="H4" class="section-title sapUiSmallMarginBottom" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- Team Skills — CLICKABLE -->
+                            <GenericTile
+                                id="tileTeamSkills"
+                                header="Team Skills Overview"
+                                subheader="View &amp; endorse team member skills"
+                                press=".onNavToView('RouteTeamSkills')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://manager" />
+                                </TileContent>
+                            </GenericTile>
 
-                        <GenericTile
-                            header="{i18n>generatedCVs}"
-                            subheader="{i18n>manageGeneratedCVs}"
-                            press=".onNavToView('RouteGeneratedCVs')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <ImageContent src="sap-icon://pdf-attachment" />
-                            </TileContent>
-                        </GenericTile>
-                    </HBox>
-                </IconTabFilter>
+                            <!-- Personnel Directory — CLICKABLE -->
+                            <GenericTile
+                                id="tilePersonnel"
+                                header="Personnel Directory"
+                                subheader="Browse &amp; manage employee profiles"
+                                press=".onNavToView('RoutePersonnel')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/employees}" icon="sap-icon://company-view" valueColor="Good" />
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Management -->
-                <IconTabFilter text="{i18n>management}" key="management" visible="{= ${userRolesModel>/isManagerOrAbove}}">
-                    <HBox class="sapUiMediumMargin" wrap="Wrap">
-                        <GenericTile
-                            header="{i18n>teamSkills}"
-                            subheader="{i18n>managerWorkspace}"
-                            press=".onNavToView('RouteTeamSkills')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <ImageContent src="sap-icon://manager" />
-                            </TileContent>
-                        </GenericTile>
+                            <!-- Skill Catalog — CLICKABLE -->
+                            <GenericTile
+                                id="tileSkillCatalog"
+                                header="Skill Catalog"
+                                subheader="Browse &amp; manage approved skills"
+                                press=".onNavToView('RouteSkills')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/skills}" icon="sap-icon://education" valueColor="Neutral" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
 
-                        <GenericTile
-                            header="{i18n>departmentHeatmap}"
-                            subheader="{i18n>analytics}"
-                            press=".onNavToView('RouteDepartmentHeatmap')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <ImageContent src="sap-icon://business-objects-experience" />
-                            </TileContent>
-                        </GenericTile>
+                        <!-- Section: Team Analytics -->
+                        <Title text="Team Analytics" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- Department Heatmap — CLICKABLE -->
+                            <GenericTile
+                                id="tileDeptHeatmap"
+                                header="Department Skills Heatmap"
+                                subheader="Visualise skill gaps across departments"
+                                press=".onNavToView('RouteDepartmentHeatmap')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://business-objects-experience" />
+                                </TileContent>
+                            </GenericTile>
 
-                        <GenericTile
-                            header="{i18n>cvActivity}"
-                            subheader="{i18n>analytics}"
-                            press=".onNavToView('RouteCVActivity')"
-                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                        >
-                            <TileContent>
-                                <ImageContent src="sap-icon://activity-2" />
-                            </TileContent>
-                        </GenericTile>
-                    </HBox>
+                            <!-- CV Activity — CLICKABLE -->
+                            <GenericTile
+                                id="tileCVActivity"
+                                header="CV Activity Log"
+                                subheader="Track CV uploads &amp; generation activity"
+                                press=".onNavToView('RouteCVActivity')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://activity-2" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+
+                        <!-- Section: Skill Requests (as manager) -->
+                        <Title text="Skill Requests" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- Pending Skill Requests — CLICKABLE -->
+                            <GenericTile
+                                id="tilePendingRequests"
+                                header="Pending Skill Requests"
+                                subheader="Review all employee skill requests"
+                                press=".onNavToView('RouteSkillRequests')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/pendingRequests}" indicator="{= ${dashboardModel>/pendingRequests} > 0 ? 'Up' : 'None' }" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+
+                        <!-- Section: Manager's Own Profile -->
+                        <Title text="My Profile (as Employee)" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- My Skills — CLICKABLE (manager is also employee) -->
+                            <GenericTile
+                                id="tileMgrMySkills"
+                                header="My Own Skills"
+                                subheader="Manage my personal skill profile"
+                                press=".onNavToView('RouteEmployeeSkills')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
+                                </TileContent>
+                            </GenericTile>
+
+                            <!-- My Skill Requests — CLICKABLE -->
+                            <GenericTile
+                                id="tileMgrMyRequests"
+                                header="My Skill Requests"
+                                subheader="Track my own submitted skill requests"
+                                press=".onNavToView('RouteSkillRequests')"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://request" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+                    </VBox>
                 </IconTabFilter>
 
                 <!-- Administration -->

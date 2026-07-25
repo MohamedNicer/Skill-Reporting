@@ -105,16 +105,24 @@ export default class Homepage extends BaseController implements IPage {
     private syncTabTitle(): void {
         const iconTabBar = this.byId("itbLaunchpad") as IconTabBar;
         if (!iconTabBar) return;
-        
+
         const selectedKey = iconTabBar.getSelectedKey();
-        const items = iconTabBar.getItems() as IconTabFilter[];
-        const selectedItem = items.find(item => item.getKey() === selectedKey);
-        
-        if (selectedItem) {
-            const globalModel = this.getOwnerComponent()?.getModel("globalJSONModel") as JSONModel;
-            if (selectedKey === "overview") {
-                globalModel.setProperty("/currentSection", this.getResourceBundleText("homepage"));
-            } else {
+        const globalModel = this.getOwnerComponent()?.getModel("globalJSONModel") as JSONModel;
+
+        const tabTitles: Record<string, string> = {
+            overview: this.getResourceBundleText("homepage"),
+            my_workspace: "My Workspace",
+            manager_workspace: "Manager Workspace",
+            administration: this.getResourceBundleText("administration")
+        };
+
+        const title = tabTitles[selectedKey];
+        if (title) {
+            globalModel.setProperty("/currentSection", title);
+        } else {
+            const items = iconTabBar.getItems() as IconTabFilter[];
+            const selectedItem = items.find(item => item.getKey() === selectedKey);
+            if (selectedItem) {
                 globalModel.setProperty("/currentSection", selectedItem.getText());
             }
         }
