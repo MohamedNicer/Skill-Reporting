@@ -29,6 +29,7 @@
                 showRowCount="true"
                 editTogglable="false"
                 header="{i18n>skillRequests}"
+                beforeRebindTable="onBeforeRebindTable"
                 requestAtLeastFields="status,statusText,requestedByID,requestedByName,requestedText,requestType,requestTypeText,decision,decisionText,requestedAt"
             >
                 <smartTable:customToolbar>

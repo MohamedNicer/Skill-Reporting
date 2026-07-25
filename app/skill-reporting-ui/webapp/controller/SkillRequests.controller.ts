@@ -114,6 +114,23 @@ export default class SkillRequests extends BaseController implements IPage {
         dialog.open();
     }
 
+    private _personalEmpId: string | null = null;
+    private _filterPendingOnly: boolean = false;
+
+    /** SmartTable beforeRebindTable event handler */
+    public onBeforeRebindTable(oEvent: any): void {
+        const mBindingParams = oEvent.getParameter("bindingParams");
+        if (!mBindingParams) return;
+        mBindingParams.filters = mBindingParams.filters || [];
+
+        if (this._personalEmpId) {
+            mBindingParams.filters.push(new Filter("requestedByID", FilterOperator.EQ, this._personalEmpId));
+        }
+        if (this._filterPendingOnly) {
+            mBindingParams.filters.push(new Filter("status", FilterOperator.EQ, "pendingReview"));
+        }
+    }
+
     /* IPage Implementation */
     public async onObjectMatched(): Promise<void> {
         const oDataModel = this.getComponentModel();
@@ -131,54 +148,27 @@ export default class SkillRequests extends BaseController implements IPage {
         const personalMode: boolean = navModel?.getProperty("/personalMode") === true;
         const filterPendingOnly: boolean = navModel?.getProperty("/filterPendingOnly") === true;
 
-        // Reset flags immediately
+        // Clear navigation flags
         navModel?.setProperty("/personalMode", false);
         navModel?.setProperty("/filterPendingOnly", false);
 
-        const smartTable = this.byId("stSkillRequests") as SmartTable;
-        const innerTable = smartTable?.getTable() as Table;
-
-        const applyFilters = (personalEmpId?: string) => {
-            const binding = innerTable?.getBinding("items") as ListBinding;
-            if (!binding) return;
-            const filters: Filter[] = [];
-            if (personalEmpId) {
-                filters.push(new Filter("requestedByID", FilterOperator.EQ, personalEmpId));
-            }
-            if (filterPendingOnly) {
-                filters.push(new Filter("status", FilterOperator.EQ, "pendingReview"));
-            }
-            binding.filter(filters);
-        };
+        this._filterPendingOnly = filterPendingOnly;
+        this._personalEmpId = null;
 
         if (personalMode) {
             try {
                 const res = await fetch("/api/dashboard/userInfo()");
                 if (res.ok) {
                     const userInfo = await res.json();
-                    const personalEmpId: string = (userInfo.value || userInfo).employeeID;
-                    if (personalEmpId) {
-                        const binding = innerTable?.getBinding("items") as ListBinding;
-                        if (binding) {
-                            applyFilters(personalEmpId);
-                        } else {
-                            smartTable.attachEventOnce("initialise" as any, () => applyFilters(personalEmpId));
-                        }
-                    }
+                    this._personalEmpId = (userInfo.value || userInfo).employeeID || null;
                 }
             } catch { /* ignore */ }
-        } else if (filterPendingOnly) {
-            const binding = innerTable?.getBinding("items") as ListBinding;
-            if (binding) {
-                applyFilters();
-            } else {
-                smartTable.attachEventOnce("initialise" as any, () => applyFilters());
-            }
-        } else {
-            const binding = innerTable?.getBinding("items") as ListBinding;
-            if (binding) {
-                binding.filter([]);
-            }
+        }
+
+        // Rebind table with the new filter parameters
+        const smartTable = this.byId("stSkillRequests") as SmartTable;
+        if (smartTable) {
+            smartTable.rebindTable(true);
         }
     }
 
