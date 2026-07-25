@@ -71,3 +71,20 @@
     color: #1e293b !important;
     font-weight: 700 !important;
 }
+
+/* Premium Dialog Styling */
+.custom-dialog-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.25rem 1.5rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.custom-dialog-form {
+    padding: 1.25rem 1.5rem !important;
+}
+
+.custom-dialog-form .sapUiFormElement {
+    margin-bottom: 1.25rem !important;
+}

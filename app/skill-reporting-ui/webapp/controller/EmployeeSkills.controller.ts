@@ -22,6 +22,8 @@ import Title from "sap/m/Title";
 import Avatar from "sap/m/Avatar";
 import MessageToast from "sap/m/MessageToast";
 import MessageBox from "sap/m/MessageBox";
+import ObjectStatus from "sap/m/ObjectStatus";
+import SimpleForm from "sap/ui/layout/form/SimpleForm";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
@@ -139,7 +141,6 @@ export default class EmployeeSkills extends BaseController implements IPage {
         let assignedSkillIds: string[] = [];
 
         try {
-            // 1. Fetch employee's assigned skills
             const empRes = await fetch("/odata/v2/employee-profile/VEmployeeSkills?$format=json");
             if (empRes.ok) {
                 const empData = await empRes.json();
@@ -147,7 +148,6 @@ export default class EmployeeSkills extends BaseController implements IPage {
                 assignedSkillIds = assigned.map((a: any) => a.skillID);
             }
 
-            // 2. Fetch active catalog skills
             const catRes = await fetch("/odata/v2/catalog/Skills?$expand=toCategory&$format=json&$orderby=canonicalName asc");
             if (catRes.ok) {
                 const catData = await catRes.json();
@@ -160,20 +160,31 @@ export default class EmployeeSkills extends BaseController implements IPage {
             view.setBusy(false);
         }
 
-        // 3. Filter catalog skills to EXCLUDE those the employee already has
         const availableSkills = catalogSkills.filter((s: any) => !assignedSkillIds.includes(s.ID));
 
         if (availableSkills.length === 0) {
-            MessageBox.information("You already have all active skills assigned to your profile, or no new catalog skills are available.");
+            MessageBox.information("You already have all active catalog skills assigned to your profile.");
             return;
         }
 
         let selectedSkill: any = null;
 
-        // UI Controls for Step 1 & Step 2
+        const headerAvatar = new Avatar({ src: "sap-icon://add", displaySize: "S", class: "category-icon-avatar sapUiTinyMarginEnd" });
+        const headerTitle = new Title({ text: "Add Skill to Profile", level: "H3" });
+        const headerSubTitle = new Text({ text: "Select a catalog skill that is not yet on your profile to add it and request admin review.", class: "sapUiTinyMarginTop" });
+
+        const headerBox = new VBox({
+            class: "custom-dialog-header",
+            items: [
+                new HBox({ alignItems: "Center", items: [headerAvatar, headerTitle] }),
+                headerSubTitle
+            ]
+        });
+
         const searchField = new SearchField({
-            placeholder: "Search available skills or category...",
+            placeholder: "Search available catalog skills or category...",
             width: "100%",
+            class: "sapUiSmallMarginBottom",
             liveChange: (evt: any) => {
                 const q = (evt.getParameter("newValue") || "").toLowerCase().trim();
                 const items = skillList.getItems();
@@ -214,17 +225,20 @@ export default class EmployeeSkills extends BaseController implements IPage {
         });
 
         const step1Box = new VBox({
-            items: [searchField, skillList],
-            class: "sapUiSmallMargin"
+            class: "sapUiSmallMargin",
+            items: [searchField, skillList]
         });
 
-        // Step 2 Form Controls
-        const skillTitle = new Title({ level: "H4", style: "H4", class: "sapUiTinyMarginBottom" });
-        const avatar = new Avatar({ displaySize: "S", class: "sapUiTinyMarginEnd" });
+        const step2SkillTitle = new Title({ level: "H3", class: "sapUiTinyMarginBottom" });
+        const step2CategoryBadge = new ObjectStatus({ state: "Information", class: "badge-count sapUiTinyMarginTop" });
+        const step2Avatar = new Avatar({ displaySize: "M", class: "sapUiSmallMarginEnd" });
         const selectedHeaderBox = new HBox({
             alignItems: "Center",
             class: "sapUiSmallMarginBottom",
-            items: [avatar, skillTitle]
+            items: [
+                step2Avatar,
+                new VBox({ items: [step2SkillTitle, step2CategoryBadge] })
+            ]
         });
 
         const profSelect = new Select({
@@ -247,20 +261,28 @@ export default class EmployeeSkills extends BaseController implements IPage {
             width: "100%"
         });
 
-        const step2Box = new VBox({
-            visible: false,
-            class: "sapUiSmallMargin",
-            items: [
-                selectedHeaderBox,
-                new Label({ text: "Select Proficiency Level", required: true, class: "sapUiTinyMarginTop" }),
+        const step2Form = new SimpleForm({
+            editable: true,
+            layout: "ColumnLayout",
+            columnsM: 1,
+            columnsL: 1,
+            singleContainerFullWidth: true,
+            content: [
+                new Label({ text: "Select Proficiency Level", required: true }),
                 profSelect,
-                new Label({ text: "Years of Experience", required: true, class: "sapUiSmallMarginTop" }),
+                new Label({ text: "Years of Experience", required: true }),
                 expInput
             ]
         });
 
+        const step2Box = new VBox({
+            visible: false,
+            class: "sapUiSmallMargin",
+            items: [selectedHeaderBox, step2Form]
+        });
+
         const containerBox = new VBox({
-            items: [step1Box, step2Box]
+            items: [headerBox, step1Box, step2Box]
         });
 
         const btnAdd = new Button({
@@ -305,9 +327,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const btnBack = new Button({
             text: "Select Different Skill",
             visible: false,
-            press: () => {
-                showStep1();
-            }
+            press: () => showStep1()
         });
 
         const btnCancel = new Button({
@@ -324,29 +344,34 @@ export default class EmployeeSkills extends BaseController implements IPage {
             step2Box.setVisible(false);
             btnAdd.setVisible(false);
             btnBack.setVisible(false);
-            dialog.setTitle(`Available Catalog Skills (${availableSkills.length} Available)`);
+            headerTitle.setText("Add Skill to Profile");
+            headerSubTitle.setText(`Select a catalog skill (${availableSkills.length} available) to add it to your profile.`);
         };
 
         const showStep2 = (skill: any) => {
+            const catName = skill.toCategory?.name || skill.categoryName || "Uncategorized";
             let img = skill.imageUrl || "sap-icon://education";
             if (img && !img.startsWith("sap-icon://") && !img.startsWith("http") && !img.startsWith("/")) {
                 img = "../../" + img;
             }
-            avatar.setSrc(img);
-            skillTitle.setText(skill.canonicalName);
+
+            step2Avatar.setSrc(img);
+            step2SkillTitle.setText(skill.canonicalName);
+            step2CategoryBadge.setText(catName);
 
             step1Box.setVisible(false);
             step2Box.setVisible(true);
             btnAdd.setVisible(true);
             btnBack.setVisible(true);
-            dialog.setTitle(`Add Skill: ${skill.canonicalName}`);
+            headerTitle.setText(`Add Skill: ${skill.canonicalName}`);
+            headerSubTitle.setText("Configure your proficiency level and years of experience.");
         };
 
         const dialog = new Dialog({
-            title: `Available Catalog Skills (${availableSkills.length} Available)`,
+            title: "Add Skill to Profile",
             icon: "sap-icon://add",
-            contentWidth: "540px",
-            contentHeight: "480px",
+            contentWidth: "640px",
+            contentHeight: "520px",
             content: [containerBox],
             buttons: [btnBack, btnAdd, btnCancel]
         });
@@ -378,6 +403,18 @@ export default class EmployeeSkills extends BaseController implements IPage {
         } finally {
             view.setBusy(false);
         }
+
+        const headerAvatar = new Avatar({ src: "sap-icon://request", displaySize: "S", class: "category-icon-avatar sapUiTinyMarginEnd" });
+        const headerTitle = new Title({ text: "Request New Skill to Catalog", level: "H3" });
+        const headerSubTitle = new Text({ text: "Propose a new skill not currently listed in the catalog. An automatic request will be sent to Admin for approval.", class: "sapUiTinyMarginTop" });
+
+        const headerBox = new VBox({
+            class: "custom-dialog-header",
+            items: [
+                new HBox({ alignItems: "Center", items: [headerAvatar, headerTitle] }),
+                headerSubTitle
+            ]
+        });
 
         const inputSkillName = new Input({
             placeholder: "e.g. GraphQL, Rust, Terraform, S/4HANA Finance",
@@ -418,20 +455,29 @@ export default class EmployeeSkills extends BaseController implements IPage {
             width: "100%"
         });
 
-        const formBox = new VBox({
-            class: "sapUiSmallMargin",
-            items: [
+        const simpleForm = new SimpleForm({
+            editable: true,
+            layout: "ColumnLayout",
+            columnsM: 1,
+            columnsL: 1,
+            singleContainerFullWidth: true,
+            class: "custom-dialog-form",
+            content: [
                 new Label({ text: "Proposed Skill Name", required: true }),
                 inputSkillName,
-                new Label({ text: "Category", required: true, class: "sapUiSmallMarginTop" }),
+                new Label({ text: "Category", required: true }),
                 categorySelect,
-                new Label({ text: "Initial Proficiency Level", required: true, class: "sapUiSmallMarginTop" }),
+                new Label({ text: "Initial Proficiency Level", required: true }),
                 profSelect,
-                new Label({ text: "Years of Experience", required: true, class: "sapUiSmallMarginTop" }),
+                new Label({ text: "Years of Experience", required: true }),
                 expInput,
-                new Label({ text: "Justification / Notes for Admin", class: "sapUiSmallMarginTop" }),
+                new Label({ text: "Justification / Notes for Admin" }),
                 txtJustification
             ]
+        });
+
+        const formBox = new VBox({
+            items: [headerBox, simpleForm]
         });
 
         const btnSubmit = new Button({
@@ -492,7 +538,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const dialog = new Dialog({
             title: "Request New Skill to Catalog",
             icon: "sap-icon://request",
-            contentWidth: "500px",
+            contentWidth: "600px",
             content: [formBox],
             buttons: [btnSubmit, btnCancel]
         });
