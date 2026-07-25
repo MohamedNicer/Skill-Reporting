@@ -238,7 +238,7 @@
                         <!-- Section: Manager's Own Profile -->
                         <Title text="My Profile (as Employee)" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
                         <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- My Skills — CLICKABLE (manager is also employee) -->
+                            <!-- My Skills — CLICKABLE (manager is also employee, icon only — count is personal not team-wide) -->
                             <GenericTile
                                 id="tileMgrMySkills"
                                 header="My Own Skills"
@@ -247,20 +247,7 @@
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
-                                    <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
-                                </TileContent>
-                            </GenericTile>
-
-                            <!-- My Skill Requests — CLICKABLE -->
-                            <GenericTile
-                                id="tileMgrMyRequests"
-                                header="My Skill Requests"
-                                subheader="Track my own submitted skill requests"
-                                press=".onNavToView('RouteSkillRequests')"
-                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                            >
-                                <TileContent>
-                                    <ImageContent src="sap-icon://request" />
+                                    <ImageContent src="sap-icon://employee-approvals" />
                                 </TileContent>
                             </GenericTile>
                         </HBox>
