@@ -103,7 +103,7 @@ export class AnalyticsService extends cds.ApplicationService {
     async init(): Promise<void> {
         const service = this as any;
 
-        // Manager team scoping: filter VTeamSkills to only team members
+        // Manager team scoping: filter VTeamSkills to only team members + the manager themselves
         service.before("READ", "VTeamSkills", async (req: Request) => {
             if (req.user.is("HRAdmin") || req.user.is("SkillsAdmin") || req.user.is("Auditor")) {
                 return; // Full access
@@ -115,8 +115,11 @@ export class AnalyticsService extends cds.ApplicationService {
                 let manager = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
                 if (!manager) manager = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
                 if (manager) {
-                    // Filter to only direct reports
-                    req.query.where({ managerID: manager.ID });
+                    // Include direct reports AND the manager themselves
+                    const directReports = await db.run(SELECT.from(Employees).columns("ID").where({ managerID: manager.ID, isActive: true }));
+                    const teamIds = directReports.map((e: any) => e.ID);
+                    teamIds.push(manager.ID);
+                    req.query.where({ employeeID: { in: teamIds } });
                 }
             }
         });

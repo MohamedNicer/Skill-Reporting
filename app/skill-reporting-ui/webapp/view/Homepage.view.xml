@@ -65,7 +65,7 @@
                         <!-- Section: My Skills -->
                         <Title text="My Skills" level="H4" class="section-title sapUiSmallMarginBottom" />
                         <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- My Skills tile — CLICKABLE -->
+                            <!-- My Skills tile — CLICKABLE (icon only: personal count not available from KPI endpoint) -->
                             <GenericTile
                                 id="tileMySkills"
                                 header="My Skills"
@@ -74,7 +74,7 @@
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
-                                    <NumericContent value="{dashboardModel>/employeeSkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
+                                    <ImageContent src="sap-icon://employee-approvals" />
                                 </TileContent>
                             </GenericTile>
 
@@ -95,7 +95,7 @@
                         <!-- Section: My Requests -->
                         <Title text="My Requests" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
                         <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- Skill Requests tile — CLICKABLE (redirects to my requests) -->
+                            <!-- Skill Requests tile — CLICKABLE (icon only: personal pending count not separate from team in KPI) -->
                             <GenericTile
                                 id="tileMyRequests"
                                 header="My Skill Requests"
@@ -104,7 +104,7 @@
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
-                                    <NumericContent value="{dashboardModel>/pendingRequests}" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
+                                    <ImageContent src="sap-icon://request" />
                                 </TileContent>
                             </GenericTile>
                         </HBox>
@@ -235,22 +235,7 @@
                             </GenericTile>
                         </HBox>
 
-                        <!-- Section: Manager's Own Profile -->
-                        <Title text="My Profile (as Employee)" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
-                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- My Skills — CLICKABLE (manager is also employee, icon only — count is personal not team-wide) -->
-                            <GenericTile
-                                id="tileMgrMySkills"
-                                header="My Own Skills"
-                                subheader="Manage my personal skill profile"
-                                press=".onNavToView('RouteEmployeeSkills')"
-                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                            >
-                                <TileContent>
-                                    <ImageContent src="sap-icon://employee-approvals" />
-                                </TileContent>
-                            </GenericTile>
-                        </HBox>
+
                     </VBox>
                 </IconTabFilter>
 
