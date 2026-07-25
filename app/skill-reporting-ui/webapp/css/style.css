@@ -88,3 +88,12 @@
 .custom-dialog-form .sapUiFormElement {
     margin-bottom: 1.25rem !important;
 }
+
+/* Spacing between sections in KPI/Object Cards */
+.sapFCardObjectGroup,
+.sapFCardGroup,
+.sapFCardContent .sapFCardGroupTitle,
+div[class*="ObjectGroup"],
+div[class*="GroupTitle"] {
+    margin-top: 1.25rem !important;
+}
