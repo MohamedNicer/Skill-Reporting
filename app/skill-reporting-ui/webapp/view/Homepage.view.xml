@@ -110,8 +110,8 @@
                 <IconTabFilter text="{i18n>operations}" key="operations">
                     <HBox class="sapUiMediumMargin" wrap="Wrap">
                         <GenericTile
-                            header="{i18n>employeeSkills}"
-                            subheader="{i18n>skillAssignments}"
+                            header="My Skills"
+                            subheader="{i18n>mySkillsSubheader}"
                             press=".onNavToView('RouteEmployeeSkills')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                         >
