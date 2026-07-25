@@ -24,8 +24,7 @@
 					"items": [
 						{
 							"label": "Total Employees",
-							"value": "{employees}",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employees" } }]
+							"value": "{employees}"
 						}
 					]
 				},
@@ -34,8 +33,7 @@
 					"items": [
 						{
 							"label": "Approved Skills",
-							"value": "{skills}",
-							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
+							"value": "{skills}"
 						},
 						{
 							"label": "Skill Assignments",

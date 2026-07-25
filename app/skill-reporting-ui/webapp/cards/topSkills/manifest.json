@@ -16,7 +16,7 @@
 			"title": "{cardTitle}",
 			"subTitle": "{cardSubtitle}",
 			"icon": { "src": "sap-icon://competitor" },
-			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 		},
 		"data": {
 			"request": {

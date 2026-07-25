@@ -11,8 +11,7 @@
 			"subTitle": "Latest recorded skills",
 			"icon": {
 				"src": "sap-icon://employee-approvals"
-			},
-			"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+			}
 		},
 		"data": {
 			"request": {
@@ -27,7 +26,6 @@
 		},
 		"content": {
 			"row": {
-				"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }],
 				"columns": [
 					{ "title": "Employee", "value": "{employeeName}", "identifier": true },
 					{ "title": "Skill", "value": "{skillName}" },

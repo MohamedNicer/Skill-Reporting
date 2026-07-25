@@ -10,7 +10,7 @@
 			"type": "Numeric",
 			"title": "Skills by Category",
 			"subTitle": "Distribution of skills",
-			"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-categories" } }]
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
 		},
 		"content": {
 			"chartType": "Donut",
@@ -29,7 +29,7 @@
 				{
 					"type": "Navigation",
 					"parameters": {
-						"url": "#/skill-categories"
+						"url": "#/employee-skills"
 					}
 				}
 			],
