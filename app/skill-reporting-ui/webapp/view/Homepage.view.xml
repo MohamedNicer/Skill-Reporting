@@ -77,19 +77,6 @@
                                     <NumericContent value="{myProfileModel>/mySkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
                                 </TileContent>
                             </GenericTile>
-
-                            <!-- Skills by Category tile — CLICKABLE (personal mode — shows only my skills grouped by category) -->
-                            <GenericTile
-                                id="tileMySkillsByCategory"
-                                header="Skills by Category"
-                                subheader="My skills grouped by category"
-                                press=".onNavToMySkills"
-                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
-                            >
-                                <TileContent>
-                                    <ImageContent src="sap-icon://pie-chart" />
-                                </TileContent>
-                            </GenericTile>
                         </HBox>
 
                         <!-- Section: My Requests -->
