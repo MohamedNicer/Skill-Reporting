@@ -131,7 +131,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
     /**
      * [+ Add Skill]: Displays available catalog skills (minus skills already assigned to employee)
-     * and submits both a profile skill addition AND an automatic SkillRequest to Admin.
+     * and prompts employee to specify their personal Proficiency Level & Years of Experience.
      */
     public async onAddSkill(): Promise<void> {
         const view = this.getView();
@@ -171,7 +171,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         let selectedSkill: any = null;
 
         const infoBanner = new MessageStrip({
-            text: `Select a catalog skill (${availableSkills.length} available) to add it to your profile and submit for admin validation.`,
+            text: `Select a catalog skill (${availableSkills.length} available) to add to your profile with your proficiency level and experience.`,
             type: "Information",
             showIcon: true,
             showCloseButton: false,
@@ -377,9 +377,8 @@ export default class EmployeeSkills extends BaseController implements IPage {
     }
 
     /**
-     * [Request New Skill]: Opens popup form for employee to enter proposed new skill details
-     * (Skill Name, Category, Initial Proficiency, Experience, Justification)
-     * and automatically triggers a new SkillRequest to Admin.
+     * [Request New Skill]: Opens popup form for employee to propose a new skill to the catalog
+     * (Requires ONLY Proposed Skill Name & Category + optional Justification for Admin).
      */
     public async onRequestNewSkill(): Promise<void> {
         const view = this.getView();
@@ -401,7 +400,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         }
 
         const infoBanner = new MessageStrip({
-            text: "Propose a new skill not currently listed in the catalog. An automatic request will be submitted to Admin for approval.",
+            text: "Propose a new skill to be added to the organization catalog. An automatic request will be submitted to Admin for review.",
             type: "Information",
             showIcon: true,
             showCloseButton: false,
@@ -419,27 +418,6 @@ export default class EmployeeSkills extends BaseController implements IPage {
         });
         categories.forEach((cat: any) => {
             categorySelect.addItem(new Item({ key: cat.ID, text: cat.name }));
-        });
-
-        const profSelect = new Select({
-            width: "100%",
-            items: [
-                new Item({ key: "PL1", text: "Beginner (Basic understanding & assistance required)" }),
-                new Item({ key: "PL2", text: "Intermediate (Practical application & independent execution)" }),
-                new Item({ key: "PL3", text: "Advanced (Deep knowledge & capability to guide others)" }),
-                new Item({ key: "PL4", text: "Expert (Advanced expertise & strategic domain leadership)" }),
-                new Item({ key: "PL5", text: "Master (Subject matter authority & innovation leader)" })
-            ]
-        });
-        profSelect.setSelectedKey("PL2");
-
-        const expInput = new StepInput({
-            value: 1.0,
-            min: 0.5,
-            max: 50,
-            step: 0.5,
-            displayValuePrecision: 1,
-            width: "100%"
         });
 
         const txtJustification = new TextArea({
@@ -460,10 +438,6 @@ export default class EmployeeSkills extends BaseController implements IPage {
                 inputSkillName,
                 new Label({ text: "Category", required: true }),
                 categorySelect,
-                new Label({ text: "Initial Proficiency Level", required: true }),
-                profSelect,
-                new Label({ text: "Years of Experience", required: true }),
-                expInput,
                 new Label({ text: "Justification / Notes for Admin" }),
                 txtJustification
             ]
@@ -532,7 +506,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const dialog = new Dialog({
             title: "Request New Skill to Catalog",
             icon: "sap-icon://request",
-            contentWidth: "640px",
+            contentWidth: "600px",
             content: [formBox],
             buttons: [btnSubmit, btnCancel]
         });
