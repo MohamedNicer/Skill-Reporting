@@ -169,16 +169,9 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
         let selectedSkill: any = null;
 
-        const headerAvatar = new Avatar({ src: "sap-icon://add", displaySize: "S", class: "category-icon-avatar sapUiTinyMarginEnd" });
-        const headerTitle = new Title({ text: "Add Skill to Profile", level: "H3" });
-        const headerSubTitle = new Text({ text: "Select a catalog skill that is not yet on your profile to add it and request admin review.", class: "sapUiTinyMarginTop" });
-
-        const headerBox = new VBox({
-            class: "custom-dialog-header",
-            items: [
-                new HBox({ alignItems: "Center", items: [headerAvatar, headerTitle] }),
-                headerSubTitle
-            ]
+        const subTitleText = new Text({
+            text: `Select a catalog skill (${availableSkills.length} available) to add it to your profile and submit for admin validation.`,
+            class: "sapUiTinyMarginBottom"
         });
 
         const searchField = new SearchField({
@@ -226,10 +219,10 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
         const step1Box = new VBox({
             class: "sapUiSmallMargin",
-            items: [searchField, skillList]
+            items: [subTitleText, searchField, skillList]
         });
 
-        const step2SkillTitle = new Title({ level: "H3", class: "sapUiTinyMarginBottom" });
+        const step2SkillTitle = new Title({ level: "H3" });
         const step2CategoryBadge = new ObjectStatus({ state: "Information", class: "badge-count sapUiTinyMarginTop" });
         const step2Avatar = new Avatar({ displaySize: "M", class: "sapUiSmallMarginEnd" });
         const selectedHeaderBox = new HBox({
@@ -244,11 +237,11 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const profSelect = new Select({
             width: "100%",
             items: [
-                new Item({ key: "PL1", text: "Beginner (Basic understanding & assistance required)" }),
-                new Item({ key: "PL2", text: "Intermediate (Practical application & independent execution)" }),
-                new Item({ key: "PL3", text: "Advanced (Deep knowledge & capability to guide others)" }),
-                new Item({ key: "PL4", text: "Expert (Advanced expertise & strategic domain leadership)" }),
-                new Item({ key: "PL5", text: "Master (Subject matter authority & innovation leader)" })
+                new Item({ key: "PL1", text: "Beginner" }),
+                new Item({ key: "PL2", text: "Intermediate" }),
+                new Item({ key: "PL3", text: "Advanced" }),
+                new Item({ key: "PL4", text: "Expert" }),
+                new Item({ key: "PL5", text: "Master" })
             ]
         });
         profSelect.setSelectedKey("PL2");
@@ -258,6 +251,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
             min: 0.5,
             max: 50,
             step: 0.5,
+            displayValuePrecision: 1,
             width: "100%"
         });
 
@@ -282,7 +276,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
         });
 
         const containerBox = new VBox({
-            items: [headerBox, step1Box, step2Box]
+            items: [step1Box, step2Box]
         });
 
         const btnAdd = new Button({
@@ -344,8 +338,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
             step2Box.setVisible(false);
             btnAdd.setVisible(false);
             btnBack.setVisible(false);
-            headerTitle.setText("Add Skill to Profile");
-            headerSubTitle.setText(`Select a catalog skill (${availableSkills.length} available) to add it to your profile.`);
+            dialog.setTitle(`Add Skill to Profile (${availableSkills.length} Available)`);
         };
 
         const showStep2 = (skill: any) => {
@@ -363,15 +356,14 @@ export default class EmployeeSkills extends BaseController implements IPage {
             step2Box.setVisible(true);
             btnAdd.setVisible(true);
             btnBack.setVisible(true);
-            headerTitle.setText(`Add Skill: ${skill.canonicalName}`);
-            headerSubTitle.setText("Configure your proficiency level and years of experience.");
+            dialog.setTitle(`Configure Skill: ${skill.canonicalName}`);
         };
 
         const dialog = new Dialog({
-            title: "Add Skill to Profile",
+            title: `Add Skill to Profile (${availableSkills.length} Available)`,
             icon: "sap-icon://add",
-            contentWidth: "640px",
-            contentHeight: "520px",
+            contentWidth: "600px",
+            contentHeight: "500px",
             content: [containerBox],
             buttons: [btnBack, btnAdd, btnCancel]
         });
@@ -404,16 +396,9 @@ export default class EmployeeSkills extends BaseController implements IPage {
             view.setBusy(false);
         }
 
-        const headerAvatar = new Avatar({ src: "sap-icon://request", displaySize: "S", class: "category-icon-avatar sapUiTinyMarginEnd" });
-        const headerTitle = new Title({ text: "Request New Skill to Catalog", level: "H3" });
-        const headerSubTitle = new Text({ text: "Propose a new skill not currently listed in the catalog. An automatic request will be sent to Admin for approval.", class: "sapUiTinyMarginTop" });
-
-        const headerBox = new VBox({
-            class: "custom-dialog-header",
-            items: [
-                new HBox({ alignItems: "Center", items: [headerAvatar, headerTitle] }),
-                headerSubTitle
-            ]
+        const subTitleText = new Text({
+            text: "Propose a new skill not currently listed in the catalog. An automatic request will be submitted to Admin for approval.",
+            class: "sapUiSmallMarginBottom"
         });
 
         const inputSkillName = new Input({
@@ -432,11 +417,11 @@ export default class EmployeeSkills extends BaseController implements IPage {
         const profSelect = new Select({
             width: "100%",
             items: [
-                new Item({ key: "PL1", text: "Beginner (Basic understanding & assistance required)" }),
-                new Item({ key: "PL2", text: "Intermediate (Practical application & independent execution)" }),
-                new Item({ key: "PL3", text: "Advanced (Deep knowledge & capability to guide others)" }),
-                new Item({ key: "PL4", text: "Expert (Advanced expertise & strategic domain leadership)" }),
-                new Item({ key: "PL5", text: "Master (Subject matter authority & innovation leader)" })
+                new Item({ key: "PL1", text: "Beginner" }),
+                new Item({ key: "PL2", text: "Intermediate" }),
+                new Item({ key: "PL3", text: "Advanced" }),
+                new Item({ key: "PL4", text: "Expert" }),
+                new Item({ key: "PL5", text: "Master" })
             ]
         });
         profSelect.setSelectedKey("PL2");
@@ -446,6 +431,7 @@ export default class EmployeeSkills extends BaseController implements IPage {
             min: 0.5,
             max: 50,
             step: 0.5,
+            displayValuePrecision: 1,
             width: "100%"
         });
 
@@ -477,7 +463,8 @@ export default class EmployeeSkills extends BaseController implements IPage {
         });
 
         const formBox = new VBox({
-            items: [headerBox, simpleForm]
+            class: "sapUiSmallMargin",
+            items: [subTitleText, simpleForm]
         });
 
         const btnSubmit = new Button({
