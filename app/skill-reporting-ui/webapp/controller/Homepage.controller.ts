@@ -118,6 +118,30 @@ export default class Homepage extends BaseController implements IPage {
         this.openMessagePopover();
     }
 
+    /** Navigate to Employee Skills in PERSONAL mode (show only current user's own skills) */
+    public onNavToMySkills(): void {
+        const component = this.getOwnerComponent() as any;
+        let navModel = component?.getModel("navStateModel") as JSONModel;
+        if (!navModel) {
+            navModel = new JSONModel({ personalMode: false });
+            component?.setModel(navModel, "navStateModel");
+        }
+        navModel.setProperty("/personalMode", true);
+        this.onNavToView("RouteEmployeeSkills");
+    }
+
+    /** Navigate to Skill Requests in PERSONAL mode (show only current user's own requests) */
+    public onNavToMyRequests(): void {
+        const component = this.getOwnerComponent() as any;
+        let navModel = component?.getModel("navStateModel") as JSONModel;
+        if (!navModel) {
+            navModel = new JSONModel({ personalMode: false });
+            component?.setModel(navModel, "navStateModel");
+        }
+        navModel.setProperty("/personalMode", true);
+        this.onNavToView("RouteSkillRequests");
+    }
+
     public onTabSelect(event: IconTabBar$SelectEvent): void {
         this.syncTabTitle();
     }

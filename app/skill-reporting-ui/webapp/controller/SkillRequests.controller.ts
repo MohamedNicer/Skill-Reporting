@@ -13,6 +13,10 @@ import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import { ButtonType } from "sap/m/library";
+import JSONModel from "sap/ui/model/json/JSONModel";
+import Filter from "sap/ui/model/Filter";
+import FilterOperator from "sap/ui/model/FilterOperator";
+import ListBinding from "sap/ui/model/ListBinding";
 
 /**
  * @namespace com.ndbs.skillreportingui.controller
@@ -111,7 +115,7 @@ export default class SkillRequests extends BaseController implements IPage {
     }
 
     /* IPage Implementation */
-    public onObjectMatched(): void {
+    public async onObjectMatched(): Promise<void> {
         const oDataModel = this.getComponentModel();
         oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
 
@@ -120,6 +124,38 @@ export default class SkillRequests extends BaseController implements IPage {
         const isAdmin = !!rolesModel?.getProperty("/isAdmin");
         (this.byId("btnApproveRequest") as Button).setVisible(isAdmin);
         (this.byId("btnRejectRequest") as Button).setVisible(isAdmin);
+
+        // Check if we're in personal mode (manager navigated from My Workspace)
+        const component = this.getOwnerComponent() as any;
+        const navModel = component?.getModel("navStateModel") as JSONModel;
+        const personalMode: boolean = navModel?.getProperty("/personalMode") === true;
+
+        if (personalMode) {
+            navModel.setProperty("/personalMode", false);
+            try {
+                const res = await fetch("/api/dashboard/userInfo()");
+                if (res.ok) {
+                    const userInfo = await res.json();
+                    const personalEmpId: string = (userInfo.value || userInfo).employeeID;
+                    if (personalEmpId) {
+                        // Wait for SmartTable to finish initial bind then apply personal filter
+                        const smartTable = this.byId("stSkillRequests") as SmartTable;
+                        const innerTable = smartTable?.getTable() as Table;
+                        const binding = innerTable?.getBinding("items") as ListBinding;
+                        const applyFilter = () => {
+                            binding?.filter([new Filter("requestedByID", FilterOperator.EQ, personalEmpId)]);
+                        };
+                        if (binding) {
+                            applyFilter();
+                        } else {
+                            smartTable.attachEventOnce("dataReceived" as any, applyFilter);
+                            // Also apply after rebind
+                            oDataModel.attachRequestCompleted(applyFilter, this);
+                        }
+                    }
+                }
+            } catch { /* ignore */ }
+        }
     }
 
     public onODataRequestFail(_event: Model$RequestFailedEvent): void {

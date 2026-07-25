@@ -38,7 +38,27 @@ export default class EmployeeSkills extends BaseController implements IPage {
 
     public async onObjectMatched(): Promise<void> {
         this.getComponentModel()?.attachRequestFailed({}, this.onODataRequestFail, this);
-        await this.loadGroupedEmployeeSkills();
+
+        // Check if we're in personal mode (manager navigated from My Workspace)
+        const component = this.getOwnerComponent() as any;
+        const navModel = component?.getModel("navStateModel") as JSONModel;
+        const personalMode: boolean = navModel?.getProperty("/personalMode") === true;
+
+        // Resolve the current user's personal employee ID if needed
+        let personalEmployeeId: string | null = null;
+        if (personalMode) {
+            // Reset the flag immediately so it doesn't affect future navigations
+            navModel?.setProperty("/personalMode", false);
+            try {
+                const res = await fetch("/api/dashboard/userInfo()");
+                if (res.ok) {
+                    const d = await res.json();
+                    personalEmployeeId = (d.value || d).employeeID || null;
+                }
+            } catch { /* ignore */ }
+        }
+
+        await this.loadGroupedEmployeeSkills(undefined, personalEmployeeId);
     }
 
     public onSearch(event: any): void {
@@ -58,16 +78,22 @@ export default class EmployeeSkills extends BaseController implements IPage {
         return "sap-icon://education";
     }
 
-    public async loadGroupedEmployeeSkills(searchQuery?: string): Promise<void> {
+    public async loadGroupedEmployeeSkills(searchQuery?: string, personalEmployeeId?: string | null): Promise<void> {
         const view = this.getView();
         if (!view) return;
 
         view.setBusy(true);
         try {
-            const response = await fetch("/odata/v2/employee-profile/VEmployeeSkills?$format=json&$orderby=categoryName asc,skillName asc");
+            // Build URL — if personalEmployeeId is set, scope strictly to that employee (personal mode for manager)
+            let url = "/odata/v2/employee-profile/VEmployeeSkills?$format=json&$orderby=categoryName asc,skillName asc";
+            if (personalEmployeeId) {
+                url += `&$filter=employeeID eq '${personalEmployeeId}'`;
+            }
+            const response = await fetch(url);
             if (response.ok) {
                 const data = await response.json();
                 const results: any[] = data.d?.results || data.value || [];
+
 
                 let filtered = results;
                 if (searchQuery && searchQuery.trim() !== "") {

@@ -70,7 +70,7 @@
                                 id="tileMySkills"
                                 header="My Skills"
                                 subheader="View &amp; update my profile skills"
-                                press=".onNavToView('RouteEmployeeSkills')"
+                                press=".onNavToMySkills"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
@@ -78,12 +78,12 @@
                                 </TileContent>
                             </GenericTile>
 
-                            <!-- Skills by Category tile — CLICKABLE (redirects to My Skills) -->
+                            <!-- Skills by Category tile — CLICKABLE (personal mode — shows only my skills grouped by category) -->
                             <GenericTile
                                 id="tileMySkillsByCategory"
                                 header="Skills by Category"
                                 subheader="My skills grouped by category"
-                                press=".onNavToView('RouteEmployeeSkills')"
+                                press=".onNavToMySkills"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
@@ -100,7 +100,7 @@
                                 id="tileMyRequests"
                                 header="My Skill Requests"
                                 subheader="Track my submitted skill requests"
-                                press=".onNavToView('RouteSkillRequests')"
+                                press=".onNavToMyRequests"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
