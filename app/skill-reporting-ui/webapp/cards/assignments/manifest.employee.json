@@ -1,0 +1,44 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.assignments.employee",
+		"type": "card",
+		"title": "Recent Skill Assignments"
+	},
+	"sap.card": {
+		"type": "Table",
+		"header": {
+			"title": "My Recent Skill Assignments",
+			"subTitle": "Latest recorded skills in your profile",
+			"icon": {
+				"src": "sap-icon://employee-approvals"
+			},
+			"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+		},
+		"data": {
+			"request": {
+				"url": "/odata/v2/employee-profile/VEmployeeSkills",
+				"parameters": {
+					"$top": "10",
+					"$select": "employeeName,skillName,proficiencyLevel,validationStatusText,validationStatus",
+					"$orderby": "skillName asc"
+				}
+			},
+			"path": "/d/results"
+		},
+		"content": {
+			"row": {
+				"columns": [
+					{ "title": "Employee", "value": "{employeeName}", "identifier": true },
+					{ "title": "Skill", "value": "{skillName}" },
+					{ "title": "Proficiency", "value": "{proficiencyLevel}" },
+					{
+						"title": "Status",
+						"value": "{validationStatusText}",
+						"state": "{= ${validationStatus} === 'verified' || ${validationStatus} === 'managerConfirmed' ? 'Success' : ${validationStatus} === 'rejected' ? 'Error' : 'Warning' }"
+					}
+				],
+				"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+			}
+		}
+	}
+}

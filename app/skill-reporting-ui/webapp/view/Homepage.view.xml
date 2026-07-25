@@ -36,7 +36,15 @@
                                     </w:layoutData>
                                 </w:Card>
 
-                                <w:Card manifest="./cards/assignments/manifest.json">
+                                <!-- Employee assignments card (links to #/employee-skills) -->
+                                <w:Card manifest="./cards/assignments/manifest.employee.json" visible="{= !${userRolesModel>/isManagerOrAbove}}">
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 2" />
+                                    </w:layoutData>
+                                </w:Card>
+
+                                <!-- Manager/Admin assignments card (links to #/team-skills) -->
+                                <w:Card manifest="./cards/assignments/manifest.json" visible="{= ${userRolesModel>/isManagerOrAbove}}">
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 2" />
                                     </w:layoutData>
