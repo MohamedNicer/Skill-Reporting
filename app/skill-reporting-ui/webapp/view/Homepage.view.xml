@@ -74,6 +74,7 @@
                             subheader="{i18n>employeeDirectory}"
                             press=".onNavToView('RoutePersonnel')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            visible="{= ${userRolesModel>/isManagerOrAbove}}"
                         >
                             <TileContent>
                                 <NumericContent value="{dashboardModel>/employees}" icon="sap-icon://company-view" valueColor="Good" />
@@ -85,9 +86,21 @@
                             subheader="{i18n>manageSkills}"
                             press=".onNavToView('RouteSkills')"
                             class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            visible="{= ${userRolesModel>/isManagerOrAbove}}"
                         >
                             <TileContent>
                                 <NumericContent value="{dashboardModel>/skills}" icon="sap-icon://education" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile
+                            header="Skill Requests"
+                            subheader="Track submitted requests"
+                            press=".onNavToView('RouteSkillRequests')"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <TileContent>
+                                <NumericContent value="{dashboardModel>/pendingRequests}" icon="sap-icon://message-popup" valueColor="{= ${dashboardModel>/pendingRequests} > 0 ? 'Critical' : 'Good' }" />
                             </TileContent>
                         </GenericTile>
                     </HBox>
