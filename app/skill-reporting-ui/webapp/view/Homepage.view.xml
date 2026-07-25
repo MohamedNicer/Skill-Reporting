@@ -99,7 +99,7 @@
                                 id="tileMyRequests"
                                 header="My Skill Requests"
                                 subheader="Track my submitted skill requests"
-                                press=".onNavToMyRequests"
+                                press=".onNavToMyPendingRequests"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
@@ -116,7 +116,7 @@
                                 id="tileMyRequestHistory"
                                 header="Skill Request History"
                                 subheader="All my past and current skill requests"
-                                press=".onNavToMyRequests"
+                                press=".onNavToMyRequestsHistory"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
@@ -242,7 +242,7 @@
                                 id="tilePendingRequests"
                                 header="Pending Skill Requests"
                                 subheader="Review all employee skill requests"
-                                press=".onNavToView('RouteSkillRequests')"
+                                press=".onNavToTeamPendingRequests"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
@@ -258,7 +258,7 @@
                                 id="tileMgrRequestHistory"
                                 header="Skill Request History"
                                 subheader="All my past and current skill requests"
-                                press=".onNavToMyRequests"
+                                press=".onNavToMyRequestsHistory"
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>

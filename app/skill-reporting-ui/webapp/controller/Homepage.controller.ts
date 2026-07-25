@@ -123,22 +123,50 @@ export default class Homepage extends BaseController implements IPage {
         const component = this.getOwnerComponent() as any;
         let navModel = component?.getModel("navStateModel") as JSONModel;
         if (!navModel) {
-            navModel = new JSONModel({ personalMode: false });
+            navModel = new JSONModel({ personalMode: false, filterPendingOnly: false });
             component?.setModel(navModel, "navStateModel");
         }
         navModel.setProperty("/personalMode", true);
+        navModel.setProperty("/filterPendingOnly", false);
         this.onNavToView("RouteEmployeeSkills");
     }
 
-    /** Navigate to Skill Requests in PERSONAL mode (show only current user's own requests) */
-    public onNavToMyRequests(): void {
+    /** Navigate to Skill Requests in PERSONAL mode - Pending Only */
+    public onNavToMyPendingRequests(): void {
         const component = this.getOwnerComponent() as any;
         let navModel = component?.getModel("navStateModel") as JSONModel;
         if (!navModel) {
-            navModel = new JSONModel({ personalMode: false });
+            navModel = new JSONModel({ personalMode: false, filterPendingOnly: false });
             component?.setModel(navModel, "navStateModel");
         }
         navModel.setProperty("/personalMode", true);
+        navModel.setProperty("/filterPendingOnly", true);
+        this.onNavToView("RouteSkillRequests");
+    }
+
+    /** Navigate to Skill Requests in PERSONAL mode - Full History */
+    public onNavToMyRequestsHistory(): void {
+        const component = this.getOwnerComponent() as any;
+        let navModel = component?.getModel("navStateModel") as JSONModel;
+        if (!navModel) {
+            navModel = new JSONModel({ personalMode: false, filterPendingOnly: false });
+            component?.setModel(navModel, "navStateModel");
+        }
+        navModel.setProperty("/personalMode", true);
+        navModel.setProperty("/filterPendingOnly", false);
+        this.onNavToView("RouteSkillRequests");
+    }
+
+    /** Navigate to Skill Requests in TEAM mode - Pending Only */
+    public onNavToTeamPendingRequests(): void {
+        const component = this.getOwnerComponent() as any;
+        let navModel = component?.getModel("navStateModel") as JSONModel;
+        if (!navModel) {
+            navModel = new JSONModel({ personalMode: false, filterPendingOnly: false });
+            component?.setModel(navModel, "navStateModel");
+        }
+        navModel.setProperty("/personalMode", false);
+        navModel.setProperty("/filterPendingOnly", true);
         this.onNavToView("RouteSkillRequests");
     }
 

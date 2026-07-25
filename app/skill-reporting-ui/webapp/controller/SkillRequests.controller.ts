@@ -125,36 +125,60 @@ export default class SkillRequests extends BaseController implements IPage {
         (this.byId("btnApproveRequest") as Button).setVisible(isAdmin);
         (this.byId("btnRejectRequest") as Button).setVisible(isAdmin);
 
-        // Check if we're in personal mode (manager navigated from My Workspace)
+        // Check navigation state flags
         const component = this.getOwnerComponent() as any;
         const navModel = component?.getModel("navStateModel") as JSONModel;
         const personalMode: boolean = navModel?.getProperty("/personalMode") === true;
+        const filterPendingOnly: boolean = navModel?.getProperty("/filterPendingOnly") === true;
+
+        // Reset flags immediately
+        navModel?.setProperty("/personalMode", false);
+        navModel?.setProperty("/filterPendingOnly", false);
+
+        const smartTable = this.byId("stSkillRequests") as SmartTable;
+        const innerTable = smartTable?.getTable() as Table;
+
+        const applyFilters = (personalEmpId?: string) => {
+            const binding = innerTable?.getBinding("items") as ListBinding;
+            if (!binding) return;
+            const filters: Filter[] = [];
+            if (personalEmpId) {
+                filters.push(new Filter("requestedByID", FilterOperator.EQ, personalEmpId));
+            }
+            if (filterPendingOnly) {
+                filters.push(new Filter("status", FilterOperator.EQ, "pendingReview"));
+            }
+            binding.filter(filters);
+        };
 
         if (personalMode) {
-            navModel.setProperty("/personalMode", false);
             try {
                 const res = await fetch("/api/dashboard/userInfo()");
                 if (res.ok) {
                     const userInfo = await res.json();
                     const personalEmpId: string = (userInfo.value || userInfo).employeeID;
                     if (personalEmpId) {
-                        // Wait for SmartTable to finish initial bind then apply personal filter
-                        const smartTable = this.byId("stSkillRequests") as SmartTable;
-                        const innerTable = smartTable?.getTable() as Table;
                         const binding = innerTable?.getBinding("items") as ListBinding;
-                        const applyFilter = () => {
-                            binding?.filter([new Filter("requestedByID", FilterOperator.EQ, personalEmpId)]);
-                        };
                         if (binding) {
-                            applyFilter();
+                            applyFilters(personalEmpId);
                         } else {
-                            smartTable.attachEventOnce("dataReceived" as any, applyFilter);
-                            // Also apply after rebind
-                            oDataModel.attachRequestCompleted(applyFilter, this);
+                            smartTable.attachEventOnce("initialise" as any, () => applyFilters(personalEmpId));
                         }
                     }
                 }
             } catch { /* ignore */ }
+        } else if (filterPendingOnly) {
+            const binding = innerTable?.getBinding("items") as ListBinding;
+            if (binding) {
+                applyFilters();
+            } else {
+                smartTable.attachEventOnce("initialise" as any, () => applyFilters());
+            }
+        } else {
+            const binding = innerTable?.getBinding("items") as ListBinding;
+            if (binding) {
+                binding.filter([]);
+            }
         }
     }
 
