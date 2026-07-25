@@ -18,7 +18,19 @@
                     <VBox class="sapUiMediumMarginTop sapUiSmallMarginBeginEnd">
                         <grid:CSSGrid class="gridAlignStart" gridGap="1rem" gridTemplateColumns="repeat(auto-fit, minmax(22rem, 1fr))">
                             <grid:items>
-                                <w:Card id="cardKpi" manifest="./cards/kpi/manifest.json">
+                                <!-- Employee overview card (personal stats, no headcount) -->
+                                <w:Card id="cardKpiEmployee" manifest="./cards/kpi/manifest.employee.json"
+                                    visible="{= !${userRolesModel>/isManagerOrAbove}}"
+                                >
+                                    <w:layoutData>
+                                        <grid:GridItemLayoutData gridColumn="span 1" />
+                                    </w:layoutData>
+                                </w:Card>
+
+                                <!-- Manager/Admin overview card (team stats + headcount) -->
+                                <w:Card id="cardKpi" manifest="./cards/kpi/manifest.json"
+                                    visible="{= ${userRolesModel>/isManagerOrAbove}}"
+                                >
                                     <w:layoutData>
                                         <grid:GridItemLayoutData gridColumn="span 1" />
                                     </w:layoutData>
@@ -92,6 +104,23 @@
                             >
                                 <TileContent>
                                     <NumericContent value="{myProfileModel>/myPendingRequests}" icon="sap-icon://request" valueColor="{= ${myProfileModel>/myPendingRequests} > 0 ? 'Critical' : 'Good' }" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
+
+                        <!-- Section: My Request History -->
+                        <Title text="My Request History" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <!-- All skill requests (all statuses) — CLICKABLE (personal mode) -->
+                            <GenericTile
+                                id="tileMyRequestHistory"
+                                header="Skill Request History"
+                                subheader="All my past and current skill requests"
+                                press=".onNavToMyRequests"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://history" />
                                 </TileContent>
                             </GenericTile>
                         </HBox>
@@ -222,6 +251,21 @@
                             </GenericTile>
                         </HBox>
 
+                        <!-- Section: My Request History (manager as employee) -->
+                        <Title text="My Request History" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
+                        <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                            <GenericTile
+                                id="tileMgrRequestHistory"
+                                header="Skill Request History"
+                                subheader="All my past and current skill requests"
+                                press=".onNavToMyRequests"
+                                class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            >
+                                <TileContent>
+                                    <ImageContent src="sap-icon://history" />
+                                </TileContent>
+                            </GenericTile>
+                        </HBox>
 
                     </VBox>
                 </IconTabFilter>

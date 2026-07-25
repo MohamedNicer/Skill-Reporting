@@ -2,13 +2,13 @@
 	"sap.app": {
 		"id": "com.ndbs.skillreportingui.cards.kpi",
 		"type": "card",
-		"title": "KPIs"
+		"title": "Team Overview"
 	},
 	"sap.card": {
 		"type": "Object",
 		"header": {
-			"title": "Overview",
-			"subTitle": "Live Application Metrics",
+			"title": "Team Overview",
+			"subTitle": "Live team metrics",
 			"icon": { "src": "sap-icon://business-objects-experience" }
 		},
 		"data": {
@@ -29,10 +29,10 @@
 					]
 				},
 				{
-					"title": "Skills",
+					"title": "Team Skills",
 					"items": [
 						{
-							"label": "Approved Skills",
+							"label": "Skill Catalog",
 							"value": "{skills}",
 							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skills" } }]
 						},

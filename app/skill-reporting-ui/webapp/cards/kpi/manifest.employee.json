@@ -1,0 +1,44 @@
+{
+	"sap.app": {
+		"id": "com.ndbs.skillreportingui.cards.kpi.employee",
+		"type": "card",
+		"title": "My Overview"
+	},
+	"sap.card": {
+		"type": "Object",
+		"header": {
+			"title": "My Overview",
+			"subTitle": "Your personal skill statistics",
+			"icon": { "src": "sap-icon://employee" }
+		},
+		"data": {
+			"request": {
+				"url": "/api/dashboard/kpi()"
+			}
+		},
+		"content": {
+			"groups": [
+				{
+					"title": "My Skills",
+					"items": [
+						{
+							"label": "Skills Recorded",
+							"value": "{skills}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/employee-skills" } }]
+						}
+					]
+				},
+				{
+					"title": "My Requests",
+					"items": [
+						{
+							"label": "Pending Requests",
+							"value": "{pendingRequests}",
+							"actions": [{ "type": "Navigation", "parameters": { "url": "#/skill-requests" } }]
+						}
+					]
+				}
+			]
+		}
+	}
+}

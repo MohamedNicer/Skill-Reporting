@@ -248,6 +248,7 @@ export class DashboardService extends cds.ApplicationService {
             let employeeFilter: any = { isActive: true };
             let skillAssignmentFilter: any = {};
             let requestFilter: any = { status: "pendingReview" };
+            const isEmployeeOnly = !isAdmin && !isAuditor && !isManager;
 
             if (!isAdmin && !isAuditor) {
                 if (isManager && currentEmp) {
@@ -265,9 +266,16 @@ export class DashboardService extends cds.ApplicationService {
                 }
             }
 
+            // For employees, skills = their own assigned skills count (not catalog total)
+            const skillsFilter = isEmployeeOnly && currentEmp
+                ? { employeeID: currentEmp.ID }
+                : { isActive: true, status: "approved" };
+
             const [employees, skills, employeeSkills, pendingRequests] = await Promise.all([
                 db.run(SELECT.one`count(*) as cnt`.from(Employees).where(employeeFilter)),
-                db.run(SELECT.one`count(*) as cnt`.from(Skills).where({ isActive: true, status: "approved" })),
+                isEmployeeOnly && currentEmp
+                    ? db.run(SELECT.one`count(*) as cnt`.from(EmployeeSkills).where(skillsFilter))
+                    : db.run(SELECT.one`count(*) as cnt`.from(Skills).where({ isActive: true, status: "approved" })),
                 db.run(SELECT.one`count(*) as cnt`.from(EmployeeSkills).where(skillAssignmentFilter)),
                 db.run(SELECT.one`count(*) as cnt`.from(SkillRequests).where(requestFilter))
             ]);
@@ -276,7 +284,9 @@ export class DashboardService extends cds.ApplicationService {
                 skills: parseInt(skills?.cnt ?? "0"),
                 employeeSkills: parseInt(employeeSkills?.cnt ?? "0"),
                 pendingRequests: parseInt(pendingRequests?.cnt ?? "0"),
-                showHeadcount: isAdmin || isAuditor || isManager
+                showHeadcount: isAdmin || isAuditor || isManager,
+                isEmployee: isEmployeeOnly,
+                isManagerOrAbove: isManager || isAdmin || isAuditor
             };
         });
 
