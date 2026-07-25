@@ -226,15 +226,17 @@ export default class EmployeeSkills extends BaseController implements IPage {
             items: [infoBanner, searchField, skillList]
         });
 
-        const step2SkillTitle = new Title({ level: "H3" });
+        const step2SkillTitle = new Title({ level: "H3", class: "sapUiTinyMarginTop" });
         const step2CategoryBadge = new ObjectStatus({ state: "Information", class: "badge-count sapUiTinyMarginTop" });
-        const step2Avatar = new Avatar({ displaySize: "S", class: "sapUiTinyMarginEnd" });
-        const selectedHeaderBox = new HBox({
+        const step2Avatar = new Avatar({ displaySize: "S" });
+        const selectedHeaderBox = new VBox({
             alignItems: "Center",
-            class: "sapUiSmallMarginBottom",
+            justifyContent: "Center",
+            class: "sapUiMediumMarginBottom",
             items: [
                 step2Avatar,
-                new VBox({ items: [step2SkillTitle, step2CategoryBadge] })
+                step2SkillTitle,
+                step2CategoryBadge
             ]
         });
 
