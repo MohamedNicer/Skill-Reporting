@@ -65,4 +65,9 @@ service DashboardService {
     }
 
     function userInfo() returns UserRole;
+
+    function myProfile() returns {
+        mySkills         : Integer;
+        myPendingRequests: Integer;
+    };
 }

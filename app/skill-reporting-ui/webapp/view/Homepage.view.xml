@@ -65,7 +65,7 @@
                         <!-- Section: My Skills -->
                         <Title text="My Skills" level="H4" class="section-title sapUiSmallMarginBottom" />
                         <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- My Skills tile — CLICKABLE (icon only: personal count not available from KPI endpoint) -->
+                            <!-- My Skills tile — CLICKABLE, shows the user's own skill count -->
                             <GenericTile
                                 id="tileMySkills"
                                 header="My Skills"
@@ -74,7 +74,7 @@
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
-                                    <ImageContent src="sap-icon://employee-approvals" />
+                                    <NumericContent value="{myProfileModel>/mySkills}" icon="sap-icon://employee-approvals" valueColor="Good" />
                                 </TileContent>
                             </GenericTile>
 
@@ -95,7 +95,7 @@
                         <!-- Section: My Requests -->
                         <Title text="My Requests" level="H4" class="section-title sapUiSmallMarginBottom sapUiMediumMarginTop" />
                         <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
-                            <!-- Skill Requests tile — CLICKABLE (icon only: personal pending count not separate from team in KPI) -->
+                            <!-- Skill Requests tile — CLICKABLE, shows the user's own pending request count -->
                             <GenericTile
                                 id="tileMyRequests"
                                 header="My Skill Requests"
@@ -104,7 +104,7 @@
                                 class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
                             >
                                 <TileContent>
-                                    <ImageContent src="sap-icon://request" />
+                                    <NumericContent value="{myProfileModel>/myPendingRequests}" icon="sap-icon://request" valueColor="{= ${myProfileModel>/myPendingRequests} > 0 ? 'Critical' : 'Good' }" />
                                 </TileContent>
                             </GenericTile>
                         </HBox>

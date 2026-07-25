@@ -36,6 +36,9 @@ export default class Homepage extends BaseController implements IPage {
         // Load dashboard KPIs
         this.loadDashboardData();
 
+        // Load current user's personal profile stats
+        this.loadMyProfileData();
+
         // Load user roles for UI visibility
         this.loadUserRoles();
     }
@@ -60,6 +63,23 @@ export default class Homepage extends BaseController implements IPage {
             }
         } catch (error) {
             console.error("Failed to load dashboard KPI data", error);
+        }
+    }
+
+    private async loadMyProfileData(): Promise<void> {
+        let myProfileModel = this.getView()?.getModel("myProfileModel") as JSONModel;
+        if (!myProfileModel) {
+            myProfileModel = new JSONModel({ mySkills: 0, myPendingRequests: 0 });
+            this.getView()?.setModel(myProfileModel, "myProfileModel");
+        }
+        try {
+            const response = await fetch("/api/dashboard/myProfile()");
+            if (response.ok) {
+                const data = await response.json();
+                myProfileModel.setData(data.value || data);
+            }
+        } catch (error) {
+            console.error("Failed to load personal profile data", error);
         }
     }
 

@@ -280,6 +280,30 @@ export class DashboardService extends cds.ApplicationService {
             };
         });
 
+        // Personal profile stats — always scoped to the current user's own employee record, regardless of role
+        service.on("myProfile", async (req: Request) => {
+            const db = await cds.connect.to("db");
+            const { Employees, EmployeeSkills, SkillRequests } = db.entities;
+
+            // Resolve the current user to their employee record
+            let currentEmp = await db.run(SELECT.one.from(Employees).where({ email: req.user.id }));
+            if (!currentEmp) currentEmp = await db.run(SELECT.one.from(Employees).where({ ID: req.user.id }));
+
+            if (!currentEmp) {
+                return { mySkills: 0, myPendingRequests: 0 };
+            }
+
+            const [mySkillsRow, myRequestsRow] = await Promise.all([
+                db.run(SELECT.one`count(*) as cnt`.from(EmployeeSkills).where({ employeeID: currentEmp.ID })),
+                db.run(SELECT.one`count(*) as cnt`.from(SkillRequests).where({ requestedByID: currentEmp.ID, status: "pendingReview" }))
+            ]);
+
+            return {
+                mySkills: parseInt(mySkillsRow?.cnt ?? "0"),
+                myPendingRequests: parseInt(myRequestsRow?.cnt ?? "0")
+            };
+        });
+
         service.on("topSkills", async (req: Request) => {
             const db = await cds.connect.to("db");
             const { Employees, EmployeeSkills } = db.entities;
